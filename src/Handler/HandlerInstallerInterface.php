@@ -2,7 +2,7 @@
 
 namespace RubenMartinDev\PrestaShopModuleInstaller\Handler;
 
-interface InstallerHandlerInterface
+interface HandlerInstallerInterface
 {
     /**
      * @return bool

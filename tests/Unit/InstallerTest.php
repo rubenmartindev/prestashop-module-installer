@@ -5,7 +5,7 @@ namespace RubenMartinDev\PrestaShopModuleInstaller\Tests\Unit;
 use ArrayIterator;
 use PHPUnit\Framework\TestCase;
 use PHPUnit_Framework_MockObject_MockObject;
-use RubenMartinDev\PrestaShopModuleInstaller\Handler\InstallerHandlerInterface;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\HandlerInstallerInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\Installer;
 
 class InstallerTest extends TestCase
@@ -137,11 +137,11 @@ class InstallerTest extends TestCase
     }
 
     /**
-     * @return InstallerHandlerInterface|PHPUnit_Framework_MockObject_MockObject
+     * @return HandlerInstallerInterface|PHPUnit_Framework_MockObject_MockObject
      */
     private function createMockInstallerHandler()
     {
-        $handler = $this->createMock(InstallerHandlerInterface::class);
+        $handler = $this->createMock(HandlerInstallerInterface::class);
 
         return $handler;
     }

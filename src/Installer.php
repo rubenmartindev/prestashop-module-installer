@@ -2,15 +2,15 @@
 
 namespace RubenMartinDev\PrestaShopModuleInstaller;
 
-use RubenMartinDev\PrestaShopModuleInstaller\Handler\InstallerHandlerInterface;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\HandlerInstallerInterface;
 
 class Installer implements InstallerInterface
 {
-    /** @var array<int, InstallerHandlerInterface> */
+    /** @var array<int, HandlerInstallerInterface> */
     private $handlers = [];
 
     /**
-     * @param iterable<int, InstallerHandlerInterface> $handlers
+     * @param iterable<int, HandlerInstallerInterface> $handlers
      */
     public function __construct($handlers = [])
     {
@@ -22,7 +22,7 @@ class Installer implements InstallerInterface
     /**
      * {@inheritDoc}
      */
-    public function addHandler($priority, InstallerHandlerInterface $handler)
+    public function addHandler($priority, HandlerInstallerInterface $handler)
     {
         $this->handlers[$priority] = $handler;
 

@@ -2,22 +2,22 @@
 
 namespace RubenMartinDev\PrestaShopModuleInstaller;
 
-use RubenMartinDev\PrestaShopModuleInstaller\Handler\InstallerHandlerInterface;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\HandlerInstallerInterface;
 
 interface InstallerInterface
 {
     /**
      * @param int $priority
-     * @param InstallerHandlerInterface $handler
+     * @param HandlerInstallerInterface $handler
      *
      * @return static
      */
-    public function addHandler($priority, InstallerHandlerInterface $handler);
+    public function addHandler($priority, HandlerInstallerInterface $handler);
 
     /**
      * @param int $priority
      *
-     * @return InstallerHandlerInterface|null
+     * @return HandlerInstallerInterface|null
      */
     public function getHandler($priority);
 
@@ -29,7 +29,7 @@ interface InstallerInterface
     public function removeHandler($priority);
 
     /**
-     * @return InstallerHandlerInterface[]
+     * @return HandlerInstallerInterface[]
      */
     public function getHandlers();
 
