@@ -7,26 +7,26 @@ use RubenMartinDev\PrestaShopModuleInstaller\Handler\InstallerHandlerInterface;
 interface InstallerInterface
 {
     /**
-     * @param int $position
+     * @param int $priority
      * @param InstallerHandlerInterface $handler
      *
      * @return static
      */
-    public function addHandler($position, InstallerHandlerInterface $handler);
+    public function addHandler($priority, InstallerHandlerInterface $handler);
 
     /**
-     * @param int $position
+     * @param int $priority
      *
      * @return InstallerHandlerInterface|null
      */
-    public function getHandler($position);
+    public function getHandler($priority);
 
     /**
-     * @param int $position
+     * @param int $priority
      *
      * @return static
      */
-    public function removeHandler($position);
+    public function removeHandler($priority);
 
     /**
      * @return InstallerHandlerInterface[]

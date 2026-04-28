@@ -14,17 +14,17 @@ class Installer implements InstallerInterface
      */
     public function __construct($handlers = [])
     {
-        foreach ($handlers as $position => $handler) {
-            $this->addHandler($position, $handler);
+        foreach ($handlers as $priority => $handler) {
+            $this->addHandler($priority, $handler);
         }
     }
 
     /**
      * {@inheritDoc}
      */
-    public function addHandler($position, InstallerHandlerInterface $handler)
+    public function addHandler($priority, InstallerHandlerInterface $handler)
     {
-        $this->handlers[$position] = $handler;
+        $this->handlers[$priority] = $handler;
 
         return $this;
     }
@@ -32,18 +32,18 @@ class Installer implements InstallerInterface
     /**
      * {@inheritDoc}
      */
-    public function getHandler($position)
+    public function getHandler($priority)
     {
-        return isset($this->handlers[$position]) ? $this->handlers[$position] : null;
+        return isset($this->handlers[$priority]) ? $this->handlers[$priority] : null;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function removeHandler($position)
+    public function removeHandler($priority)
     {
-        if (isset($this->handlers[$position])) {
-            unset($this->handlers[$position]);
+        if (isset($this->handlers[$priority])) {
+            unset($this->handlers[$priority]);
         }
 
         return $this;
