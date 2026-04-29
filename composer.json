@@ -27,7 +27,11 @@
     "autoload-dev": {
         "psr-4": {
             "RubenMartinDev\\PrestaShopModuleInstaller\\Tests\\": "tests/"
-        }
+        },
+        "files": [
+            "tests/Stubs/Module.php",
+            "tests/Stubs/PrestaShopException.php"
+        ]
     },
     "config": {
         "platform": {
