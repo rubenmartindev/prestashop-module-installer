@@ -18,6 +18,14 @@ use Tab;
  */
 class TabHandlerInstaller extends AbstractHandlerInstaller
 {
+    const DEFAULT_TAB_PROPERTIES = [
+        'parent'    => -1,
+        'position'  => 0,
+        'active'    => true,
+        'module'    => null,
+        'name'      => null,
+    ];
+
     /** @var TTabs */
     protected $tabs;
 
@@ -29,7 +37,20 @@ class TabHandlerInstaller extends AbstractHandlerInstaller
     {
         parent::__construct($module);
 
-        $this->tabs = $tabs;
+        $this->tabs = \array_map(function (array $tabProperties) {
+            if (!isset($tabProperties['class_name'])) {
+                throw new TabHandlerInstallerException('The key class_name is required');
+            }
+
+            return \array_merge(
+                self::DEFAULT_TAB_PROPERTIES,
+                [
+                    'module' => $this->getModule()->name,
+                    'name'   => $tabProperties['class_name'],
+                ],
+                $tabProperties
+            );
+        }, $tabs);
     }
 
     /**
@@ -38,20 +59,6 @@ class TabHandlerInstaller extends AbstractHandlerInstaller
     public function install()
     {
         foreach ($this->tabs as $tabProperties) {
-            if (!isset($tabProperties['class_name'])) {
-                throw new TabHandlerInstallerException('The key class_name is required');
-            }
-
-            $defaultTabProperties = [
-                'parent'    => -1,
-                'position'  => 0,
-                'active'    => true,
-                'module'    => $this->getModule()->name,
-                'name'      => $tabProperties['class_name'],
-            ];
-
-            $tabProperties = \array_merge($defaultTabProperties, $tabProperties);
-
             $tab = new Tab();
 
             $tab->class_name    = (string) $tabProperties['class_name'];
