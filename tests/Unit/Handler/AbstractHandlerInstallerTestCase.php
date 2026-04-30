@@ -3,8 +3,8 @@
 namespace RubenMartinDev\PrestaShopModuleInstaller\Tests\Unit\Handler;
 
 use Module;
-use PHPUnit\Framework\TestCase;
 use PHPUnit_Framework_MockObject_MockObject;
+use PHPUnit\Framework\TestCase;
 
 abstract class AbstractHandlerInstallerTestCase extends TestCase
 {
@@ -14,5 +14,7 @@ abstract class AbstractHandlerInstallerTestCase extends TestCase
     public function setUp()
     {
         $this->module = $this->getMockForAbstractClass(Module::class);
+
+        $this->module->name = 'mymodule';
     }
 }
