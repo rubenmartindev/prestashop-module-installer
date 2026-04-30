@@ -2,10 +2,9 @@
 
 namespace RubenMartinDev\PrestaShopModuleInstaller\Tests\Unit\Handler;
 
-use Module;
-use PHPUnit_Framework_MockObject_MockObject;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Exception\HookHandlerInstallerException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\HookHandlerInstaller;
+use RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes\Module\Module;
 
 class HookHandlerInstallerTest extends AbstractHandlerInstallerTestCase
 {
@@ -25,15 +24,9 @@ class HookHandlerInstallerTest extends AbstractHandlerInstallerTestCase
 
     public function testInstallThrowsExceptionWhenRegisteringHookFails()
     {
-        /** @var Module|PHPUnit_Framework_MockObject_MockObject */
-        $this->module = $this->getMockBuilder(Module::class)
-            ->setMethods(['registerHook'])
-            ->getMockForAbstractClass()
-        ;
-
-        $this->module->method('registerHook')->willReturn(false);
-
         $this->expectException(HookHandlerInstallerException::class);
+
+        Module::$forceReturnFalseOnRegisterHook = true;
 
         $handler = new HookHandlerInstaller($this->module, ['returnFalse']);
 
