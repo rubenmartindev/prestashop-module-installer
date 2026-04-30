@@ -40,7 +40,7 @@
         }
     },
     "scripts": {
-        "tests": "phpunit --colors=always",
+        "tests": "phpunit",
         "cs": "phpcs"
     }
 }
