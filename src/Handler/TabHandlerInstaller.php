@@ -32,6 +32,8 @@ class TabHandlerInstaller extends AbstractHandlerInstaller
     /**
      * @param Module $module
      * @param TTabs $tabs
+     *
+     * @throws TabHandlerInstallerException
      */
     public function __construct(Module $module, array $tabs)
     {
@@ -55,6 +57,8 @@ class TabHandlerInstaller extends AbstractHandlerInstaller
 
     /**
      * {@inheritDoc}
+     *
+     * @throws TabHandlerInstallerException
      */
     public function install()
     {
@@ -88,6 +92,8 @@ class TabHandlerInstaller extends AbstractHandlerInstaller
 
     /**
      * {@inheritDoc}
+     *
+     * @throws TabHandlerInstallerException
      */
     public function uninstall()
     {

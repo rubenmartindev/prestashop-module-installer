@@ -23,6 +23,8 @@ class HookHandlerInstaller extends AbstractHandlerInstaller
 
     /**
      * {@inheritDoc}
+     *
+     * @throws HookHandlerInstallerException
      */
     public function install()
     {
