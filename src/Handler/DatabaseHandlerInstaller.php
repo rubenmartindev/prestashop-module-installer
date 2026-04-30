@@ -144,7 +144,9 @@ class DatabaseHandlerInstaller extends AbstractHandlerInstaller
         try {
             Db::getInstance()->execute($query);
         } catch (PrestaShopDatabaseException $e) {
-            throw new DatabaseHandlerInstallerException(\sprintf('An error occurred while executing the query: %s', $query));
+            throw new DatabaseHandlerInstallerException(
+                \sprintf('An error occurred while executing the query: %s', $query)
+            );
         }
     }
 }
