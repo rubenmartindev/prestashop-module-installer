@@ -1,6 +1,8 @@
 <?php
 
 use RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes\Collection;
+use RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes\Db\Db;
+use RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes\Exception\PrestaShopDatabaseException;
 use RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes\Exception\PrestaShopException;
 use RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes\Language;
 use RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes\Module\Module;
@@ -12,13 +14,15 @@ use RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes\Tab;
 require_once __DIR__ . '/../vendor/autoload.php';
 
 $stubs = [
-    Collection::class           => 'Collection',
-    Language::class             => 'Language',
-    Module::class               => 'Module',
-    ObjectModel::class          => 'ObjectModel',
-    PrestaShopCollection::class => 'PrestaShopCollection',
-    PrestaShopException::class  => 'PrestaShopException',
-    Tab::class                  => 'Tab',
+    Collection::class                   => 'Collection',
+    Db::class                           => 'Db',
+    Language::class                     => 'Language',
+    Module::class                       => 'Module',
+    ObjectModel::class                  => 'ObjectModel',
+    PrestaShopCollection::class         => 'PrestaShopCollection',
+    PrestaShopDatabaseException::class  => 'PrestaShopDatabaseException',
+    PrestaShopException::class          => 'PrestaShopException',
+    Tab::class                          => 'Tab',
 ];
 
 foreach ($stubs as $stubClassName => $alias) {
