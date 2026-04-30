@@ -41,5 +41,9 @@
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true
         }
+    },
+    "scripts": {
+        "tests": "phpunit --colors=always",
+        "phpcs": "phpcs"
     }
 }
