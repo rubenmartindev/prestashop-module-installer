@@ -41,6 +41,6 @@
     },
     "scripts": {
         "tests": "phpunit --colors=always",
-        "phpcs": "phpcs"
+        "cs": "phpcs"
     }
 }
