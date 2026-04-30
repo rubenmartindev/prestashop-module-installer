@@ -45,6 +45,9 @@ class TabHandlerInstallerTest extends AbstractHandlerInstallerTestCase
         $handler->install();
     }
 
+    /**
+     * @runInSeparateProcess
+     */
     public function testInstallThrowsExceptionWhenCreatingTabFails()
     {
         $this->expectException(TabHandlerInstallerException::class);
@@ -67,6 +70,9 @@ class TabHandlerInstallerTest extends AbstractHandlerInstallerTestCase
         $this->assertTrue($handler->uninstall());
     }
 
+    /**
+     * @runInSeparateProcess
+     */
     public function testUninstallThrowsExceptionWhenRemovingTabFails()
     {
         $this->expectException(TabHandlerInstallerException::class);
