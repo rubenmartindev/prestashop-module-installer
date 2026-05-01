@@ -5,20 +5,24 @@ namespace RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook;
 use Module;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\AbstractHandlerInstaller;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Exception\FailedRegisterHookException;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Exception\HooksIsEmptyException;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Exception\HooksMustBeInstanceOfHookItemException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Item\HookItemInterface;
 
 class HookHandlerInstaller extends AbstractHandlerInstaller implements HookHandlerInstallerInterface
 {
-    /** @var HookItemInterface[] */
+    /** @var array<string, HookItemInterface> */
     private $hooks = [];
 
     /**
      * @param Module $module
      * @param HookItemInterface[] $hooks
      */
-    public function __construct(Module $module, array $hooks = [])
+    public function __construct(Module $module, array $hooks)
     {
         parent::__construct($module);
+
+        $this->ensureHooksIsValid($hooks);
 
         foreach ($hooks as $hook) {
             $this->addHook($hook);
@@ -63,7 +67,7 @@ class HookHandlerInstaller extends AbstractHandlerInstaller implements HookHandl
      */
     public function getHooks()
     {
-        return \array_values($this->hooks);
+        return $this->hooks;
     }
 
     /**
@@ -86,5 +90,26 @@ class HookHandlerInstaller extends AbstractHandlerInstaller implements HookHandl
     public function uninstall()
     {
         return true;
+    }
+
+    /**
+     * @param HookItemInterface[] $hooks
+     *
+     * @return void
+     *
+     * @throws HooksIsEmptyException
+     * @throws HooksMustBeInstanceOfHookItemException
+     */
+    private function ensureHooksIsValid(array $hooks)
+    {
+        if (empty($hooks)) {
+            throw new HooksIsEmptyException('The $hooks cannot be empty');
+        }
+
+        foreach ($hooks as $hook) {
+            if (!$hook instanceof HookItemInterface) {
+                throw new HooksMustBeInstanceOfHookItemException('The $hooks must be an array of HookItemInterface');
+            }
+        }
     }
 }

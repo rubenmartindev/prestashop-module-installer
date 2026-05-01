@@ -3,6 +3,8 @@
 namespace RubenMartinDev\PrestaShopModuleInstaller\Tests\Unit\Handler\Hook;
 
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Exception\FailedRegisterHookException;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Exception\HooksIsEmptyException;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Exception\HooksMustBeInstanceOfHookItemException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\HookHandlerInstaller;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Item\HookItem;
 use RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes\Module\Module;
@@ -10,82 +12,121 @@ use RubenMartinDev\PrestaShopModuleInstaller\Tests\Unit\Handler\AbstractHandlerI
 
 class HookHandlerInstallerTest extends AbstractHandlerInstallerTestCase
 {
-    public function testAddHandler()
+    public function testConstructThrowsExceptionWhenEmptyHooks()
     {
-        $handler = new HookHandlerInstaller($this->module);
+        $this->expectException(HooksIsEmptyException::class);
 
-        $hookItem = HookItem::create('displayHeader');
+        new HookHandlerInstaller($this->module, []);
+    }
 
-        $handler->addHook($hookItem);
+    public function testConstructThrowsExceptionWhenInvalidHooks()
+    {
+        $this->expectException(HooksMustBeInstanceOfHookItemException::class);
 
-        $this->assertSame($hookItem, $handler->getHook('displayHeader'));
+        new HookHandlerInstaller($this->module, [
+            'invalidHook',
+        ]);
+    }
+
+    public function testConstruct()
+    {
+        $hookItem1 = new HookItem('displayHeader');
+        $hookItem2 = new HookItem('displayFooter');
+
+        $handler = new HookHandlerInstaller($this->module, [
+            $hookItem1,
+            $hookItem2,
+        ]);
+
+        $this->assertCount(2, $handler->getHooks());
+        $this->assertSame($hookItem1, $handler->getHook('displayHeader'));
+        $this->assertSame($hookItem2, $handler->getHook('displayFooter'));
+    }
+
+    public function testAddHook()
+    {
+        $hookItem1 = new HookItem('displayHeader');
+        $hookItem2 = new HookItem('displayFooter');
+
+        $handler = new HookHandlerInstaller($this->module, [
+            $hookItem1
+        ]);
+
+        $handler->addHook($hookItem2);
+
+        $this->assertSame($hookItem1, $handler->getHook('displayHeader'));
+        $this->assertSame($hookItem2, $handler->getHook('displayFooter'));
     }
 
     public function testGetHookReturnsNullWhenHookNotFound()
     {
-        $handler = new HookHandlerInstaller($this->module);
+        $handler = new HookHandlerInstaller($this->module, [
+            new HookItem('displayHeader'),
+        ]);
 
         $this->assertNull($handler->getHook('nonExistingHook'));
     }
 
     public function testGetHookReturnsHookItemWhenFound()
     {
-        $handler = new HookHandlerInstaller($this->module);
+        $hookItem1 = new HookItem('displayHeader');
+        $hookItem2 = new HookItem('displayFooter');
 
-        $hookItem = HookItem::create('displayHeader');
+        $handler = new HookHandlerInstaller($this->module, [
+            $hookItem1
+        ]);
 
-        $handler->addHook($hookItem);
+        $handler->addHook($hookItem2);
 
-        $this->assertSame($hookItem, $handler->getHook('displayHeader'));
+        $this->assertSame($hookItem1, $handler->getHook('displayHeader'));
+        $this->assertSame($hookItem2, $handler->getHook('displayFooter'));
     }
 
     public function testRemoveHook()
     {
-        $handler = new HookHandlerInstaller($this->module);
+        $hookItem1 = new HookItem('displayHeader');
+        $hookItem2 = new HookItem('displayFooter');
+        $hookItem3 = new HookItem('displaySidebar');
 
-        $hookItem = HookItem::create('displayHeader');
+        $handler = new HookHandlerInstaller($this->module, [
+            $hookItem1,
+            $hookItem2,
+        ]);
 
-        $handler->addHook($hookItem);
+        $handler->addHook($hookItem3);
 
         $handler->removeHook('displayHeader');
+        $handler->removeHook('displayFooter');
 
         $this->assertNull($handler->getHook('displayHeader'));
+        $this->assertNull($handler->getHook('displayFooter'));
+        $this->assertSame($hookItem3, $handler->getHook('displaySidebar'));
     }
 
     public function testGetHooks()
     {
-        $handler = new HookHandlerInstaller($this->module);
+        $hookItem1 = new HookItem('displayHeader');
+        $hookItem2 = new HookItem('displayFooter');
+        $hookItem3 = new HookItem('displaySidebar');
 
-        $hookItem1 = HookItem::create('displayHeader');
-        $hookItem2 = HookItem::create('displayFooter');
+        $handler = new HookHandlerInstaller($this->module, [
+            $hookItem1,
+            $hookItem2
+        ]);
 
-        $handler->addHook($hookItem1);
-        $handler->addHook($hookItem2);
+        $handler->addHook($hookItem3);
 
         $hooks = $handler->getHooks();
 
-        $this->assertCount(2, $hooks);
-        $this->assertSame($hookItem1, $hooks[0]);
-        $this->assertSame($hookItem2, $hooks[1]);
+        $this->assertCount(3, $hooks);
+        $this->assertSame($hookItem1, $hooks['displayHeader']);
+        $this->assertSame($hookItem2, $hooks['displayFooter']);
+        $this->assertSame($hookItem3, $hooks['displaySidebar']);
     }
 
-    public function testInstallReturnsTrueWhenWithoutHooks()
-    {
-        $handler = new HookHandlerInstaller($this->module);
-
-        $this->assertTrue($handler->install());
-    }
-
-    public function testInstallReturnsTrueWhenWithHooks()
-    {
-        $handler = new HookHandlerInstaller($this->module, [
-            HookItem::create('displayHeader'),
-            HookItem::create('displayFooter')
-        ]);
-
-        $this->assertTrue($handler->install());
-    }
-
+    /**
+     * @runInSeparateProcess
+     */
     public function testInstallThrowsExceptionWhenRegisteringHookFails()
     {
         $this->expectException(FailedRegisterHookException::class);
@@ -93,24 +134,27 @@ class HookHandlerInstallerTest extends AbstractHandlerInstallerTestCase
         Module::$forceReturnFalseOnRegisterHook = true;
 
         $handler = new HookHandlerInstaller($this->module, [
-            HookItem::create('displayHeader')
+            new HookItem('displayHeader')
         ]);
 
         $handler->install();
     }
 
-    public function testUninstallReturnsTrueWhenWithoutHooks()
-    {
-        $handler = new HookHandlerInstaller($this->module, []);
-
-        $this->assertTrue($handler->uninstall());
-    }
-
-    public function testUninstallReturnsTrueWhenWithHooks()
+    public function testInstallReturnsTrue()
     {
         $handler = new HookHandlerInstaller($this->module, [
-            HookItem::create('displayHeader'),
-            HookItem::create('displayFooter')
+            new HookItem('displayHeader'),
+            new HookItem('displayFooter')
+        ]);
+
+        $this->assertTrue($handler->install());
+    }
+
+    public function testUninstallReturnsTrue()
+    {
+        $handler = new HookHandlerInstaller($this->module, [
+            new HookItem('displayHeader'),
+            new HookItem('displayFooter')
         ]);
 
         $this->assertTrue($handler->uninstall());

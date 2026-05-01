@@ -30,7 +30,7 @@ interface HookHandlerInstallerInterface extends HandlerInstallerInterface
     public function removeHook($hookName);
 
     /**
-    * @return HookItemInterface[]
+    * @return array<string, HookItemInterface>
     */
     public function getHooks();
 
