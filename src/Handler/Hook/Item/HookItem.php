@@ -17,19 +17,9 @@ class HookItem implements HookItemInterface
      */
     public function __construct($name)
     {
-        if (!Validate::isHookName($name)) {
-            throw new NameIsInvalidException(\sprintf('Invalid hook name "%s"', $name));
-        }
+        $this->ensureNameIsValid($name);
 
         $this->name = $name;
-    }
-
-    /**
-    * {@inheritDoc}
-    */
-    public static function create($hookName)
-    {
-        return new self($hookName);
     }
 
     /**
@@ -38,5 +28,17 @@ class HookItem implements HookItemInterface
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * @param string $name
+     *
+     * @throws NameIsInvalidException
+     */
+    private function ensureNameIsValid($name)
+    {
+        if (!Validate::isHookName($name)) {
+            throw new NameIsInvalidException(\sprintf('Invalid hook name "%s"', $name));
+        }
     }
 }
