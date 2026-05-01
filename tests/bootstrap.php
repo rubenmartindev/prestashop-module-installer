@@ -9,6 +9,7 @@ use RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes\Module\Module;
 use RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes\ObjectModel;
 use RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes\PrestaShopCollection;
 use RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes\Tab;
+use RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes\Validate;
 
 // Composer
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -23,6 +24,7 @@ $stubs = [
     PrestaShopDatabaseException::class  => 'PrestaShopDatabaseException',
     PrestaShopException::class          => 'PrestaShopException',
     Tab::class                          => 'Tab',
+    Validate::class                     => 'Validate',
 ];
 
 foreach ($stubs as $stubClassName => $alias) {
