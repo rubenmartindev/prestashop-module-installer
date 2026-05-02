@@ -2,13 +2,32 @@
 
 namespace RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab;
 
+use Module;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\HandlerInstallerInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Exception\FailedToCreateTabException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Exception\FailedToDeleteTabException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Item\TabItemInterface;
 
+/**
+ * @phpstan-type TBuild array{
+ *   className: string,
+ *   name: string|array<string, string>,
+ *   parentId?: int|string,
+ *   position?: int,
+ *   active?: bool,
+ * }[]
+ */
 interface TabHandlerInstallerInterface extends HandlerInstallerInterface
 {
+    /**
+     * @param Module $module
+     * @param TBuild $tabs
+     * @param callable|null $factory
+     *
+     * @return static
+     */
+    public static function build(Module $module, array $tabs, $factory = null);
+
     /**
      * @param TabItemInterface $tab
      *

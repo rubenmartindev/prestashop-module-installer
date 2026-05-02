@@ -2,6 +2,7 @@
 
 namespace RubenMartinDev\PrestaShopModuleInstaller\Tests\Unit;
 
+use Module;
 use PHPUnit\Framework\TestCase;
 use PHPUnit_Framework_MockObject_MockObject;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\HandlerInstallerInterface;
@@ -11,7 +12,7 @@ class InstallerTest extends TestCase
 {
     public function testConstructor()
     {
-        $handler = $this->createInstallerHandlerMock();
+        $handler = $this->createHandlerInstallerMock();
 
         $installer = new Installer([
             $handler,
@@ -20,10 +21,43 @@ class InstallerTest extends TestCase
         $this->assertSame($handler, $installer->getHandler(0));
     }
 
+    public function testBuild()
+    {
+        $factoryDatabase = function (Module $module, array $handler) {
+            return $this->createHandlerInstallerMock();
+        };
+        $factoryHooks = function (Module $module, array $handler) {
+            return $this->createHandlerInstallerMock();
+        };
+        $factoryTabs = function (Module $module, array $handler) {
+            return $this->createHandlerInstallerMock();
+        };
+
+        $installer = Installer::build(
+            $this->createModuleMock(),
+            [
+                'database'  => [],
+                'hooks'     => [],
+                'tabs'      => [],
+            ],
+            $factoryDatabase,
+            $factoryHooks,
+            $factoryTabs
+        );
+
+        $handler1 = $installer->getHandler(0);
+        $handler2 = $installer->getHandler(1);
+        $handler3 = $installer->getHandler(2);
+
+        $this->assertInstanceOf(HandlerInstallerInterface::class, $handler1);
+        $this->assertInstanceOf(HandlerInstallerInterface::class, $handler2);
+        $this->assertInstanceOf(HandlerInstallerInterface::class, $handler3);
+    }
+
     public function testAddHandler()
     {
-        $handler1 = $this->createInstallerHandlerMock();
-        $handler2 = $this->createInstallerHandlerMock();
+        $handler1 = $this->createHandlerInstallerMock();
+        $handler2 = $this->createHandlerInstallerMock();
 
         $installer = new Installer([
             $handler1,
@@ -38,7 +72,7 @@ class InstallerTest extends TestCase
     public function testGetHandlerReturnsNullWhenNotFound()
     {
         $installer = new Installer([
-            $this->createInstallerHandlerMock(),
+            $this->createHandlerInstallerMock(),
         ]);
 
         $this->assertNull($installer->getHandler(-1));
@@ -46,7 +80,7 @@ class InstallerTest extends TestCase
 
     public function testGetHandlerReturnsHandlerWhenFound()
     {
-        $handler = $this->createInstallerHandlerMock();
+        $handler = $this->createHandlerInstallerMock();
 
         $installer = new Installer([
             $handler,
@@ -57,8 +91,8 @@ class InstallerTest extends TestCase
 
     public function testRemoveHandler()
     {
-        $handler1 = $this->createInstallerHandlerMock();
-        $handler2 = $this->createInstallerHandlerMock();
+        $handler1 = $this->createHandlerInstallerMock();
+        $handler2 = $this->createHandlerInstallerMock();
 
         $installer = new Installer([
             $handler1,
@@ -73,8 +107,8 @@ class InstallerTest extends TestCase
 
     public function testGetHandlers()
     {
-        $handler1 = $this->createInstallerHandlerMock();
-        $handler2 = $this->createInstallerHandlerMock();
+        $handler1 = $this->createHandlerInstallerMock();
+        $handler2 = $this->createHandlerInstallerMock();
 
         $installer = new Installer([
             $handler1,
@@ -91,8 +125,8 @@ class InstallerTest extends TestCase
     public function testInstall()
     {
         $installer = new Installer([
-            $this->createInstallerHandlerMock(),
-            $this->createInstallerHandlerMock(),
+            $this->createHandlerInstallerMock(),
+            $this->createHandlerInstallerMock(),
         ]);
 
         $this->assertTrue($installer->install());
@@ -101,8 +135,8 @@ class InstallerTest extends TestCase
     public function testUninstall()
     {
         $installer = new Installer([
-            $this->createInstallerHandlerMock(),
-            $this->createInstallerHandlerMock(),
+            $this->createHandlerInstallerMock(),
+            $this->createHandlerInstallerMock(),
         ]);
 
         $this->assertTrue($installer->uninstall());
@@ -111,7 +145,7 @@ class InstallerTest extends TestCase
     /**
      * @return HandlerInstallerInterface|PHPUnit_Framework_MockObject_MockObject
      */
-    private function createInstallerHandlerMock()
+    private function createHandlerInstallerMock()
     {
         $handler = $this->createMock(HandlerInstallerInterface::class);
 
@@ -119,5 +153,13 @@ class InstallerTest extends TestCase
         $handler->method('uninstall')->willReturn(true);
 
         return $handler;
+    }
+
+    /**
+     * @return Module|PHPUnit_Framework_MockObject_MockObject
+     */
+    private function createModuleMock()
+    {
+        return $this->getMockForAbstractClass(Module::class);
     }
 }

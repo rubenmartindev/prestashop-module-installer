@@ -2,7 +2,11 @@
 
 namespace RubenMartinDev\PrestaShopModuleInstaller;
 
+use Module;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\DatabaseHandlerInstaller;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\HandlerInstallerInterface;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\HookHandlerInstaller;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\TabHandlerInstaller;
 
 class Installer implements InstallerInterface
 {
@@ -17,6 +21,54 @@ class Installer implements InstallerInterface
         foreach ($handlers as $priority => $handler) {
             $this->addHandler($priority, $handler);
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public static function build(
+        Module $module,
+        array $handlers,
+        $factoryDatabase = null,
+        $factoryHooks = null,
+        $factoryTabs = null
+    ) {
+        $factoryDatabase = \is_callable($factoryDatabase)
+            ? $factoryDatabase
+            : function (Module $module, array $properties) {
+                return DatabaseHandlerInstaller::build($module, $properties);
+            }
+        ;
+        $factoryHooks = \is_callable($factoryHooks)
+            ? $factoryHooks
+            : function (Module $module, array $properties) {
+                return HookHandlerInstaller::build($module, $properties);
+            }
+        ;
+        $factoryTabs = \is_callable($factoryTabs)
+            ? $factoryTabs
+            : function (Module $module, array $properties) {
+                return TabHandlerInstaller::build($module, $properties);
+            }
+        ;
+
+        foreach ($handlers as $name => &$properties) {
+            if ('database' === $name) {
+                $properties = $factoryDatabase($module, $properties);
+            }
+
+            if ('hooks' === $name) {
+                $properties = $factoryHooks($module, $properties);
+            }
+
+            if ('tabs' === $name) {
+                $properties = $factoryTabs($module, $properties);
+            }
+        }
+
+        $handlers = \array_values($handlers);
+
+        return new static($handlers);
     }
 
     /**

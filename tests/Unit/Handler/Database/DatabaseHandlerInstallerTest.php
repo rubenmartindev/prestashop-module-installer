@@ -4,6 +4,7 @@ namespace RubenMartinDev\PrestaShopModuleInstaller\Tests\Unit\Handler\Database;
 
 use PHPUnit_Framework_MockObject_MockObject;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\DatabaseHandlerInstaller;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\Exception\DatabaseHandlerInstallerException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\Exception\FailedToExecuteQueryException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\Exception\QueriesIsEmptyException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\Exception\QueriesMustBeInstanceOfDatabaseItemException;
@@ -31,31 +32,92 @@ class DatabaseHandlerInstallerTest extends AbstractHandlerInstallerTestCase
 
     public function testConstruct()
     {
-        $item1 = $this->createDatabaseItemMock('my_table_1');
-        $item2 = $this->createDatabaseItemMock('my_table_2');
+        $databaseItem1 = $this->createDatabaseItemMock('my_table_1');
+        $databaseItem2 = $this->createDatabaseItemMock('my_table_2');
 
         $handler = new DatabaseHandlerInstaller($this->module, [
-            $item1,
-            $item2,
+            $databaseItem1,
+            $databaseItem2,
         ]);
 
-        $this->assertSame($item1, $handler->getQuery('my_table_1'));
-        $this->assertSame($item2, $handler->getQuery('my_table_2'));
+        $this->assertSame($databaseItem1, $handler->getQuery('my_table_1'));
+        $this->assertSame($databaseItem2, $handler->getQuery('my_table_2'));
+    }
+
+    public function testBuildThrowsExceptionWhenKeyTableNameIsMissing()
+    {
+        $this->expectException(DatabaseHandlerInstallerException::class);
+        $this->expectExceptionMessage('The key tableName is required');
+
+        DatabaseHandlerInstaller::build(
+            $this->module,
+            [
+                [
+                    'queryFile' => 'my_table.sql',
+                ],
+            ]
+        );
+    }
+
+    public function testBuildThrowsExceptionWhenKeyQueryFileIsMissing()
+    {
+        $this->expectException(DatabaseHandlerInstallerException::class);
+        $this->expectExceptionMessage('The key queryFile is required');
+
+        DatabaseHandlerInstaller::build(
+            $this->module,
+            [
+                [
+                    'tableName' => 'my_table',
+                ],
+            ]
+        );
+    }
+
+    public function testBuild()
+    {
+        $factory = function (array $query) {
+            $query['keepData'] = isset($query['keepData']) ? $query['keepData'] : false;
+
+            return $this->createDatabaseItemMock($query['tableName'], $query['keepData']);
+        };
+
+        $handler = DatabaseHandlerInstaller::build(
+            $this->module,
+            [
+                [
+                    'tableName' => 'my_table_1',
+                    'queryFile' => 'my_table_1.sql',
+                ],
+                [
+                    'tableName' => 'my_table_2',
+                    'queryFile' => 'my_table_2.sql',
+                    'keepData'  => true,
+                ],
+            ],
+            $factory
+        );
+
+        $databaseItem1 = $handler->getQuery('my_table_1');
+        $databaseItem2 = $handler->getQuery('my_table_2');
+
+        $this->assertInstanceOf(DatabaseItemInterface::class, $databaseItem1);
+        $this->assertInstanceOf(DatabaseItemInterface::class, $databaseItem2);
     }
 
     public function testAddQuery()
     {
-        $item1 = $this->createDatabaseItemMock('my_table_1');
-        $item2 = $this->createDatabaseItemMock('my_table_2');
+        $databaseItem1 = $this->createDatabaseItemMock('my_table_1');
+        $databaseItem2 = $this->createDatabaseItemMock('my_table_2');
 
         $handler = new DatabaseHandlerInstaller($this->module, [
-            $item1,
+            $databaseItem1,
         ]);
 
-        $handler->addQuery($item2);
+        $handler->addQuery($databaseItem2);
 
-        $this->assertSame($item1, $handler->getQuery('my_table_1'));
-        $this->assertSame($item2, $handler->getQuery('my_table_2'));
+        $this->assertSame($databaseItem1, $handler->getQuery('my_table_1'));
+        $this->assertSame($databaseItem2, $handler->getQuery('my_table_2'));
     }
 
     public function testGetQueryReturnsNullWhenNotFound()
@@ -69,45 +131,45 @@ class DatabaseHandlerInstallerTest extends AbstractHandlerInstallerTestCase
 
     public function testGetQueryReturnDatabaseItemWhenFound()
     {
-        $item = $this->createDatabaseItemMock('my_table');
+        $databaseItem = $this->createDatabaseItemMock('my_table');
 
         $handler = new DatabaseHandlerInstaller($this->module, [
-            $item,
+            $databaseItem,
         ]);
 
-        $this->assertSame($item, $handler->getQuery('my_table'));
+        $this->assertSame($databaseItem, $handler->getQuery('my_table'));
     }
 
     public function testRemoveQuery()
     {
-        $item1 = $this->createDatabaseItemMock('my_table_1');
-        $item2 = $this->createDatabaseItemMock('my_table_2');
+        $databaseItem1 = $this->createDatabaseItemMock('my_table_1');
+        $databaseItem2 = $this->createDatabaseItemMock('my_table_2');
 
         $handler = new DatabaseHandlerInstaller($this->module, [
-            $item1,
-            $item2,
+            $databaseItem1,
+            $databaseItem2,
         ]);
 
         $handler->removeQuery('my_table_1');
 
         $this->assertNull($handler->getQuery('my_table_1'));
-        $this->assertSame($item2, $handler->getQuery('my_table_2'));
+        $this->assertSame($databaseItem2, $handler->getQuery('my_table_2'));
     }
 
     public function testGetQueries()
     {
-        $item1 = $this->createDatabaseItemMock('my_table_1');
-        $item2 = $this->createDatabaseItemMock('my_table_2');
+        $databaseItem1 = $this->createDatabaseItemMock('my_table_1');
+        $databaseItem2 = $this->createDatabaseItemMock('my_table_2');
 
         $handler = new DatabaseHandlerInstaller($this->module, [
-            $item1,
-            $item2,
+            $databaseItem1,
+            $databaseItem2,
         ]);
 
         $queries = $handler->getQueries();
 
-        $this->assertSame($item1, $queries['my_table_1']);
-        $this->assertSame($item2, $queries['my_table_2']);
+        $this->assertSame($databaseItem1, $queries['my_table_1']);
+        $this->assertSame($databaseItem2, $queries['my_table_2']);
     }
 
     /**
@@ -162,14 +224,16 @@ class DatabaseHandlerInstallerTest extends AbstractHandlerInstallerTestCase
 
     /**
      * @param string $tableName
+     * @param bool $keepData
      *
      * @return DatabaseItemInterface|PHPUnit_Framework_MockObject_MockObject
      */
-    private function createDatabaseItemMock($tableName)
+    private function createDatabaseItemMock($tableName, $keepData = false)
     {
         $databaseItem = $this->createMock(DatabaseItemInterface::class);
 
         $databaseItem->method('getTableName')->willReturn($tableName);
+        $databaseItem->method('getKeepData')->willReturn($keepData);
 
         return $databaseItem;
     }

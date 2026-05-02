@@ -6,9 +6,11 @@ use Db;
 use Module;
 use PrestaShopDatabaseException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\AbstractHandlerInstaller;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\Exception\DatabaseHandlerInstallerException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\Exception\FailedToExecuteQueryException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\Exception\QueriesIsEmptyException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\Exception\QueriesMustBeInstanceOfDatabaseItemException;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\Item\DatabaseItem;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\Item\DatabaseItemInterface;
 
 class DatabaseHandlerInstaller extends AbstractHandlerInstaller implements DatabaseHandlerInstallerInterface
@@ -29,6 +31,37 @@ class DatabaseHandlerInstaller extends AbstractHandlerInstaller implements Datab
         foreach ($queries as $query) {
             $this->addQuery($query);
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public static function build(Module $module, array $queries, $factory = null)
+    {
+        $factory = \is_callable($factory)
+            ? $factory
+            : function (array $query) {
+                if (!isset($query['tableName'])) {
+                    throw new DatabaseHandlerInstallerException('The key tableName is required');
+                }
+
+                if (!isset($query['queryFile'])) {
+                    throw new DatabaseHandlerInstallerException('The key queryFile is required');
+                }
+
+                $query['keepData'] = isset($query['keepData']) ? $query['keepData'] : false;
+
+                return new DatabaseItem(
+                    $query['tableName'],
+                    $query['queryFile'],
+                    $query['keepData']
+                );
+            }
+        ;
+
+        $queries = \array_map($factory, $queries);
+
+        return new static($module, $queries);
     }
 
     /**
