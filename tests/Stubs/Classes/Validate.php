@@ -8,4 +8,9 @@ class Validate
     {
         return preg_match('/^[a-zA-Z0-9_-]+$/', $hook);
     }
+
+    public static function isTablePrefix($data)
+    {
+        return preg_match('/^[a-z0-9_]+$/ui', $data);
+    }
 }
