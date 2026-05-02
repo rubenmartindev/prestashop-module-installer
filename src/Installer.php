@@ -10,9 +10,9 @@ class Installer implements InstallerInterface
     private $handlers = [];
 
     /**
-     * @param iterable<int, HandlerInstallerInterface> $handlers
+     * @param array<int, HandlerInstallerInterface> $handlers
      */
-    public function __construct($handlers = [])
+    public function __construct(array $handlers)
     {
         foreach ($handlers as $priority => $handler) {
             $this->addHandler($priority, $handler);
@@ -34,7 +34,10 @@ class Installer implements InstallerInterface
      */
     public function getHandler($priority)
     {
-        return isset($this->handlers[$priority]) ? $this->handlers[$priority] : null;
+        return isset($this->handlers[$priority])
+            ? $this->handlers[$priority]
+            : null
+        ;
     }
 
     /**
@@ -62,7 +65,11 @@ class Installer implements InstallerInterface
      */
     public function install()
     {
-        dump(__METHOD__);
+        foreach ($this->handlers as $handler) {
+            $handler->install();
+        }
+
+        return true;
     }
 
     /**
@@ -70,6 +77,10 @@ class Installer implements InstallerInterface
      */
     public function uninstall()
     {
-        dump(__METHOD__);
+        foreach ($this->handlers as $handler) {
+            $handler->uninstall();
+        }
+
+        return true;
     }
 }

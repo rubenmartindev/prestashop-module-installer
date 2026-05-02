@@ -2,7 +2,6 @@
 
 namespace RubenMartinDev\PrestaShopModuleInstaller;
 
-use RubenMartinDev\PrestaShopModuleInstaller\Exception\InstallerException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\HandlerInstallerInterface;
 
 interface InstallerInterface
@@ -36,15 +35,11 @@ interface InstallerInterface
 
     /**
      * @return bool
-     *
-     * @throws InstallerException
      */
     public function install();
 
     /**
      * @return bool
-     *
-     * @throws InstallerException
      */
     public function uninstall();
 }
