@@ -2,6 +2,10 @@
   bootstrap="tests/bootstrap.php"
   colors="true"
 >
+  <php>
+    <const name="_DB_PREFIX_" value="ps_"/>
+    <const name="_MYSQL_ENGINE_" value="InnoDB"/>
+  </php>
   <testsuites>
     <testsuite name="Unit">
       <directory>tests/Unit</directory>

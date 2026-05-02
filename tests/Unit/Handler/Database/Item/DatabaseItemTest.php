@@ -19,19 +19,6 @@ class DatabaseItemTest extends TestCase
     /** @var vfsStreamContainer */
     private $directory;
 
-    public static function setUpBeforeClass()
-    {
-        parent::setUpBeforeClass();
-
-        if (!\defined('_DB_PREFIX_')) {
-            \define('_DB_PREFIX_', 'ps_');
-        }
-
-        if (!\defined('_MYSQL_ENGINE_')) {
-            \define('_MYSQL_ENGINE_', 'InnoDB');
-        }
-    }
-
     public function setUp()
     {
         parent::setUp();

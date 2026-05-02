@@ -2,51 +2,17 @@
 
 namespace RubenMartinDev\PrestaShopModuleInstaller\Tests\Unit\Handler\Database;
 
-use org\bovigo\vfs\vfsStream;
-use org\bovigo\vfs\vfsStreamContainer;
+use PHPUnit_Framework_MockObject_MockObject;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\DatabaseHandlerInstaller;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\Exception\FailedToExecuteQueryException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\Exception\QueriesIsEmptyException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\Exception\QueriesMustBeInstanceOfDatabaseItemException;
-use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\Item\DatabaseItem;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\Item\DatabaseItemInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes\Db\Db;
 use RubenMartinDev\PrestaShopModuleInstaller\Tests\Unit\Handler\AbstractHandlerInstallerTestCase;
 
 class DatabaseHandlerInstallerTest extends AbstractHandlerInstallerTestCase
 {
-    /** @var vfsStreamContainer */
-    private $directory;
-
-    public static function setUpBeforeClass()
-    {
-        parent::setUpBeforeClass();
-
-        if (!\defined('_DB_PREFIX_')) {
-            \define('_DB_PREFIX_', 'ps_');
-        }
-
-        if (!\defined('_MYSQL_ENGINE_')) {
-            \define('_MYSQL_ENGINE_', 'InnoDB');
-        }
-    }
-
-    public function setUp()
-    {
-        parent::setUp();
-
-        $this->directory = vfsStream::setup();
-
-        vfsStream::newFile('my_table_1.sql')
-            ->withContent('CREATE TABLE IF NOT EXISTS `{{DB_PREFIX}}my_table_1` (id INT) ENGINE={{ENGINE_TYPE}};')
-            ->at($this->directory)
-        ;
-
-        vfsStream::newFile('my_table_2.sql')
-            ->withContent('CREATE TABLE IF NOT EXISTS `{{DB_PREFIX}}my_table_2` (id INT) ENGINE={{ENGINE_TYPE}};')
-            ->at($this->directory)
-        ;
-    }
-
     public function testConstructThrowsExceptionWhenQueriesIsEmpty()
     {
         $this->expectException(QueriesIsEmptyException::class);
@@ -65,8 +31,8 @@ class DatabaseHandlerInstallerTest extends AbstractHandlerInstallerTestCase
 
     public function testConstruct()
     {
-        $item1 = new DatabaseItem('my_table_1', vfsStream::url('root/my_table_1.sql'));
-        $item2 = new DatabaseItem('my_table_2', vfsStream::url('root/my_table_2.sql'));
+        $item1 = $this->createDatabaseItemMock('my_table_1');
+        $item2 = $this->createDatabaseItemMock('my_table_2');
 
         $handler = new DatabaseHandlerInstaller($this->module, [
             $item1,
@@ -79,8 +45,8 @@ class DatabaseHandlerInstallerTest extends AbstractHandlerInstallerTestCase
 
     public function testAddQuery()
     {
-        $item1 = new DatabaseItem('my_table_1', vfsStream::url('root/my_table_1.sql'));
-        $item2 = new DatabaseItem('my_table_2', vfsStream::url('root/my_table_2.sql'));
+        $item1 = $this->createDatabaseItemMock('my_table_1');
+        $item2 = $this->createDatabaseItemMock('my_table_2');
 
         $handler = new DatabaseHandlerInstaller($this->module, [
             $item1,
@@ -92,10 +58,10 @@ class DatabaseHandlerInstallerTest extends AbstractHandlerInstallerTestCase
         $this->assertSame($item2, $handler->getQuery('my_table_2'));
     }
 
-    public function testGetQueryReturnsNullWhenQueryNotFound()
+    public function testGetQueryReturnsNullWhenNotFound()
     {
         $handler = new DatabaseHandlerInstaller($this->module, [
-            new DatabaseItem('my_table_1', vfsStream::url('root/my_table_1.sql')),
+            $this->createDatabaseItemMock('my_table_1'),
         ]);
 
         $this->assertNull($handler->getQuery('non_existing_query'));
@@ -103,19 +69,19 @@ class DatabaseHandlerInstallerTest extends AbstractHandlerInstallerTestCase
 
     public function testGetQueryReturnDatabaseItemWhenFound()
     {
-        $item = new DatabaseItem('my_table_1', vfsStream::url('root/my_table_1.sql'));
+        $item = $this->createDatabaseItemMock('my_table');
 
         $handler = new DatabaseHandlerInstaller($this->module, [
             $item,
         ]);
 
-        $this->assertSame($item, $handler->getQuery('my_table_1'));
+        $this->assertSame($item, $handler->getQuery('my_table'));
     }
 
     public function testRemoveQuery()
     {
-        $item1 = new DatabaseItem('my_table_1', vfsStream::url('root/my_table_1.sql'));
-        $item2 = new DatabaseItem('my_table_2', vfsStream::url('root/my_table_2.sql'));
+        $item1 = $this->createDatabaseItemMock('my_table_1');
+        $item2 = $this->createDatabaseItemMock('my_table_2');
 
         $handler = new DatabaseHandlerInstaller($this->module, [
             $item1,
@@ -130,8 +96,8 @@ class DatabaseHandlerInstallerTest extends AbstractHandlerInstallerTestCase
 
     public function testGetQueries()
     {
-        $item1 = new DatabaseItem('my_table_1', vfsStream::url('root/my_table_1.sql'));
-        $item2 = new DatabaseItem('my_table_2', vfsStream::url('root/my_table_2.sql'));
+        $item1 = $this->createDatabaseItemMock('my_table_1');
+        $item2 = $this->createDatabaseItemMock('my_table_2');
 
         $handler = new DatabaseHandlerInstaller($this->module, [
             $item1,
@@ -154,7 +120,7 @@ class DatabaseHandlerInstallerTest extends AbstractHandlerInstallerTestCase
         Db::$forceThrowExceptionOnExecute = true;
 
         $handler = new DatabaseHandlerInstaller($this->module, [
-            new DatabaseItem('my_table_1', vfsStream::url('root/my_table_1.sql')),
+            $this->createDatabaseItemMock('my_table'),
         ]);
 
         $handler->install();
@@ -163,7 +129,7 @@ class DatabaseHandlerInstallerTest extends AbstractHandlerInstallerTestCase
     public function testInstallReturnsTrue()
     {
         $handler = new DatabaseHandlerInstaller($this->module, [
-            new DatabaseItem('my_table_1', vfsStream::url('root/my_table_1.sql')),
+            $this->createDatabaseItemMock('my_table'),
         ]);
 
         $this->assertTrue($handler->install());
@@ -179,7 +145,7 @@ class DatabaseHandlerInstallerTest extends AbstractHandlerInstallerTestCase
         Db::$forceThrowExceptionOnExecute = true;
 
         $handler = new DatabaseHandlerInstaller($this->module, [
-            new DatabaseItem('my_table_1', vfsStream::url('root/my_table_1.sql')),
+            $this->createDatabaseItemMock('my_table'),
         ]);
 
         $handler->uninstall();
@@ -188,9 +154,23 @@ class DatabaseHandlerInstallerTest extends AbstractHandlerInstallerTestCase
     public function testUninstallReturnsTrue()
     {
         $handler = new DatabaseHandlerInstaller($this->module, [
-            new DatabaseItem('my_table_1', vfsStream::url('root/my_table_1.sql')),
+            $this->createDatabaseItemMock('my_table'),
         ]);
 
         $this->assertTrue($handler->uninstall());
+    }
+
+    /**
+     * @param string $tableName
+     *
+     * @return DatabaseItemInterface|PHPUnit_Framework_MockObject_MockObject
+     */
+    private function createDatabaseItemMock($tableName)
+    {
+        $databaseItem = $this->createMock(DatabaseItemInterface::class);
+
+        $databaseItem->method('getTableName')->willReturn($tableName);
+
+        return $databaseItem;
     }
 }
