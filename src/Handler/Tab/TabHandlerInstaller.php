@@ -6,10 +6,8 @@ use Module;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\AbstractHandlerInstaller;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Exception\FailedToCreateTabException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Exception\FailedToDeleteTabException;
-use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Exception\TabHandlerInstallerException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Exception\TabsIsEmptyException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Exception\TabsMustBeInstanceOfTabItemException;
-use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Item\TabItem;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Item\TabItemInterface;
 use Tab;
 
@@ -31,41 +29,6 @@ class TabHandlerInstaller extends AbstractHandlerInstaller implements TabHandler
         foreach ($tabs as $tab) {
             $this->addTab($tab);
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public static function build(Module $module, array $tabs, $factory = null)
-    {
-        $factory = \is_callable($factory)
-            ? $factory
-            : function (array $tab) {
-                if (!isset($tab['className'])) {
-                    throw new TabHandlerInstallerException('The key className is required');
-                }
-
-                if (!isset($tab['name'])) {
-                    throw new TabHandlerInstallerException('The key name is required');
-                }
-
-                $tab['parentId']    = isset($tab['parentId']) ? $tab['parentId'] : -1;
-                $tab['position']    = isset($tab['position']) ? $tab['position'] : 0;
-                $tab['active']      = isset($tab['active']) ? $tab['active'] : true;
-
-                return new TabItem(
-                    $tab['className'],
-                    $tab['name'],
-                    $tab['parentId'],
-                    $tab['position'],
-                    $tab['active']
-                );
-            }
-        ;
-
-        $tabs = \array_map($factory, $tabs);
-
-        return new static($module, $tabs);
     }
 
     /**

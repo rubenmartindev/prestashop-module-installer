@@ -8,6 +8,7 @@ use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\DatabaseHandlerIns
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\HookHandlerInstallerFactory;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\HookHandlerInstallerInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\TabHandlerInstaller;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\TabHandlerInstallerFactory;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\TabHandlerInstallerInterface;
 
 /**
@@ -17,7 +18,8 @@ use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\TabHandlerInstallerInte
  * @phpstan-import-type THook from HookHandlerInstallerFactory as THooksHook
  * @phpstan-import-type THooks from HookHandlerInstallerFactory as THooksHooks
  *
- * @phpstan-import-type TBuild from TabHandlerInstallerInterface as TTabsBuild
+ * @phpstan-import-type TTab from TabHandlerInstallerFactory as TTabsTab
+ * @phpstan-import-type TTabs from TabHandlerInstallerFactory as TTabsTabs
  */
 class InstallerFactory
 {
@@ -26,11 +28,11 @@ class InstallerFactory
      * @param array{
      *   database?: TDatabaseQueries,
      *   hooks?: THooksHooks,
-     *   tabs?: TTabsBuild,
+     *   tabs?: TTabsTabs,
      * } $handlers
      * @param callable(Module $module, TDatabaseQuery $properties): DatabaseHandlerInstallerInterface|null $factoryDatabase
      * @param callable(Module $module, THooksHook $properties): HookHandlerInstallerInterface|null $factoryHooks
-     * @param callable(Module $module, array $properties): TabHandlerInstallerInterface|null $factoryTabs
+     * @param callable(Module $module, TTabsTab $properties): TabHandlerInstallerInterface|null $factoryTabs
      *
      * @return InstallerInterface
      */
@@ -56,7 +58,7 @@ class InstallerFactory
         $factoryTabs = \is_callable($factoryTabs)
             ? $factoryTabs
             : function (Module $module, array $properties) {
-                return TabHandlerInstaller::build($module, $properties);
+                return TabHandlerInstallerFactory::create($module, $properties);
             }
         ;
 
