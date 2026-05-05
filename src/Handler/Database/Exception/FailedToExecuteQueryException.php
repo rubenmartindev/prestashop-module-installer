@@ -2,6 +2,6 @@
 
 namespace RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\Exception;
 
-class FailedToExecuteQueryException extends DatabaseHandlerInstallerException
+class FailedToExecuteQueryException extends DatabaseHandlerException
 {
 }

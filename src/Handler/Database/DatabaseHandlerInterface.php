@@ -6,7 +6,7 @@ use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\Exception\FailedTo
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\Item\DatabaseItemInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\HandlerInstallerInterface;
 
-interface DatabaseHandlerInstallerInterface extends HandlerInstallerInterface
+interface DatabaseHandlerInterface extends HandlerInstallerInterface
 {
     /**
      * @param DatabaseItemInterface $query

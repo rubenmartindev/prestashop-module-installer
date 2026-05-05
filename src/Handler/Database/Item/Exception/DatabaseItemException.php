@@ -2,8 +2,8 @@
 
 namespace RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\Item\Exception;
 
-use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\Exception\DatabaseHandlerInstallerException;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\Exception\DatabaseHandlerException;
 
-class DatabaseItemException extends DatabaseHandlerInstallerException
+class DatabaseItemException extends DatabaseHandlerException
 {
 }

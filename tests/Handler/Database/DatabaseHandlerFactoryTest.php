@@ -3,20 +3,20 @@
 namespace RubenMartinDev\PrestaShopModuleInstaller\Tests\Handler\Database;
 
 use PHPUnit_Framework_MockObject_MockObject;
-use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\DatabaseHandlerInstallerFactory;
-use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\Exception\DatabaseHandlerInstallerException;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\DatabaseHandlerFactory;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\Exception\DatabaseHandlerException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\Item\DatabaseItemInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\Tests\Handler\AbstractHandlerInstallerTestCase;
 
-class DatabaseHandlerInstallerFactoryTest extends AbstractHandlerInstallerTestCase
+class DatabaseHandlerFactoryTest extends AbstractHandlerInstallerTestCase
 {
 
     public function testCreateThrowsExceptionWhenKeyTableNameIsMissing()
     {
-        $this->expectException(DatabaseHandlerInstallerException::class);
+        $this->expectException(DatabaseHandlerException::class);
         $this->expectExceptionMessage('The key tableName is required');
 
-        DatabaseHandlerInstallerFactory::create(
+        DatabaseHandlerFactory::create(
             $this->module,
             [
                 [
@@ -28,10 +28,10 @@ class DatabaseHandlerInstallerFactoryTest extends AbstractHandlerInstallerTestCa
 
     public function testCreateThrowsExceptionWhenKeyQueryFileIsMissing()
     {
-        $this->expectException(DatabaseHandlerInstallerException::class);
+        $this->expectException(DatabaseHandlerException::class);
         $this->expectExceptionMessage('The key queryFile is required');
 
-        DatabaseHandlerInstallerFactory::create(
+        DatabaseHandlerFactory::create(
             $this->module,
             [
                 [
@@ -49,7 +49,7 @@ class DatabaseHandlerInstallerFactoryTest extends AbstractHandlerInstallerTestCa
             return $this->createDatabaseItemMock($query['tableName'], $query['keepData']);
         };
 
-        $handler = DatabaseHandlerInstallerFactory::create(
+        $handler = DatabaseHandlerFactory::create(
             $this->module,
             [
                 [

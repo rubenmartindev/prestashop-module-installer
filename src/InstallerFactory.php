@@ -3,8 +3,8 @@
 namespace RubenMartinDev\PrestaShopModuleInstaller;
 
 use Module;
-use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\DatabaseHandlerInstallerFactory;
-use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\DatabaseHandlerInstallerInterface;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\DatabaseHandlerFactory;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\DatabaseHandlerInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\HookHandlerInstallerFactory;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\HookHandlerInstallerInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\TabHandlerInstaller;
@@ -12,8 +12,8 @@ use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\TabHandlerInstallerFact
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\TabHandlerInstallerInterface;
 
 /**
- * @phpstan-import-type TQuery from DatabaseHandlerInstallerFactory as TDatabaseQuery
- * @phpstan-import-type TQueries from DatabaseHandlerInstallerFactory as TDatabaseQueries
+ * @phpstan-import-type TQuery from DatabaseHandlerFactory as TDatabaseQuery
+ * @phpstan-import-type TQueries from DatabaseHandlerFactory as TDatabaseQueries
  *
  * @phpstan-import-type THook from HookHandlerInstallerFactory as THooksHook
  * @phpstan-import-type THooks from HookHandlerInstallerFactory as THooksHooks
@@ -30,7 +30,7 @@ class InstallerFactory
      *   hooks?: THooksHooks,
      *   tabs?: TTabsTabs,
      * } $handlers
-     * @param callable(Module $module, TDatabaseQuery $properties): DatabaseHandlerInstallerInterface|null $factoryDatabase
+     * @param callable(Module $module, TDatabaseQuery $properties): DatabaseHandlerInterface|null $factoryDatabase
      * @param callable(Module $module, THooksHook $properties): HookHandlerInstallerInterface|null $factoryHooks
      * @param callable(Module $module, TTabsTab $properties): TabHandlerInstallerInterface|null $factoryTabs
      *
@@ -46,7 +46,7 @@ class InstallerFactory
         $factoryDatabase = \is_callable($factoryDatabase)
             ? $factoryDatabase
             : function (Module $module, array $properties) {
-                return DatabaseHandlerInstallerFactory::create($module, $properties);
+                return DatabaseHandlerFactory::create($module, $properties);
             }
         ;
         $factoryHooks = \is_callable($factoryHooks)

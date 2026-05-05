@@ -11,7 +11,7 @@ use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\Exception\QueriesI
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\Exception\QueriesMustBeInstanceOfDatabaseItemException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\Item\DatabaseItemInterface;
 
-class DatabaseHandlerInstaller extends AbstractHandlerInstaller implements DatabaseHandlerInstallerInterface
+class DatabaseHandler extends AbstractHandlerInstaller implements DatabaseHandlerInterface
 {
     /** @var array<string, DatabaseItemInterface> */
     protected $queries = [];

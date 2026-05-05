@@ -3,7 +3,7 @@
 namespace RubenMartinDev\PrestaShopModuleInstaller\Tests\Handler\Database;
 
 use PHPUnit_Framework_MockObject_MockObject;
-use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\DatabaseHandlerInstaller;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\DatabaseHandler;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\Exception\FailedToExecuteQueryException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\Exception\QueriesIsEmptyException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\Exception\QueriesMustBeInstanceOfDatabaseItemException;
@@ -11,20 +11,20 @@ use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\Item\DatabaseItemI
 use RubenMartinDev\PrestaShopModuleInstaller\Tests\Handler\AbstractHandlerInstallerTestCase;
 use RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes\Db\Db;
 
-class DatabaseHandlerInstallerTest extends AbstractHandlerInstallerTestCase
+class DatabaseHandlerTest extends AbstractHandlerInstallerTestCase
 {
     public function testConstructThrowsExceptionWhenQueriesIsEmpty()
     {
         $this->expectException(QueriesIsEmptyException::class);
 
-        new DatabaseHandlerInstaller($this->module, []);
+        new DatabaseHandler($this->module, []);
     }
 
     public function testConstructThrowsExceptionWhenQueriesIsNotInstanceOfDatabaseItemInterface()
     {
         $this->expectException(QueriesMustBeInstanceOfDatabaseItemException::class);
 
-        new DatabaseHandlerInstaller($this->module, [
+        new DatabaseHandler($this->module, [
             'invalidQuery',
         ]);
     }
@@ -34,7 +34,7 @@ class DatabaseHandlerInstallerTest extends AbstractHandlerInstallerTestCase
         $databaseItem1 = $this->createDatabaseItemMock('my_table_1');
         $databaseItem2 = $this->createDatabaseItemMock('my_table_2');
 
-        $handler = new DatabaseHandlerInstaller($this->module, [
+        $handler = new DatabaseHandler($this->module, [
             $databaseItem1,
             $databaseItem2,
         ]);
@@ -48,7 +48,7 @@ class DatabaseHandlerInstallerTest extends AbstractHandlerInstallerTestCase
         $databaseItem1 = $this->createDatabaseItemMock('my_table_1');
         $databaseItem2 = $this->createDatabaseItemMock('my_table_2');
 
-        $handler = new DatabaseHandlerInstaller($this->module, [
+        $handler = new DatabaseHandler($this->module, [
             $databaseItem1,
         ]);
 
@@ -60,7 +60,7 @@ class DatabaseHandlerInstallerTest extends AbstractHandlerInstallerTestCase
 
     public function testGetQueryReturnsNullWhenNotFound()
     {
-        $handler = new DatabaseHandlerInstaller($this->module, [
+        $handler = new DatabaseHandler($this->module, [
             $this->createDatabaseItemMock('my_table_1'),
         ]);
 
@@ -71,7 +71,7 @@ class DatabaseHandlerInstallerTest extends AbstractHandlerInstallerTestCase
     {
         $databaseItem = $this->createDatabaseItemMock('my_table');
 
-        $handler = new DatabaseHandlerInstaller($this->module, [
+        $handler = new DatabaseHandler($this->module, [
             $databaseItem,
         ]);
 
@@ -83,7 +83,7 @@ class DatabaseHandlerInstallerTest extends AbstractHandlerInstallerTestCase
         $databaseItem1 = $this->createDatabaseItemMock('my_table_1');
         $databaseItem2 = $this->createDatabaseItemMock('my_table_2');
 
-        $handler = new DatabaseHandlerInstaller($this->module, [
+        $handler = new DatabaseHandler($this->module, [
             $databaseItem1,
             $databaseItem2,
         ]);
@@ -99,7 +99,7 @@ class DatabaseHandlerInstallerTest extends AbstractHandlerInstallerTestCase
         $databaseItem1 = $this->createDatabaseItemMock('my_table_1');
         $databaseItem2 = $this->createDatabaseItemMock('my_table_2');
 
-        $handler = new DatabaseHandlerInstaller($this->module, [
+        $handler = new DatabaseHandler($this->module, [
             $databaseItem1,
             $databaseItem2,
         ]);
@@ -119,7 +119,7 @@ class DatabaseHandlerInstallerTest extends AbstractHandlerInstallerTestCase
 
         Db::$forceThrowExceptionOnExecute = true;
 
-        $handler = new DatabaseHandlerInstaller($this->module, [
+        $handler = new DatabaseHandler($this->module, [
             $this->createDatabaseItemMock('my_table'),
         ]);
 
@@ -128,7 +128,7 @@ class DatabaseHandlerInstallerTest extends AbstractHandlerInstallerTestCase
 
     public function testInstallReturnsTrue()
     {
-        $handler = new DatabaseHandlerInstaller($this->module, [
+        $handler = new DatabaseHandler($this->module, [
             $this->createDatabaseItemMock('my_table'),
         ]);
 
@@ -144,7 +144,7 @@ class DatabaseHandlerInstallerTest extends AbstractHandlerInstallerTestCase
 
         Db::$forceThrowExceptionOnExecute = true;
 
-        $handler = new DatabaseHandlerInstaller($this->module, [
+        $handler = new DatabaseHandler($this->module, [
             $this->createDatabaseItemMock('my_table'),
         ]);
 
@@ -153,7 +153,7 @@ class DatabaseHandlerInstallerTest extends AbstractHandlerInstallerTestCase
 
     public function testUninstallReturnsTrue()
     {
-        $handler = new DatabaseHandlerInstaller($this->module, [
+        $handler = new DatabaseHandler($this->module, [
             $this->createDatabaseItemMock('my_table'),
         ]);
 

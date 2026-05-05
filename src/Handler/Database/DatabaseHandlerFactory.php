@@ -3,7 +3,7 @@
 namespace RubenMartinDev\PrestaShopModuleInstaller\Handler\Database;
 
 use Module;
-use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\Exception\DatabaseHandlerInstallerException;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\Exception\DatabaseHandlerException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\Item\DatabaseItem;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\Item\DatabaseItemInterface;
 
@@ -16,14 +16,14 @@ use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\Item\DatabaseItemI
  *
  * @phpstan-type TQueries TQuery[]
  */
-class DatabaseHandlerInstallerFactory
+class DatabaseHandlerFactory
 {
     /**
      * @param Module $module
      * @param TQueries $queries
      * @param callable(TQuery $query): DatabaseItemInterface|null $factory
      *
-     * @return DatabaseHandlerInstaller
+     * @return DatabaseHandler
      */
     public static function create(Module $module, array $queries, $factory = null)
     {
@@ -31,11 +31,11 @@ class DatabaseHandlerInstallerFactory
             ? $factory
             : function (array $query) {
                 if (!isset($query['tableName'])) {
-                    throw new DatabaseHandlerInstallerException('The key tableName is required');
+                    throw new DatabaseHandlerException('The key tableName is required');
                 }
 
                 if (!isset($query['queryFile'])) {
-                    throw new DatabaseHandlerInstallerException('The key queryFile is required');
+                    throw new DatabaseHandlerException('The key queryFile is required');
                 }
 
                 $query['keepData'] = isset($query['keepData']) ? $query['keepData'] : false;
@@ -50,6 +50,6 @@ class DatabaseHandlerInstallerFactory
 
         $queries = \array_map($factory, $queries);
 
-        return new DatabaseHandlerInstaller($module, $queries);
+        return new DatabaseHandler($module, $queries);
     }
 }

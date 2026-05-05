@@ -2,6 +2,6 @@
 
 namespace RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\Exception;
 
-class QueriesIsEmptyException extends DatabaseHandlerInstallerException
+class QueriesIsEmptyException extends DatabaseHandlerException
 {
 }
