@@ -4,13 +4,12 @@ namespace RubenMartinDev\PrestaShopModuleInstaller\Tests\Handler\Hook;
 
 use PHPUnit_Framework_MockObject_MockObject;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Exception\FailedRegisterHookException;
-use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Exception\HookHandlerInstallerException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Exception\HooksIsEmptyException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Exception\HooksMustBeInstanceOfHookItemException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\HookHandlerInstaller;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Item\HookItemInterface;
-use RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes\Module\Module;
 use RubenMartinDev\PrestaShopModuleInstaller\Tests\Handler\AbstractHandlerInstallerTestCase;
+use RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes\Module\Module;
 
 class HookHandlerInstallerTest extends AbstractHandlerInstallerTestCase
 {
@@ -43,45 +42,6 @@ class HookHandlerInstallerTest extends AbstractHandlerInstallerTestCase
         $this->assertCount(2, $handler->getHooks());
         $this->assertSame($hookItem1, $handler->getHook('displayHeader'));
         $this->assertSame($hookItem2, $handler->getHook('displayFooter'));
-    }
-
-    public function testBuildThrowsExceptionWhenKeyNameIsMissing()
-    {
-        $this->expectException(HookHandlerInstallerException::class);
-        $this->expectExceptionMessage('The key name is required');
-
-        HookHandlerInstaller::build(
-            $this->module,
-            [
-                [],
-            ]
-        );
-    }
-
-    public function testBuild()
-    {
-        $factory = function (array $hook) {
-            return $this->createHookItemMock($hook['name']);
-        };
-
-        $handler = HookHandlerInstaller::build(
-            $this->module,
-            [
-                [
-                    'name' => 'displayHeader',
-                ],
-                [
-                    'name' => 'displayFooter',
-                ],
-            ],
-            $factory
-        );
-
-        $hookItem1 = $handler->getHook('displayHeader');
-        $hookItem2 = $handler->getHook('displayFooter');
-
-        $this->assertInstanceOf(HookItemInterface::class, $hookItem1);
-        $this->assertInstanceOf(HookItemInterface::class, $hookItem2);
     }
 
     public function testAddHook()

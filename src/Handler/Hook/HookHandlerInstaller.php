@@ -5,10 +5,8 @@ namespace RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook;
 use Module;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\AbstractHandlerInstaller;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Exception\FailedRegisterHookException;
-use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Exception\HookHandlerInstallerException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Exception\HooksIsEmptyException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Exception\HooksMustBeInstanceOfHookItemException;
-use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Item\HookItem;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Item\HookItemInterface;
 
 class HookHandlerInstaller extends AbstractHandlerInstaller implements HookHandlerInstallerInterface
@@ -29,29 +27,6 @@ class HookHandlerInstaller extends AbstractHandlerInstaller implements HookHandl
         foreach ($hooks as $hook) {
             $this->addHook($hook);
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public static function build(Module $module, array $hooks, $factory = null)
-    {
-        $factory = \is_callable($factory)
-            ? $factory
-            : function (array $hook) {
-                if (!isset($hook['name'])) {
-                    throw new HookHandlerInstallerException('The key name is required');
-                }
-
-                return new HookItem(
-                    $hook['name']
-                );
-            }
-        ;
-
-        $hooks = \array_map($factory, $hooks);
-
-        return new static($module, $hooks);
     }
 
     /**
