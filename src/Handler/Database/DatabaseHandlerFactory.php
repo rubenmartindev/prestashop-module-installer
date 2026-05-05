@@ -3,7 +3,6 @@
 namespace RubenMartinDev\PrestaShopModuleInstaller\Handler\Database;
 
 use Module;
-use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\Exception\DatabaseHandlerException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\Item\DatabaseItem;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\Item\DatabaseItemInterface;
 
@@ -13,7 +12,6 @@ use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\Item\DatabaseItemI
  *   queryFile: string,
  *   keepData?: bool,
  * }
- *
  * @phpstan-type TQueries TQuery[]
  */
 class DatabaseHandlerFactory
@@ -23,33 +21,36 @@ class DatabaseHandlerFactory
      * @param TQueries $queries
      * @param callable(TQuery $query): DatabaseItemInterface|null $factory
      *
-     * @return DatabaseHandler
+     * @return DatabaseHandlerInterface
      */
-    public static function create(Module $module, array $queries, $factory = null)
-    {
-        $factory = \is_callable($factory)
-            ? $factory
-            : function (array $query) {
-                if (!isset($query['tableName'])) {
-                    throw new DatabaseHandlerException('The key tableName is required');
-                }
-
-                if (!isset($query['queryFile'])) {
-                    throw new DatabaseHandlerException('The key queryFile is required');
-                }
-
-                $query['keepData'] = isset($query['keepData']) ? $query['keepData'] : false;
-
-                return new DatabaseItem(
-                    $query['tableName'],
-                    $query['queryFile'],
-                    $query['keepData']
-                );
-            }
-        ;
+    public static function create(
+        Module $module,
+        array $queries,
+        $factory = null
+    ) {
+        $factory = \is_callable($factory) ? $factory : [self::class, 'defaultFactory'];
 
         $queries = \array_map($factory, $queries);
 
         return new DatabaseHandler($module, $queries);
+    }
+
+    /**
+     * @param TQuery $query
+     *
+     * @return DatabaseItemInterface
+     */
+    private static function defaultFactory(array $query)
+    {
+        $arguments = [
+            isset($query['tableName']) ? $query['tableName'] : '',
+            isset($query['queryFile']) ? $query['queryFile'] : '',
+        ];
+
+        if (isset($query['keepData'])) {
+            $arguments[] = $query['keepData'];
+        }
+
+        return new DatabaseItem(...$arguments);
     }
 }
