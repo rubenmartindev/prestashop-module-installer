@@ -9,7 +9,7 @@ use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Exception\HooksIsEmpty
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Exception\HooksMustBeInstanceOfHookItemException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Item\HookItemInterface;
 
-class HookHandlerInstaller extends AbstractHandlerInstaller implements HookHandlerInstallerInterface
+class HookHandler extends AbstractHandlerInstaller implements HookHandlerInterface
 {
     /** @var array<string, HookItemInterface> */
     private $hooks = [];

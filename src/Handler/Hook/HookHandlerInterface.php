@@ -3,10 +3,10 @@
 namespace RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook;
 
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\HandlerInstallerInterface;
-use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Exception\HookHandlerInstallerException;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Exception\HookHandlerException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Item\HookItemInterface;
 
-interface HookHandlerInstallerInterface extends HandlerInstallerInterface
+interface HookHandlerInterface extends HandlerInstallerInterface
 {
     /**
      * @param HookItemInterface $hookItem
@@ -37,14 +37,14 @@ interface HookHandlerInstallerInterface extends HandlerInstallerInterface
     /**
      * {@inheritDoc}
      *
-     * @throws HookHandlerInstallerException
+     * @throws HookHandlerException
      */
     public function install();
 
     /**
      * {@inheritDoc}
      *
-     * @throws HookHandlerInstallerException
+     * @throws HookHandlerException
      */
     public function uninstall();
 }

@@ -2,6 +2,6 @@
 
 namespace RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Exception;
 
-class HooksMustBeInstanceOfHookItemException extends HookHandlerInstallerException
+class HooksMustBeInstanceOfHookItemException extends HookHandlerException
 {
 }

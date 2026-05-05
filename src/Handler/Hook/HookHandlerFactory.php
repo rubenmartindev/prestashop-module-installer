@@ -3,7 +3,7 @@
 namespace RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook;
 
 use Module;
-use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Exception\HookHandlerInstallerException;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Exception\HookHandlerException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Item\HookItem;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Item\HookItemInterface;
 
@@ -14,14 +14,14 @@ use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Item\HookItemInterface
  *
  * @phpstan-type THooks THook[]
  */
-class HookHandlerInstallerFactory
+class HookHandlerFactory
 {
     /**
      * @param Module $module
      * @param THooks $hooks
      * @param callable(THook $hook): HookItemInterface|null $factory
      *
-     * @return HookHandlerInstallerInterface
+     * @return HookHandlerInterface
      */
     public static function create(Module $module, array $hooks, $factory = null)
     {
@@ -29,7 +29,7 @@ class HookHandlerInstallerFactory
             ? $factory
             : function (array $hook) {
                 if (!isset($hook['name'])) {
-                    throw new HookHandlerInstallerException('The key name is required');
+                    throw new HookHandlerException('The key name is required');
                 }
 
                 return new HookItem(
@@ -40,6 +40,6 @@ class HookHandlerInstallerFactory
 
         $hooks = \array_map($factory, $hooks);
 
-        return new HookHandlerInstaller($module, $hooks);
+        return new HookHandler($module, $hooks);
     }
 }

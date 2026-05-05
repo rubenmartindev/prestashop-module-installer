@@ -2,8 +2,8 @@
 
 namespace RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Item\Exception;
 
-use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Exception\HookHandlerInstallerException;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Exception\HookHandlerException;
 
-class HookItemException extends HookHandlerInstallerException
+class HookItemException extends HookHandlerException
 {
 }

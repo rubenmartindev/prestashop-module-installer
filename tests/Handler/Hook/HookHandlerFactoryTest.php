@@ -3,19 +3,19 @@
 namespace RubenMartinDev\PrestaShopModuleInstaller\Tests\Handler\Hook;
 
 use PHPUnit_Framework_MockObject_MockObject;
-use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Exception\HookHandlerInstallerException;
-use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\HookHandlerInstallerFactory;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Exception\HookHandlerException;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\HookHandlerFactory;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Item\HookItemInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\Tests\Handler\AbstractHandlerInstallerTestCase;
 
-class HookHandlerInstallerFactoryTest extends AbstractHandlerInstallerTestCase
+class HookHandlerFactoryTest extends AbstractHandlerInstallerTestCase
 {
     public function testCreateThrowsExceptionWhenKeyNameIsMissing()
     {
-        $this->expectException(HookHandlerInstallerException::class);
+        $this->expectException(HookHandlerException::class);
         $this->expectExceptionMessage('The key name is required');
 
-        HookHandlerInstallerFactory::create(
+        HookHandlerFactory::create(
             $this->module,
             [
                 [],
@@ -29,7 +29,7 @@ class HookHandlerInstallerFactoryTest extends AbstractHandlerInstallerTestCase
             return $this->createHookItemMock($hook['name']);
         };
 
-        $handler = HookHandlerInstallerFactory::create(
+        $handler = HookHandlerFactory::create(
             $this->module,
             [
                 [
