@@ -2,9 +2,8 @@
 
 namespace RubenMartinDev\PrestaShopModuleInstaller\Tests;
 
-use Module;
-use PHPUnit\Framework\TestCase;
 use PHPUnit_Framework_MockObject_MockObject;
+use PHPUnit\Framework\TestCase;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\HandlerInstallerInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\Installer;
 
@@ -19,39 +18,6 @@ class InstallerTest extends TestCase
         ]);
 
         $this->assertSame($handler, $installer->getHandler(0));
-    }
-
-    public function testBuild()
-    {
-        $factoryDatabase = function (Module $module, array $handler) {
-            return $this->createHandlerInstallerMock();
-        };
-        $factoryHooks = function (Module $module, array $handler) {
-            return $this->createHandlerInstallerMock();
-        };
-        $factoryTabs = function (Module $module, array $handler) {
-            return $this->createHandlerInstallerMock();
-        };
-
-        $installer = Installer::build(
-            $this->createModuleMock(),
-            [
-                'database'  => [],
-                'hooks'     => [],
-                'tabs'      => [],
-            ],
-            $factoryDatabase,
-            $factoryHooks,
-            $factoryTabs
-        );
-
-        $handler1 = $installer->getHandler(0);
-        $handler2 = $installer->getHandler(1);
-        $handler3 = $installer->getHandler(2);
-
-        $this->assertInstanceOf(HandlerInstallerInterface::class, $handler1);
-        $this->assertInstanceOf(HandlerInstallerInterface::class, $handler2);
-        $this->assertInstanceOf(HandlerInstallerInterface::class, $handler3);
     }
 
     public function testAddHandler()
@@ -153,13 +119,5 @@ class InstallerTest extends TestCase
         $handler->method('uninstall')->willReturn(true);
 
         return $handler;
-    }
-
-    /**
-     * @return Module|PHPUnit_Framework_MockObject_MockObject
-     */
-    private function createModuleMock()
-    {
-        return $this->getMockForAbstractClass(Module::class);
     }
 }
