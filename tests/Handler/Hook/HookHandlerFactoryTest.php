@@ -3,8 +3,9 @@
 namespace RubenMartinDev\PrestaShopModuleInstaller\Tests\Handler\Hook;
 
 use PHPUnit_Framework_MockObject_MockObject;
-use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Exception\HookHandlerException;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\HandlerInstallerInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\HookHandlerFactory;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Item\Exception\NameIsInvalidException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Item\HookItemInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\Tests\Handler\AbstractHandlerInstallerTestCase;
 
@@ -12,8 +13,7 @@ class HookHandlerFactoryTest extends AbstractHandlerInstallerTestCase
 {
     public function testCreateThrowsExceptionWhenKeyNameIsMissing()
     {
-        $this->expectException(HookHandlerException::class);
-        $this->expectExceptionMessage('The key name is required');
+        $this->expectException(NameIsInvalidException::class);
 
         HookHandlerFactory::create(
             $this->module,
@@ -23,7 +23,30 @@ class HookHandlerFactoryTest extends AbstractHandlerInstallerTestCase
         );
     }
 
-    public function testCreate()
+    public function testCreateReturnsHandlerInstallerWithoutFactory()
+    {
+        $handler = HookHandlerFactory::create(
+            $this->module,
+            [
+                [
+                    'name' => 'displayHeader',
+                ],
+                [
+                    'name' => 'displayFooter',
+                ],
+            ]
+        );
+
+        $this->assertInstanceOf(HandlerInstallerInterface::class, $handler);
+
+        $tabItem1 = $handler->getHook('displayHeader');
+        $tabItem2 = $handler->getHook('displayFooter');
+
+        $this->assertInstanceOf(HookItemInterface::class, $tabItem1);
+        $this->assertInstanceOf(HookItemInterface::class, $tabItem2);
+    }
+
+    public function testCreateReturnsHandlerInstallerWithFactory()
     {
         $factory = function (array $hook) {
             return $this->createHookItemMock($hook['name']);
@@ -42,6 +65,8 @@ class HookHandlerFactoryTest extends AbstractHandlerInstallerTestCase
             $factory
         );
 
+        $this->assertInstanceOf(HandlerInstallerInterface::class, $handler);
+
         $hookItem1 = $handler->getHook('displayHeader');
         $hookItem2 = $handler->getHook('displayFooter');
 
@@ -52,7 +77,7 @@ class HookHandlerFactoryTest extends AbstractHandlerInstallerTestCase
     /**
      * @param string $hookName
      *
-     * @return HookItemInterface|PHPUnit_Framework_MockObject_MockObject
+     * @return HookItemInterface&PHPUnit_Framework_MockObject_MockObject
      */
     private function createHookItemMock($hookName)
     {

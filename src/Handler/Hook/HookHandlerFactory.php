@@ -3,7 +3,6 @@
 namespace RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook;
 
 use Module;
-use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Exception\HookHandlerException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Item\HookItem;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Item\HookItemInterface;
 
@@ -11,7 +10,6 @@ use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Item\HookItemInterface
  * @phpstan-type THook array{
  *   name: string,
  * }
- *
  * @phpstan-type THooks THook[]
  */
 class HookHandlerFactory
@@ -23,23 +21,29 @@ class HookHandlerFactory
      *
      * @return HookHandlerInterface
      */
-    public static function create(Module $module, array $hooks, $factory = null)
-    {
-        $factory = \is_callable($factory)
-            ? $factory
-            : function (array $hook) {
-                if (!isset($hook['name'])) {
-                    throw new HookHandlerException('The key name is required');
-                }
-
-                return new HookItem(
-                    $hook['name']
-                );
-            }
-        ;
+    public static function create(
+        Module $module,
+        array $hooks,
+        $factory = null
+    ) {
+        $factory = \is_callable($factory) ? $factory : [self::class, 'defaultFactory'];
 
         $hooks = \array_map($factory, $hooks);
 
         return new HookHandler($module, $hooks);
+    }
+
+    /**
+     * @param THook $hook
+     *
+     * @return HookItemInterface
+     */
+    private static function defaultFactory(array $hook)
+    {
+        $arguments = [
+            isset($hook['name']) ? $hook['name'] : '',
+        ];
+
+        return new HookItem(...$arguments);
     }
 }
