@@ -116,7 +116,7 @@ class DatabaseItem implements DatabaseItemInterface
             throw new TableNameIsEmptyException('The $tableName is empty');
         }
 
-        if (!Validate::isTablePrefix($tableName)) {
+        if (!Validate::isTableOrIdentifier($tableName)) {
             throw new TableNameIsNotValidException('The $tableName is not valid');
         }
     }
