@@ -2,28 +2,12 @@
 
 namespace RubenMartinDev\PrestaShopModuleInstaller\Handler\Database;
 
-use Module;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\Exception\FailedToExecuteQueryException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\Item\DatabaseItemInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\HandlerInstallerInterface;
 
-/**
- * @phpstan-type TBuild array{
- *   tableName: string,
- *   queryFile: string,
- *   keepData?: bool,
- * }[]
- */
 interface DatabaseHandlerInstallerInterface extends HandlerInstallerInterface
 {
-    /**
-     * @param Module $module
-     * @param TBuild $queries
-     * @param callable|null $factory
-     *
-     * @return static
-     */
-    public static function build(Module $module, array $queries, $factory = null);
-
     /**
      * @param DatabaseItemInterface $query
      *

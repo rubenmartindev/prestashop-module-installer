@@ -4,13 +4,12 @@ namespace RubenMartinDev\PrestaShopModuleInstaller\Tests\Handler\Database;
 
 use PHPUnit_Framework_MockObject_MockObject;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\DatabaseHandlerInstaller;
-use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\Exception\DatabaseHandlerInstallerException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\Exception\FailedToExecuteQueryException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\Exception\QueriesIsEmptyException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\Exception\QueriesMustBeInstanceOfDatabaseItemException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\Item\DatabaseItemInterface;
-use RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes\Db\Db;
 use RubenMartinDev\PrestaShopModuleInstaller\Tests\Handler\AbstractHandlerInstallerTestCase;
+use RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes\Db\Db;
 
 class DatabaseHandlerInstallerTest extends AbstractHandlerInstallerTestCase
 {
@@ -42,67 +41,6 @@ class DatabaseHandlerInstallerTest extends AbstractHandlerInstallerTestCase
 
         $this->assertSame($databaseItem1, $handler->getQuery('my_table_1'));
         $this->assertSame($databaseItem2, $handler->getQuery('my_table_2'));
-    }
-
-    public function testBuildThrowsExceptionWhenKeyTableNameIsMissing()
-    {
-        $this->expectException(DatabaseHandlerInstallerException::class);
-        $this->expectExceptionMessage('The key tableName is required');
-
-        DatabaseHandlerInstaller::build(
-            $this->module,
-            [
-                [
-                    'queryFile' => 'my_table.sql',
-                ],
-            ]
-        );
-    }
-
-    public function testBuildThrowsExceptionWhenKeyQueryFileIsMissing()
-    {
-        $this->expectException(DatabaseHandlerInstallerException::class);
-        $this->expectExceptionMessage('The key queryFile is required');
-
-        DatabaseHandlerInstaller::build(
-            $this->module,
-            [
-                [
-                    'tableName' => 'my_table',
-                ],
-            ]
-        );
-    }
-
-    public function testBuild()
-    {
-        $factory = function (array $query) {
-            $query['keepData'] = isset($query['keepData']) ? $query['keepData'] : false;
-
-            return $this->createDatabaseItemMock($query['tableName'], $query['keepData']);
-        };
-
-        $handler = DatabaseHandlerInstaller::build(
-            $this->module,
-            [
-                [
-                    'tableName' => 'my_table_1',
-                    'queryFile' => 'my_table_1.sql',
-                ],
-                [
-                    'tableName' => 'my_table_2',
-                    'queryFile' => 'my_table_2.sql',
-                    'keepData'  => true,
-                ],
-            ],
-            $factory
-        );
-
-        $databaseItem1 = $handler->getQuery('my_table_1');
-        $databaseItem2 = $handler->getQuery('my_table_2');
-
-        $this->assertInstanceOf(DatabaseItemInterface::class, $databaseItem1);
-        $this->assertInstanceOf(DatabaseItemInterface::class, $databaseItem2);
     }
 
     public function testAddQuery()
