@@ -2,6 +2,6 @@
 
 namespace RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Exception;
 
-class TabsIsEmptyException extends TabHandlerInstallerException
+class TabsIsEmptyException extends TabHandlerException
 {
 }

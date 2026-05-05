@@ -2,6 +2,6 @@
 
 namespace RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Exception;
 
-class FailedToDeleteTabException extends TabHandlerInstallerException
+class FailedToDeleteTabException extends TabHandlerException
 {
 }

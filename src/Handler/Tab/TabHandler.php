@@ -11,7 +11,7 @@ use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Exception\TabsMustBeIns
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Item\TabItemInterface;
 use Tab;
 
-class TabHandlerInstaller extends AbstractHandlerInstaller implements TabHandlerInstallerInterface
+class TabHandler extends AbstractHandlerInstaller implements TabHandlerInterface
 {
     /** @var array<string, TabItemInterface> */
     private $tabs = [];

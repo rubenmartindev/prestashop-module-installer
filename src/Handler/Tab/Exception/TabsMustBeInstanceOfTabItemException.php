@@ -2,6 +2,6 @@
 
 namespace RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Exception;
 
-class TabsMustBeInstanceOfTabItemException extends TabHandlerInstallerException
+class TabsMustBeInstanceOfTabItemException extends TabHandlerException
 {
 }

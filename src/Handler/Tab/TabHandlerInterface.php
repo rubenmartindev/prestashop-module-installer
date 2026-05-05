@@ -7,7 +7,7 @@ use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Exception\FailedToCreat
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Exception\FailedToDeleteTabException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Item\TabItemInterface;
 
-interface TabHandlerInstallerInterface extends HandlerInstallerInterface
+interface TabHandlerInterface extends HandlerInstallerInterface
 {
     /**
      * @param TabItemInterface $tab

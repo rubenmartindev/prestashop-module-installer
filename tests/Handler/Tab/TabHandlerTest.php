@@ -8,24 +8,24 @@ use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Exception\FailedToDelet
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Exception\TabsIsEmptyException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Exception\TabsMustBeInstanceOfTabItemException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Item\TabItemInterface;
-use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\TabHandlerInstaller;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\TabHandler;
 use RubenMartinDev\PrestaShopModuleInstaller\Tests\Handler\AbstractHandlerInstallerTestCase;
 use RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes\Tab;
 
-class TabHandlerInstallerTest extends AbstractHandlerInstallerTestCase
+class TabHandlerTest extends AbstractHandlerInstallerTestCase
 {
     public function testConstructThrowsExceptionWhenTabsIsEmpty()
     {
         $this->expectException(TabsIsEmptyException::class);
 
-        new TabHandlerInstaller($this->module, []);
+        new TabHandler($this->module, []);
     }
 
     public function testConstructThrowsExceptionWhenTabsIsNotInstanceOfTabItemInterface()
     {
         $this->expectException(TabsMustBeInstanceOfTabItemException::class);
 
-        new TabHandlerInstaller($this->module, [
+        new TabHandler($this->module, [
             'invalidTab',
         ]);
     }
@@ -35,7 +35,7 @@ class TabHandlerInstallerTest extends AbstractHandlerInstallerTestCase
         $tabItem1 = $this->createTabItemMock('AdminMyModule1', 'My tab 1');
         $tabItem2 = $this->createTabItemMock('AdminMyModule2', 'My tab 2');
 
-        $handler = new TabHandlerInstaller($this->module, [
+        $handler = new TabHandler($this->module, [
             $tabItem1,
             $tabItem2
         ]);
@@ -49,7 +49,7 @@ class TabHandlerInstallerTest extends AbstractHandlerInstallerTestCase
         $tabItem1 = $this->createTabItemMock('AdminMyModule1', 'My tab 1');
         $tabItem2 = $this->createTabItemMock('AdminMyModule2', 'My tab 2');
 
-        $handler = new TabHandlerInstaller($this->module, [
+        $handler = new TabHandler($this->module, [
             $tabItem1
         ]);
 
@@ -61,7 +61,7 @@ class TabHandlerInstallerTest extends AbstractHandlerInstallerTestCase
 
     public function testGetTabReturnsNullWhenTabNotFound()
     {
-        $handler = new TabHandlerInstaller($this->module, [
+        $handler = new TabHandler($this->module, [
             $this->createTabItemMock('AdminMyModule', 'My tab'),
         ]);
 
@@ -72,7 +72,7 @@ class TabHandlerInstallerTest extends AbstractHandlerInstallerTestCase
     {
         $tabItem = $this->createTabItemMock('AdminMyModule', 'My tab');
 
-        $handler = new TabHandlerInstaller($this->module, [
+        $handler = new TabHandler($this->module, [
             $tabItem,
         ]);
 
@@ -85,7 +85,7 @@ class TabHandlerInstallerTest extends AbstractHandlerInstallerTestCase
         $tabItem2 = $this->createTabItemMock('AdminMyModule2', 'My tab 2');
         $tabItem3 = $this->createTabItemMock('AdminMyModule3', 'My tab 3');
 
-        $handler = new TabHandlerInstaller($this->module, [
+        $handler = new TabHandler($this->module, [
             $tabItem1,
             $tabItem2,
         ]);
@@ -106,7 +106,7 @@ class TabHandlerInstallerTest extends AbstractHandlerInstallerTestCase
         $tabItem2 = $this->createTabItemMock('AdminMyModule2', 'My tab 2');
         $tabItem3 = $this->createTabItemMock('AdminMyModule3', 'My tab 3');
 
-        $handler = new TabHandlerInstaller($this->module, [
+        $handler = new TabHandler($this->module, [
             $tabItem1,
             $tabItem2,
         ]);
@@ -130,7 +130,7 @@ class TabHandlerInstallerTest extends AbstractHandlerInstallerTestCase
 
         Tab::$forceReturnFalseOnAdd = true;
 
-        $handler = new TabHandlerInstaller($this->module, [
+        $handler = new TabHandler($this->module, [
             $this->createTabItemMock('AdminMyModule', 'My tab'),
         ]);
 
@@ -139,7 +139,7 @@ class TabHandlerInstallerTest extends AbstractHandlerInstallerTestCase
 
     public function testUninstallReturnsTrue()
     {
-        $handler = new TabHandlerInstaller($this->module, [
+        $handler = new TabHandler($this->module, [
             $this->createTabItemMock('AdminMyModule', 'My tab'),
         ]);
 
@@ -155,7 +155,7 @@ class TabHandlerInstallerTest extends AbstractHandlerInstallerTestCase
 
         Tab::$forceReturnFalseOnDelete = true;
 
-        $handler = new TabHandlerInstaller($this->module, [
+        $handler = new TabHandler($this->module, [
             $this->createTabItemMock('AdminMyModule', 'My tab'),
         ]);
 
@@ -164,7 +164,7 @@ class TabHandlerInstallerTest extends AbstractHandlerInstallerTestCase
 
     public function testUninstallRetunsTrue()
     {
-        $handler = new TabHandlerInstaller($this->module, [
+        $handler = new TabHandler($this->module, [
             $this->createTabItemMock('AdminMyModule', 'My tab'),
         ]);
 

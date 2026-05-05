@@ -7,9 +7,9 @@ use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\DatabaseHandlerFac
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\DatabaseHandlerInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\HookHandlerFactory;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\HookHandlerInterface;
-use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\TabHandlerInstaller;
-use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\TabHandlerInstallerFactory;
-use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\TabHandlerInstallerInterface;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\TabHandler;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\TabHandlerFactory;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\TabHandlerInterface;
 
 /**
  * @phpstan-import-type TQuery from DatabaseHandlerFactory as TDatabaseQuery
@@ -18,8 +18,8 @@ use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\TabHandlerInstallerInte
  * @phpstan-import-type THook from HookHandlerFactory as THooksHook
  * @phpstan-import-type THooks from HookHandlerFactory as THooksHooks
  *
- * @phpstan-import-type TTab from TabHandlerInstallerFactory as TTabsTab
- * @phpstan-import-type TTabs from TabHandlerInstallerFactory as TTabsTabs
+ * @phpstan-import-type TTab from TabHandlerFactory as TTabsTab
+ * @phpstan-import-type TTabs from TabHandlerFactory as TTabsTabs
  */
 class InstallerFactory
 {
@@ -32,7 +32,7 @@ class InstallerFactory
      * } $handlers
      * @param callable(Module $module, TDatabaseQuery $properties): DatabaseHandlerInterface|null $factoryDatabase
      * @param callable(Module $module, THooksHook $properties): HookHandlerInterface|null $factoryHooks
-     * @param callable(Module $module, TTabsTab $properties): TabHandlerInstallerInterface|null $factoryTabs
+     * @param callable(Module $module, TTabsTab $properties): TabHandlerInterface|null $factoryTabs
      *
      * @return InstallerInterface
      */
@@ -58,7 +58,7 @@ class InstallerFactory
         $factoryTabs = \is_callable($factoryTabs)
             ? $factoryTabs
             : function (Module $module, array $properties) {
-                return TabHandlerInstallerFactory::create($module, $properties);
+                return TabHandlerFactory::create($module, $properties);
             }
         ;
 

@@ -3,7 +3,7 @@
 namespace RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab;
 
 use Module;
-use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Exception\TabHandlerInstallerException;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Exception\TabHandlerException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Item\TabItem;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Item\TabItemInterface;
 
@@ -18,14 +18,14 @@ use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Item\TabItemInterface;
  *
  * @phpstan-type TTabs TTab[]
  */
-class TabHandlerInstallerFactory
+class TabHandlerFactory
 {
     /**
      * @param Module $module
      * @param TTabs $tabs
      * @param callable(TTab $tab): TabItemInterface|null $factory
      *
-     * @return TabHandlerInstallerInterface
+     * @return TabHandlerInterface
      */
     public static function create(Module $module, array $tabs, $factory = null)
     {
@@ -33,11 +33,11 @@ class TabHandlerInstallerFactory
             ? $factory
             : function (array $tab) {
                 if (!isset($tab['className'])) {
-                    throw new TabHandlerInstallerException('The key className is required');
+                    throw new TabHandlerException('The key className is required');
                 }
 
                 if (!isset($tab['name'])) {
-                    throw new TabHandlerInstallerException('The key name is required');
+                    throw new TabHandlerException('The key name is required');
                 }
 
                 $tab['parentId']    = isset($tab['parentId']) ? $tab['parentId'] : -1;
@@ -56,6 +56,6 @@ class TabHandlerInstallerFactory
 
         $tabs = \array_map($factory, $tabs);
 
-        return new TabHandlerInstaller($module, $tabs);
+        return new TabHandler($module, $tabs);
     }
 }

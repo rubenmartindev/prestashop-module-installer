@@ -2,6 +2,6 @@
 
 namespace RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Exception;
 
-class FailedToCreateTabException extends TabHandlerInstallerException
+class FailedToCreateTabException extends TabHandlerException
 {
 }

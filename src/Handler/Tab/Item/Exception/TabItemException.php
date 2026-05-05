@@ -2,8 +2,8 @@
 
 namespace RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Item\Exception;
 
-use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Exception\TabHandlerInstallerException;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Exception\TabHandlerException;
 
-class TabItemException extends TabHandlerInstallerException
+class TabItemException extends TabHandlerException
 {
 }

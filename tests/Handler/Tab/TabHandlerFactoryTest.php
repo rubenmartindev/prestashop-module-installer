@@ -3,19 +3,19 @@
 namespace RubenMartinDev\PrestaShopModuleInstaller\Tests\Handler\Tab;
 
 use PHPUnit_Framework_MockObject_MockObject;
-use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Exception\TabHandlerInstallerException;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Exception\TabHandlerException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Item\TabItemInterface;
-use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\TabHandlerInstallerFactory;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\TabHandlerFactory;
 use RubenMartinDev\PrestaShopModuleInstaller\Tests\Handler\AbstractHandlerInstallerTestCase;
 
-class TabHandlerInstallerFactoryTest extends AbstractHandlerInstallerTestCase
+class TabHandlerFactoryTest extends AbstractHandlerInstallerTestCase
 {
     public function testBuildThrowsExceptionWhenKeyClassNameIsMissing()
     {
-        $this->expectException(TabHandlerInstallerException::class);
+        $this->expectException(TabHandlerException::class);
         $this->expectExceptionMessage('The key className is required');
 
-        TabHandlerInstallerFactory::create(
+        TabHandlerFactory::create(
             $this->module,
             [
                 [
@@ -27,10 +27,10 @@ class TabHandlerInstallerFactoryTest extends AbstractHandlerInstallerTestCase
 
     public function testBuildThrowsExceptionWhenKeyNameIsMissing()
     {
-        $this->expectException(TabHandlerInstallerException::class);
+        $this->expectException(TabHandlerException::class);
         $this->expectExceptionMessage('The key name is required');
 
-        TabHandlerInstallerFactory::create(
+        TabHandlerFactory::create(
             $this->module,
             [
                 [
@@ -46,7 +46,7 @@ class TabHandlerInstallerFactoryTest extends AbstractHandlerInstallerTestCase
             return $this->createTabItemMock($tab['className'], $tab['name']);
         };
 
-        $handler = TabHandlerInstallerFactory::create(
+        $handler = TabHandlerFactory::create(
             $this->module,
             [
                 [
