@@ -1,6 +1,6 @@
 <?php
 
-namespace RubenMartinDev\PrestaShopModuleInstaller\Tests\Unit\Handler\Hook\Item;
+namespace RubenMartinDev\PrestaShopModuleInstaller\Tests\Handler\Hook\Item;
 
 use PHPUnit\Framework\TestCase;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Item\Exception\NameIsInvalidException;

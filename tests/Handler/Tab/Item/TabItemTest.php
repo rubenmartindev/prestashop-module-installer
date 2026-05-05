@@ -1,6 +1,6 @@
 <?php
 
-namespace RubenMartinDev\PrestaShopModuleInstaller\Tests\Unit\Handler\Tab\Item;
+namespace RubenMartinDev\PrestaShopModuleInstaller\Tests\Handler\Tab\Item;
 
 use PHPUnit\Framework\TestCase;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Item\Exception\NameIsEmptyException;

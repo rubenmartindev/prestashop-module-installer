@@ -1,6 +1,6 @@
 <?php
 
-namespace RubenMartinDev\PrestaShopModuleInstaller\Tests\Unit\Handler\Tab;
+namespace RubenMartinDev\PrestaShopModuleInstaller\Tests\Handler\Tab;
 
 use PHPUnit_Framework_MockObject_MockObject;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Exception\FailedToCreateTabException;
@@ -11,7 +11,7 @@ use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Exception\TabsMustBeIns
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Item\TabItemInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\TabHandlerInstaller;
 use RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes\Tab;
-use RubenMartinDev\PrestaShopModuleInstaller\Tests\Unit\Handler\AbstractHandlerInstallerTestCase;
+use RubenMartinDev\PrestaShopModuleInstaller\Tests\Handler\AbstractHandlerInstallerTestCase;
 
 class TabHandlerInstallerTest extends AbstractHandlerInstallerTestCase
 {

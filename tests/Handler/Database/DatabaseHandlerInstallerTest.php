@@ -1,6 +1,6 @@
 <?php
 
-namespace RubenMartinDev\PrestaShopModuleInstaller\Tests\Unit\Handler\Database;
+namespace RubenMartinDev\PrestaShopModuleInstaller\Tests\Handler\Database;
 
 use PHPUnit_Framework_MockObject_MockObject;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\DatabaseHandlerInstaller;
@@ -10,7 +10,7 @@ use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\Exception\QueriesI
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\Exception\QueriesMustBeInstanceOfDatabaseItemException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\Item\DatabaseItemInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes\Db\Db;
-use RubenMartinDev\PrestaShopModuleInstaller\Tests\Unit\Handler\AbstractHandlerInstallerTestCase;
+use RubenMartinDev\PrestaShopModuleInstaller\Tests\Handler\AbstractHandlerInstallerTestCase;
 
 class DatabaseHandlerInstallerTest extends AbstractHandlerInstallerTestCase
 {

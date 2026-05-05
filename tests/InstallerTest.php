@@ -1,6 +1,6 @@
 <?php
 
-namespace RubenMartinDev\PrestaShopModuleInstaller\Tests\Unit;
+namespace RubenMartinDev\PrestaShopModuleInstaller\Tests;
 
 use Module;
 use PHPUnit\Framework\TestCase;

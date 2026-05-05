@@ -1,6 +1,6 @@
 <?php
 
-namespace RubenMartinDev\PrestaShopModuleInstaller\Tests\Unit\Handler\Hook;
+namespace RubenMartinDev\PrestaShopModuleInstaller\Tests\Handler\Hook;
 
 use PHPUnit_Framework_MockObject_MockObject;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Exception\FailedRegisterHookException;
@@ -10,7 +10,7 @@ use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Exception\HooksMustBeI
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\HookHandlerInstaller;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Item\HookItemInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes\Module\Module;
-use RubenMartinDev\PrestaShopModuleInstaller\Tests\Unit\Handler\AbstractHandlerInstallerTestCase;
+use RubenMartinDev\PrestaShopModuleInstaller\Tests\Handler\AbstractHandlerInstallerTestCase;
 
 class HookHandlerInstallerTest extends AbstractHandlerInstallerTestCase
 {

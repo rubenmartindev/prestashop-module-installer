@@ -1,6 +1,6 @@
 <?php
 
-namespace RubenMartinDev\PrestaShopModuleInstaller\Tests\Unit\Handler\Database\Item;
+namespace RubenMartinDev\PrestaShopModuleInstaller\Tests\Handler\Database\Item;
 
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamContainer;

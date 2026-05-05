@@ -1,6 +1,6 @@
 <?php
 
-namespace RubenMartinDev\PrestaShopModuleInstaller\Tests\Unit\Handler;
+namespace RubenMartinDev\PrestaShopModuleInstaller\Tests\Handler;
 
 use Module;
 use PHPUnit_Framework_MockObject_MockObject;
