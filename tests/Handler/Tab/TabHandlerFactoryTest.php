@@ -3,17 +3,18 @@
 namespace RubenMartinDev\PrestaShopModuleInstaller\Tests\Handler\Tab;
 
 use PHPUnit_Framework_MockObject_MockObject;
-use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Exception\TabHandlerException;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\HandlerInstallerInterface;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Item\Exception\NameIsEmptyException;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Item\Exception\ClassNameIsEmptyException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Item\TabItemInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\TabHandlerFactory;
 use RubenMartinDev\PrestaShopModuleInstaller\Tests\Handler\AbstractHandlerInstallerTestCase;
 
 class TabHandlerFactoryTest extends AbstractHandlerInstallerTestCase
 {
-    public function testBuildThrowsExceptionWhenKeyClassNameIsMissing()
+    public function testCreateThrowsExceptionWhenKeyClassNameIsMissing()
     {
-        $this->expectException(TabHandlerException::class);
-        $this->expectExceptionMessage('The key className is required');
+        $this->expectException(ClassNameIsEmptyException::class);
 
         TabHandlerFactory::create(
             $this->module,
@@ -25,10 +26,9 @@ class TabHandlerFactoryTest extends AbstractHandlerInstallerTestCase
         );
     }
 
-    public function testBuildThrowsExceptionWhenKeyNameIsMissing()
+    public function testCreateThrowsExceptionWhenKeyNameIsMissing()
     {
-        $this->expectException(TabHandlerException::class);
-        $this->expectExceptionMessage('The key name is required');
+        $this->expectException(NameIsEmptyException::class);
 
         TabHandlerFactory::create(
             $this->module,
@@ -40,7 +40,7 @@ class TabHandlerFactoryTest extends AbstractHandlerInstallerTestCase
         );
     }
 
-    public function testBuild()
+    public function testCreateReturnsHandlerInstallerWithFactory()
     {
         $factory = function (array $tab) {
             return $this->createTabItemMock($tab['className'], $tab['name']);
@@ -56,10 +56,43 @@ class TabHandlerFactoryTest extends AbstractHandlerInstallerTestCase
                 [
                     'className' => 'AdminMyModule2',
                     'name'      => 'My tab 2',
+                    'parentId'  => 1,
+                    'position'  => 1,
+                    'active'    => false,
                 ],
             ],
             $factory
         );
+
+        $this->assertInstanceOf(HandlerInstallerInterface::class, $handler);
+
+        $tabItem1 = $handler->getTab('AdminMyModule1');
+        $tabItem2 = $handler->getTab('AdminMyModule2');
+
+        $this->assertInstanceOf(TabItemInterface::class, $tabItem1);
+        $this->assertInstanceOf(TabItemInterface::class, $tabItem2);
+    }
+
+    public function testCreateReturnsHandlerInstallerWithoutFactory()
+    {
+        $handler = TabHandlerFactory::create(
+            $this->module,
+            [
+                [
+                    'className' => 'AdminMyModule1',
+                    'name'      => 'My tab 1',
+                ],
+                [
+                    'className' => 'AdminMyModule2',
+                    'name'      => 'My tab 2',
+                    'parentId'  => 1,
+                    'position'  => 1,
+                    'active'    => false,
+                ],
+            ]
+        );
+
+        $this->assertInstanceOf(HandlerInstallerInterface::class, $handler);
 
         $tabItem1 = $handler->getTab('AdminMyModule1');
         $tabItem2 = $handler->getTab('AdminMyModule2');
@@ -72,7 +105,7 @@ class TabHandlerFactoryTest extends AbstractHandlerInstallerTestCase
      * @param string $className
      * @param string $name
      *
-     * @return TabItemInterface|PHPUnit_Framework_MockObject_MockObject
+     * @return TabItemInterface&PHPUnit_Framework_MockObject_MockObject
      */
     private function createTabItemMock($className, $name)
     {
