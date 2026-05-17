@@ -13,8 +13,28 @@ abstract class AbstractHandlerInstallerTestCase extends TestCase
 
     public function setUp()
     {
-        $this->module = $this->getMockForAbstractClass(Module::class);
+        $this->module = $this->getModule();
+    }
 
-        $this->module->name = 'mymodule';
+    /**
+     * @param string[] $methods
+     *
+     * @return Module|PHPUnit_Framework_MockObject_MockObject
+     */
+    protected function getModule($methods = [])
+    {
+        $module = $this->getMockForAbstractClass(
+            Module::class,
+            [],
+            '',
+            true,
+            true,
+            true,
+            $methods
+        );
+
+        $module->name = 'mymodule';
+
+        return $module;
     }
 }

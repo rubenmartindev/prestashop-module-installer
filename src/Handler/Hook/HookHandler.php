@@ -8,6 +8,7 @@ use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Exception\FailedRegist
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Exception\HooksIsEmptyException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Exception\HooksMustBeInstanceOfHookItemException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Item\HookItemInterface;
+use RubenMartinDev\PrestaShopVersionChecker\PrestaShopVersionChecker;
 
 class HookHandler extends AbstractHandlerInstaller implements HookHandlerInterface
 {
@@ -76,6 +77,10 @@ class HookHandler extends AbstractHandlerInstaller implements HookHandlerInterfa
     public function install()
     {
         foreach ($this->hooks as $hook) {
+            if (null !== $hook->getPrestaShopVersion() && false === PrestaShopVersionChecker::is($hook->getPrestaShopVersion())) {
+                continue;
+            }
+
             if (!$this->getModule()->registerHook($hook->getName())) {
                 throw new FailedRegisterHookException(\sprintf('Failed to register hook "%s"', $hook->getName()));
             }

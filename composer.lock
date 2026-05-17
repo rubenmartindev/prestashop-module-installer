@@ -4,8 +4,65 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "409e9effe8adf59e83b9b8f5fc5d5d95",
-    "packages": [],
+    "content-hash": "4d01b86723e90bd65b4e789361b305ce",
+    "packages": [
+        {
+            "name": "rubenmartindev/prestashop-version-checker",
+            "version": "v1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/rubenmartindev/prestashop-version-checker.git",
+                "reference": "1957b7c6b2afc9146d54511886e53ef17b09ebe8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/rubenmartindev/prestashop-version-checker/zipball/1957b7c6b2afc9146d54511886e53ef17b09ebe8",
+                "reference": "1957b7c6b2afc9146d54511886e53ef17b09ebe8",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6.0"
+            },
+            "require-dev": {
+                "dealerdirect/phpcodesniffer-composer-installer": "^1.2",
+                "phpcompatibility/php-compatibility": "^9.3",
+                "phpunit/phpunit": "^5.7",
+                "squizlabs/php_codesniffer": "^3.13"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/functions.php"
+                ],
+                "psr-4": {
+                    "RubenMartinDev\\PrestaShopVersionChecker\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Rubén Martín",
+                    "email": "hola@rubenmartin.dev"
+                }
+            ],
+            "description": "A lightweight library to check and compare PrestaShop versions with a fluent API",
+            "keywords": [
+                "checker",
+                "compare",
+                "prestashop",
+                "semver",
+                "version"
+            ],
+            "support": {
+                "issues": "https://github.com/rubenmartindev/prestashop-version-checker/issues",
+                "source": "https://github.com/rubenmartindev/prestashop-version-checker/tree/v1.1.0"
+            },
+            "time": "2026-05-17T05:19:46+00:00"
+        }
+    ],
     "packages-dev": [
         {
             "name": "dealerdirect/phpcodesniffer-composer-installer",

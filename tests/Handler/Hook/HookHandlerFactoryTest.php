@@ -6,6 +6,7 @@ use PHPUnit_Framework_MockObject_MockObject;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\HandlerInstallerInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\HookHandlerFactory;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Item\Exception\NameIsInvalidException;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Item\Exception\PrestaShopVersionIsInvalidException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Item\HookItemInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\Tests\Handler\AbstractHandlerInstallerTestCase;
 
@@ -23,16 +24,32 @@ class HookHandlerFactoryTest extends AbstractHandlerInstallerTestCase
         );
     }
 
+    public function testCreateThrowsExceptionWhenKeyPrestashopVersionIsInvalid()
+    {
+        $this->expectException(PrestaShopVersionIsInvalidException::class);
+
+        HookHandlerFactory::create(
+            $this->module,
+            [
+                [
+                    'name'              => 'displayHeader',
+                    'prestashopVersion' => 1.0,
+                ],
+            ]
+        );
+    }
+
     public function testCreateReturnsHandlerInstallerWithoutFactory()
     {
         $handler = HookHandlerFactory::create(
             $this->module,
             [
                 [
-                    'name' => 'displayHeader',
+                    'name'              => 'displayHeader',
                 ],
                 [
-                    'name' => 'displayFooter',
+                    'name'              => 'displayFooter',
+                    'prestashopVersion' => '>=1.0',
                 ],
             ]
         );
@@ -49,17 +66,21 @@ class HookHandlerFactoryTest extends AbstractHandlerInstallerTestCase
     public function testCreateReturnsHandlerInstallerWithFactory()
     {
         $factory = function (array $hook) {
-            return $this->createHookItemMock($hook['name']);
+            return $this->createHookItemMock(
+                $hook['name'],
+                isset($hook['prestashopVersion']) ? $hook['prestashopVersion'] : null
+            );
         };
 
         $handler = HookHandlerFactory::create(
             $this->module,
             [
                 [
-                    'name' => 'displayHeader',
+                    'name'              => 'displayHeader',
                 ],
                 [
-                    'name' => 'displayFooter',
+                    'name'              => 'displayFooter',
+                    'prestashopVersion' => '>=1.1',
                 ],
             ],
             $factory
@@ -76,14 +97,16 @@ class HookHandlerFactoryTest extends AbstractHandlerInstallerTestCase
 
     /**
      * @param string $hookName
+     * @param string|null $prestashopVersion
      *
      * @return HookItemInterface&PHPUnit_Framework_MockObject_MockObject
      */
-    private function createHookItemMock($hookName)
+    private function createHookItemMock($hookName, $prestashopVersion = null)
     {
         $hookItem = $this->createMock(HookItemInterface::class);
 
         $hookItem->method('getName')->willReturn($hookName);
+        $hookItem->method('getPrestaShopVersion')->willReturn($prestashopVersion);
 
         return $hookItem;
     }

@@ -7,6 +7,7 @@ use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Exception\FailedRegist
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Exception\HooksIsEmptyException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Exception\HooksMustBeInstanceOfHookItemException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\HookHandler;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\HookHandlerInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Item\HookItemInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\Tests\Handler\AbstractHandlerInstallerTestCase;
 use RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes\Module\Module;
@@ -29,7 +30,7 @@ class HookHandlerTest extends AbstractHandlerInstallerTestCase
         ]);
     }
 
-    public function testConstruct()
+    public function testConstructReturnsInstanceOfHookHandlerInterface()
     {
         $hookItem1 = $this->createHookItemMock('displayHeader');
         $hookItem2 = $this->createHookItemMock('displayFooter');
@@ -39,6 +40,7 @@ class HookHandlerTest extends AbstractHandlerInstallerTestCase
             $hookItem2,
         ]);
 
+        $this->assertInstanceOf(HookHandlerInterface::class, $handler);
         $this->assertCount(2, $handler->getHooks());
         $this->assertSame($hookItem1, $handler->getHook('displayHeader'));
         $this->assertSame($hookItem2, $handler->getHook('displayFooter'));
@@ -50,7 +52,7 @@ class HookHandlerTest extends AbstractHandlerInstallerTestCase
         $hookItem2 = $this->createHookItemMock('displayFooter');
 
         $handler = new HookHandler($this->module, [
-            $hookItem1
+            $hookItem1,
         ]);
 
         $handler->addHook($hookItem2);
@@ -74,7 +76,7 @@ class HookHandlerTest extends AbstractHandlerInstallerTestCase
         $hookItem2 = $this->createHookItemMock('displayFooter');
 
         $handler = new HookHandler($this->module, [
-            $hookItem1
+            $hookItem1,
         ]);
 
         $handler->addHook($hookItem2);
@@ -112,7 +114,7 @@ class HookHandlerTest extends AbstractHandlerInstallerTestCase
 
         $handler = new HookHandler($this->module, [
             $hookItem1,
-            $hookItem2
+            $hookItem2,
         ]);
 
         $handler->addHook($hookItem3);
@@ -135,7 +137,33 @@ class HookHandlerTest extends AbstractHandlerInstallerTestCase
         Module::$forceReturnFalseOnRegisterHook = true;
 
         $handler = new HookHandler($this->module, [
-            $this->createHookItemMock('displayHeader')
+            $this->createHookItemMock('displayHeader'),
+        ]);
+
+        $handler->install();
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testInstallReturnsTrueWhenVersionIsChecked()
+    {
+        \define('_PS_VERSION_', 1.0);
+
+        Module::$forceReturnFalseOnRegisterHook = true;
+
+        $module = $this->getModule(['registerHook']);
+
+        $module
+            ->expects($this->once())
+            ->method('registerHook')
+            ->with('displayFooter')
+            ->willReturn(true)
+        ;
+
+        $handler = new HookHandler($module, [
+            $this->createHookItemMock('displayHeader', '>=2.0'),
+            $this->createHookItemMock('displayFooter'),
         ]);
 
         $handler->install();
@@ -145,7 +173,7 @@ class HookHandlerTest extends AbstractHandlerInstallerTestCase
     {
         $handler = new HookHandler($this->module, [
             $this->createHookItemMock('displayHeader'),
-            $this->createHookItemMock('displayFooter')
+            $this->createHookItemMock('displayFooter'),
         ]);
 
         $this->assertTrue($handler->install());
@@ -155,7 +183,7 @@ class HookHandlerTest extends AbstractHandlerInstallerTestCase
     {
         $handler = new HookHandler($this->module, [
             $this->createHookItemMock('displayHeader'),
-            $this->createHookItemMock('displayFooter')
+            $this->createHookItemMock('displayFooter'),
         ]);
 
         $this->assertTrue($handler->uninstall());
@@ -163,14 +191,16 @@ class HookHandlerTest extends AbstractHandlerInstallerTestCase
 
     /**
      * @param string $hookName
+     * @param string|null $prestashopVersion
      *
      * @return HookItemInterface|PHPUnit_Framework_MockObject_MockObject
      */
-    private function createHookItemMock($hookName)
+    private function createHookItemMock($hookName, $prestashopVersion = null)
     {
         $hookItem = $this->createMock(HookItemInterface::class);
 
         $hookItem->method('getName')->willReturn($hookName);
+        $hookItem->method('getPrestaShopVersion')->willReturn($prestashopVersion);
 
         return $hookItem;
     }

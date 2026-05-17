@@ -9,6 +9,7 @@ use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Item\HookItemInterface
 /**
  * @phpstan-type THook array{
  *   name: string,
+ *   prestashopVersion?: string|null,
  * }
  * @phpstan-type THooks THook[]
  */
@@ -41,7 +42,8 @@ class HookHandlerFactory
     private static function defaultFactory(array $hook)
     {
         $arguments = [
-            isset($hook['name']) ? $hook['name'] : '',
+            isset($hook['name'])                ? $hook['name']                 : '',
+            isset($hook['prestashopVersion'])   ? $hook['prestashopVersion']    : null,
         ];
 
         return new HookItem(...$arguments);
