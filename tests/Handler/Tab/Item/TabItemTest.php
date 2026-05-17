@@ -3,9 +3,9 @@
 namespace RubenMartinDev\PrestaShopModuleInstaller\Tests\Handler\Tab\Item;
 
 use PHPUnit\Framework\TestCase;
-use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Item\Exception\NameIsEmptyException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Item\Exception\ClassNameIsEmptyException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Item\Exception\ClassNameIsNotStringException;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Item\Exception\NameIsEmptyException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Item\Exception\NameIsNotStringOrArrayException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Item\Exception\NameMissingLanguageIsoCodeEnException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Item\Exception\ParentIdIsEmptyException;

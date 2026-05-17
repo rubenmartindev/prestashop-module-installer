@@ -4,8 +4,8 @@ namespace RubenMartinDev\PrestaShopModuleInstaller\Tests\Handler\Tab;
 
 use PHPUnit_Framework_MockObject_MockObject;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\HandlerInstallerInterface;
-use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Item\Exception\NameIsEmptyException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Item\Exception\ClassNameIsEmptyException;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Item\Exception\NameIsEmptyException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Item\TabItemInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\TabHandlerFactory;
 use RubenMartinDev\PrestaShopModuleInstaller\Tests\Handler\AbstractHandlerInstallerTestCase;
