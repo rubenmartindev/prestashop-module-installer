@@ -7,6 +7,7 @@ use RubenMartinDev\PrestaShopModuleInstaller\Handler\HandlerInstallerInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\HookHandlerFactory;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Item\Exception\NameIsInvalidException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Item\Exception\PrestaShopVersionIsInvalidException;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Item\Exception\PrestaShopVersionTypeIsInvalidException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Item\HookItemInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\Tests\Handler\AbstractHandlerInstallerTestCase;
 
@@ -26,7 +27,7 @@ class HookHandlerFactoryTest extends AbstractHandlerInstallerTestCase
 
     public function testCreateThrowsExceptionWhenKeyPrestashopVersionIsInvalid()
     {
-        $this->expectException(PrestaShopVersionIsInvalidException::class);
+        $this->expectException(PrestaShopVersionTypeIsInvalidException::class);
 
         HookHandlerFactory::create(
             $this->module,
@@ -34,6 +35,21 @@ class HookHandlerFactoryTest extends AbstractHandlerInstallerTestCase
                 [
                     'name'              => 'displayHeader',
                     'prestashopVersion' => 1.0,
+                ],
+            ]
+        );
+    }
+
+    public function testCreateThrowsExceptionWhenKeyPrestashopVersionIsArrayAndMissinKeyMin()
+    {
+        $this->expectException(PrestaShopVersionIsInvalidException::class);
+
+        HookHandlerFactory::create(
+            $this->module,
+            [
+                [
+                    'name'              => 'displayHeader',
+                    'prestashopVersion' => [],
                 ],
             ]
         );
@@ -50,6 +66,13 @@ class HookHandlerFactoryTest extends AbstractHandlerInstallerTestCase
                 [
                     'name'              => 'displayFooter',
                     'prestashopVersion' => '>=1.0',
+                ],
+                [
+                    'name'              => 'displaySidebar',
+                    'prestashopVersion' => [
+                        'min' => '>=1.0',
+                        'max' => '<2.0',
+                    ],
                 ],
             ]
         );
@@ -80,7 +103,14 @@ class HookHandlerFactoryTest extends AbstractHandlerInstallerTestCase
                 ],
                 [
                     'name'              => 'displayFooter',
-                    'prestashopVersion' => '>=1.1',
+                    'prestashopVersion' => '>=1.0',
+                ],
+                [
+                    'name'              => 'displayFooter',
+                    'prestashopVersion' => [
+                        'min' => '>=1.0',
+                        'max' => '<2.0',
+                    ],
                 ],
             ],
             $factory

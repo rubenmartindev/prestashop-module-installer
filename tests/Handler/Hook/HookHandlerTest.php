@@ -55,8 +55,10 @@ class HookHandlerTest extends AbstractHandlerInstallerTestCase
             $hookItem1,
         ]);
 
-        $handler->addHook($hookItem2);
+        $result = $handler->addHook($hookItem2);
 
+        $this->assertInstanceOf(HookHandlerInterface::class, $result);
+        $this->assertCount(2, $handler->getHooks());
         $this->assertSame($hookItem1, $handler->getHook('displayHeader'));
         $this->assertSame($hookItem2, $handler->getHook('displayFooter'));
     }
@@ -89,42 +91,35 @@ class HookHandlerTest extends AbstractHandlerInstallerTestCase
     {
         $hookItem1 = $this->createHookItemMock('displayHeader');
         $hookItem2 = $this->createHookItemMock('displayFooter');
-        $hookItem3 = $this->createHookItemMock('displaySidebar');
 
         $handler = new HookHandler($this->module, [
             $hookItem1,
             $hookItem2,
         ]);
 
-        $handler->addHook($hookItem3);
+        $result = $handler->removeHook('displayHeader');
 
-        $handler->removeHook('displayHeader');
-        $handler->removeHook('displayFooter');
-
+        $this->assertInstanceOf(HookHandlerInterface::class, $result);
+        $this->assertCount(1, $handler->getHooks());
         $this->assertNull($handler->getHook('displayHeader'));
-        $this->assertNull($handler->getHook('displayFooter'));
-        $this->assertSame($hookItem3, $handler->getHook('displaySidebar'));
+        $this->assertSame($hookItem2, $handler->getHook('displayFooter'));
     }
 
     public function testGetHooks()
     {
         $hookItem1 = $this->createHookItemMock('displayHeader');
         $hookItem2 = $this->createHookItemMock('displayFooter');
-        $hookItem3 = $this->createHookItemMock('displaySidebar');
 
         $handler = new HookHandler($this->module, [
             $hookItem1,
             $hookItem2,
         ]);
 
-        $handler->addHook($hookItem3);
-
         $hooks = $handler->getHooks();
 
-        $this->assertCount(3, $hooks);
+        $this->assertCount(2, $hooks);
         $this->assertSame($hookItem1, $hooks['displayHeader']);
         $this->assertSame($hookItem2, $hooks['displayFooter']);
-        $this->assertSame($hookItem3, $hooks['displaySidebar']);
     }
 
     /**
@@ -146,34 +141,24 @@ class HookHandlerTest extends AbstractHandlerInstallerTestCase
     /**
      * @runInSeparateProcess
      */
-    public function testInstallReturnsTrueWhenVersionIsChecked()
+    public function testInstallReturnsTrue()
     {
         \define('_PS_VERSION_', 1.0);
-
-        Module::$forceReturnFalseOnRegisterHook = true;
 
         $module = $this->getModule(['registerHook']);
 
         $module
-            ->expects($this->once())
+            ->expects($this->exactly(4))
             ->method('registerHook')
-            ->with('displayFooter')
             ->willReturn(true)
         ;
 
         $handler = new HookHandler($module, [
-            $this->createHookItemMock('displayHeader', '>=2.0'),
-            $this->createHookItemMock('displayFooter'),
-        ]);
-
-        $handler->install();
-    }
-
-    public function testInstallReturnsTrue()
-    {
-        $handler = new HookHandler($this->module, [
             $this->createHookItemMock('displayHeader'),
-            $this->createHookItemMock('displayFooter'),
+            $this->createHookItemMock('displayFooter', null),
+            $this->createHookItemMock('displaySidebar', '>=2.0'),
+            $this->createHookItemMock('displayContent', '>=0.0'),
+            $this->createHookItemMock('displayModal', '>=0.0', '<1.0'),
         ]);
 
         $this->assertTrue($handler->install());
@@ -191,16 +176,20 @@ class HookHandlerTest extends AbstractHandlerInstallerTestCase
 
     /**
      * @param string $hookName
-     * @param string|null $prestashopVersion
+     * @param string|null $versionMin
+     * @param string|null $versionMax
      *
      * @return HookItemInterface|PHPUnit_Framework_MockObject_MockObject
      */
-    private function createHookItemMock($hookName, $prestashopVersion = null)
+    private function createHookItemMock($hookName, $versionMin = null, $versionMax = null)
     {
         $hookItem = $this->createMock(HookItemInterface::class);
 
         $hookItem->method('getName')->willReturn($hookName);
-        $hookItem->method('getPrestaShopVersion')->willReturn($prestashopVersion);
+        $hookItem->method('getPrestaShopVersion')->willReturn([
+            'min' => $versionMin,
+            'max' => $versionMax,
+        ]);
 
         return $hookItem;
     }

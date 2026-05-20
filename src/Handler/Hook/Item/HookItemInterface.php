@@ -2,6 +2,9 @@
 
 namespace RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Item;
 
+/**
+ * @phpstan-type TPrestaShopVersion array{min: string|null, max:string|null}
+ */
 interface HookItemInterface
 {
     /**
@@ -10,7 +13,7 @@ interface HookItemInterface
     public function getName();
 
     /**
-     * @return string|null
+     * @return TPrestaShopVersion
      */
     public function getPrestaShopVersion();
 }

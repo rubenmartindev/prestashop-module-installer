@@ -77,7 +77,14 @@ class HookHandler extends AbstractHandlerInstaller implements HookHandlerInterfa
     public function install()
     {
         foreach ($this->hooks as $hook) {
-            if (null !== $hook->getPrestaShopVersion() && false === PrestaShopVersionChecker::is($hook->getPrestaShopVersion())) {
+            $prestashopVersionMin = $hook->getPrestaShopVersion()['min'];
+            $prestashopVersionMax = $hook->getPrestaShopVersion()['max'];
+
+            if (null !== $prestashopVersionMin && false === PrestaShopVersionChecker::is($prestashopVersionMin)) {
+                continue;
+            }
+
+            if (null !== $prestashopVersionMax && false === PrestaShopVersionChecker::is($prestashopVersionMax)) {
                 continue;
             }
 

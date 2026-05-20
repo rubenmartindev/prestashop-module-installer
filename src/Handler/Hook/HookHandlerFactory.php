@@ -7,9 +7,11 @@ use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Item\HookItem;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Item\HookItemInterface;
 
 /**
+ * @phpstan-import-type TPrestaShopVersionParam from HookItem as TPrestaShopVersion
+ *
  * @phpstan-type THook array{
  *   name: string,
- *   prestashopVersion?: string|null,
+ *   prestashopVersion?: TPrestaShopVersion,
  * }
  * @phpstan-type THooks THook[]
  */
