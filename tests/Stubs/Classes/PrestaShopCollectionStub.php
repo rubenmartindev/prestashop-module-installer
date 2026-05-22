@@ -2,6 +2,6 @@
 
 namespace RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes;
 
-class PrestaShopCollection extends Collection
+class PrestaShopCollectionStub extends \Collection
 {
 }

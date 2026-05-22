@@ -10,7 +10,7 @@ use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\HookHandler;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\HookHandlerInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Item\HookItemInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\Tests\Handler\AbstractHandlerInstallerTestCase;
-use RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes\Module\Module;
+use RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes\Module\ModuleStub;
 
 class HookHandlerTest extends AbstractHandlerInstallerTestCase
 {
@@ -129,7 +129,7 @@ class HookHandlerTest extends AbstractHandlerInstallerTestCase
     {
         $this->expectException(FailedRegisterHookException::class);
 
-        Module::$forceReturnFalseOnRegisterHook = true;
+        ModuleStub::$forceReturnFalseOnRegisterHook = true;
 
         $handler = new HookHandler($this->module, [
             $this->createHookItemMock('displayHeader'),

@@ -2,8 +2,6 @@
 
 namespace RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes\Exception;
 
-use Exception;
-
-class PrestaShopException extends Exception
+class PrestaShopDatabaseExceptionStub extends \PrestaShopException
 {
 }

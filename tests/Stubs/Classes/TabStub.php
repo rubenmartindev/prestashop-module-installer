@@ -2,8 +2,16 @@
 
 namespace RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes;
 
-class Tab extends ObjectModel
+use PrestaShopCollection;
+
+class TabStub extends \ObjectModel
 {
+    /** @var bool */
+    public static $forceReturnFalseOnAdd = false;
+
+    /** @var bool */
+    public static $forceReturnFalseOnDelete = false;
+
     /** @var string */
     public $class_name;
 
@@ -27,5 +35,23 @@ class Tab extends ObjectModel
         $collection->elements = [$tab1, $tab2];
 
         return $collection;
+    }
+
+    public function add($autoDate = true, $nullValues = false)
+    {
+        if (self::$forceReturnFalseOnAdd) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function delete()
+    {
+        if (self::$forceReturnFalseOnDelete) {
+            return false;
+        }
+
+        return true;
     }
 }

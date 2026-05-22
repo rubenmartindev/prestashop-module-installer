@@ -2,7 +2,7 @@
 
 namespace RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes\Module;
 
-abstract class Module
+abstract class ModuleStub
 {
     /** @var bool */
     public static $forceReturnFalseOnRegisterHook = false;

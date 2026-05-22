@@ -7,7 +7,7 @@ use Countable;
 use Iterator;
 use PrestaShopException;
 
-class Collection implements Iterator, ArrayAccess, Countable
+class CollectionStub implements Iterator, ArrayAccess, Countable
 {
     /** @var array */
     public $elements = [];

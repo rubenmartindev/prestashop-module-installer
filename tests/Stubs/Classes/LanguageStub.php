@@ -2,7 +2,7 @@
 
 namespace RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes;
 
-class Language extends ObjectModel
+class LanguageStub extends \ObjectModel
 {
     const LANGUAGES = [
         1 => [

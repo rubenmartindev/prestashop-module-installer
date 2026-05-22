@@ -2,7 +2,7 @@
 
 namespace RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes;
 
-abstract class ObjectModel
+abstract class ObjectModelStub
 {
     /** @var bool */
     public static $forceReturnFalseOnAdd = false;

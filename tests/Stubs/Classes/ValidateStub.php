@@ -2,7 +2,7 @@
 
 namespace RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes;
 
-class Validate
+class ValidateStub
 {
     /**
      * @see \Validate::isHookName()

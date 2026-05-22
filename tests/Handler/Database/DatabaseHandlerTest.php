@@ -9,7 +9,7 @@ use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\Exception\QueriesI
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\Exception\QueriesMustBeInstanceOfDatabaseItemException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\Item\DatabaseItemInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\Tests\Handler\AbstractHandlerInstallerTestCase;
-use RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes\Db\Db;
+use RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes\Db\DbStub;
 
 class DatabaseHandlerTest extends AbstractHandlerInstallerTestCase
 {
@@ -117,7 +117,7 @@ class DatabaseHandlerTest extends AbstractHandlerInstallerTestCase
     {
         $this->expectException(FailedToExecuteQueryException::class);
 
-        Db::$forceThrowExceptionOnExecute = true;
+        DbStub::$forceThrowExceptionOnExecute = true;
 
         $handler = new DatabaseHandler($this->module, [
             $this->createDatabaseItemMock('my_table'),
@@ -142,7 +142,7 @@ class DatabaseHandlerTest extends AbstractHandlerInstallerTestCase
     {
         $this->expectException(FailedToExecuteQueryException::class);
 
-        Db::$forceThrowExceptionOnExecute = true;
+        DbStub::$forceThrowExceptionOnExecute = true;
 
         $handler = new DatabaseHandler($this->module, [
             $this->createDatabaseItemMock('my_table'),

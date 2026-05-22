@@ -1,36 +1,35 @@
 <?php
 
-use RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes\Collection;
-use RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes\Configuration;
-use RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes\Db\Db;
-use RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes\Exception\PrestaShopDatabaseException;
-use RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes\Exception\PrestaShopException;
-use RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes\Language;
-use RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes\Module\Module;
-use RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes\ObjectModel;
-use RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes\PrestaShopCollection;
-use RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes\Tab;
-use RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes\Validate;
+use RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes\CollectionStub;
+use RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes\ConfigurationStub;
+use RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes\Db\DbStub;
+use RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes\Exception\PrestaShopDatabaseExceptionStub;
+use RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes\Exception\PrestaShopExceptionStub;
+use RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes\LanguageStub;
+use RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes\Module\ModuleStub;
+use RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes\ObjectModelStub;
+use RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes\PrestaShopCollectionStub;
+use RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes\TabStub;
+use RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes\ValidateStub;
 
 // Composer
 require_once __DIR__ . '/../vendor/autoload.php';
 
 $stubs = [
-    Collection::class                   => 'Collection',
-    Configuration::class                => 'Configuration',
-    Db::class                           => 'Db',
-    Language::class                     => 'Language',
-    Module::class                       => 'Module',
-    ObjectModel::class                  => 'ObjectModel',
-    PrestaShopCollection::class         => 'PrestaShopCollection',
-    PrestaShopDatabaseException::class  => 'PrestaShopDatabaseException',
-    PrestaShopException::class          => 'PrestaShopException',
-    Tab::class                          => 'Tab',
-    Validate::class                     => 'Validate',
+    PrestaShopExceptionStub::class          => 'PrestaShopException',
+    ObjectModelStub::class                  => 'ObjectModel',
+    CollectionStub::class                   => 'Collection',
+
+    ConfigurationStub::class                => 'Configuration',
+    DbStub::class                           => 'Db',
+    LanguageStub::class                     => 'Language',
+    ModuleStub::class                       => 'Module',
+    PrestaShopCollectionStub::class         => 'PrestaShopCollection',
+    PrestaShopDatabaseExceptionStub::class  => 'PrestaShopDatabaseException',
+    TabStub::class                          => 'Tab',
+    ValidateStub::class                     => 'Validate',
 ];
 
 foreach ($stubs as $stubClassName => $alias) {
-    if (!class_exists($alias)) {
-        class_alias($stubClassName, $alias);
-    }
+    class_alias($stubClassName, $alias);
 }

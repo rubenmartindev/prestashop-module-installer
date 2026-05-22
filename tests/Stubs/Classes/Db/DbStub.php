@@ -2,9 +2,9 @@
 
 namespace RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes\Db;
 
-use RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes\Exception\PrestaShopDatabaseException;
+use PrestaShopDatabaseException;
 
-class Db
+class DbStub
 {
     /** @var bool */
     public static $forceThrowExceptionOnExecute = false;

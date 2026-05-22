@@ -2,7 +2,7 @@
 
 namespace RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes;
 
-class Configuration
+class ConfigurationStub
 {
     const CONFIGURATION = [
         'PS_LANG_DEFAULT' => 1,

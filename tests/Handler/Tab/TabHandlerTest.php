@@ -10,7 +10,7 @@ use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Exception\TabsMustBeIns
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Item\TabItemInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\TabHandler;
 use RubenMartinDev\PrestaShopModuleInstaller\Tests\Handler\AbstractHandlerInstallerTestCase;
-use RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes\Tab;
+use RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes\TabStub;
 
 class TabHandlerTest extends AbstractHandlerInstallerTestCase
 {
@@ -128,7 +128,7 @@ class TabHandlerTest extends AbstractHandlerInstallerTestCase
     {
         $this->expectException(FailedToCreateTabException::class);
 
-        Tab::$forceReturnFalseOnAdd = true;
+        TabStub::$forceReturnFalseOnAdd = true;
 
         $handler = new TabHandler($this->module, [
             $this->createTabItemMock('AdminMyModule', 'My tab'),
@@ -153,7 +153,7 @@ class TabHandlerTest extends AbstractHandlerInstallerTestCase
     {
         $this->expectException(FailedToDeleteTabException::class);
 
-        Tab::$forceReturnFalseOnDelete = true;
+        TabStub::$forceReturnFalseOnDelete = true;
 
         $handler = new TabHandler($this->module, [
             $this->createTabItemMock('AdminMyModule', 'My tab'),
