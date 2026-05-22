@@ -5,12 +5,13 @@ namespace RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes;
 use ArrayAccess;
 use Countable;
 use Iterator;
+use ObjectModel;
 use PrestaShopException;
 
 class CollectionStub implements Iterator, ArrayAccess, Countable
 {
-    /** @var array */
-    public $elements = [];
+    /** @var ObjectModel[] */
+    public static $forceElements = [];
 
     /** @var string */
     private $classname;
@@ -29,7 +30,7 @@ class CollectionStub implements Iterator, ArrayAccess, Countable
 
     public function current()
     {
-        return isset($this->elements[$this->iterator]) ? $this->elements[$this->iterator] : null;
+        return isset(self::$forceElements[$this->iterator]) ? self::$forceElements[$this->iterator] : null;
     }
 
     public function next()
@@ -44,7 +45,7 @@ class CollectionStub implements Iterator, ArrayAccess, Countable
 
     public function valid()
     {
-        return isset($this->elements[$this->iterator]);
+        return isset(self::$forceElements[$this->iterator]);
     }
 
     public function rewind()
@@ -54,13 +55,13 @@ class CollectionStub implements Iterator, ArrayAccess, Countable
 
     public function offsetExists($offset)
     {
-        return isset($this->elements[$offset]);
+        return isset(self::$forceElements[$offset]);
     }
 
     public function offsetGet($offset)
     {
-        if (isset($this->elements[$offset])) {
-            return $this->elements[$offset];
+        if (isset(self::$forceElements[$offset])) {
+            return self::$forceElements[$offset];
         }
 
         throw new PrestaShopException("Unknown offset {$offset} for collection {$this->classname}");
@@ -73,19 +74,19 @@ class CollectionStub implements Iterator, ArrayAccess, Countable
         }
 
         if (null === $offset) {
-            $this->elements[] = $value;
+            self::$forceElements[] = $value;
         } else {
-            $this->elements[$offset] = $value;
+            self::$forceElements[$offset] = $value;
         }
     }
 
     public function offsetUnset($offset)
     {
-        unset($this->elements[$offset]);
+        unset(self::$forceElements[$offset]);
     }
 
     public function count()
     {
-        return \count($this->elements);
+        return \count(self::$forceElements);
     }
 }
