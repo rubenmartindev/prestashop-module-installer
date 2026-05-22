@@ -6,6 +6,7 @@ use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamContainer;
 use PHPUnit\Framework\TestCase;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\Item\DatabaseItem;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\Item\DatabaseItemInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\Item\Exception\QuerFileNotExistsException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\Item\Exception\QueryFileIsEmptyException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\Item\Exception\QueryFileIsNotRedeableException;
@@ -82,15 +83,22 @@ class DatabaseItemTest extends TestCase
         new DatabaseItem('my_table', vfsStream::url('root/no_readable.sql'));
     }
 
-    public function testConstruct()
+    public function testConstructWithRequireParameters()
+    {
+        $queryFile = vfsSTream::url('root/my_table.sql');
+
+        $databaseItem = new DatabaseItem('my_table', $queryFile);
+
+        $this->assertInstanceOf(DatabaseItemInterface::class, $databaseItem);
+    }
+
+    public function testConstructWithOptionalParameters()
     {
         $queryFile = vfsSTream::url('root/my_table.sql');
 
         $databaseItem = new DatabaseItem('my_table', $queryFile, true);
 
-        $this->assertSame('my_table', $databaseItem->getTableName());
-        $this->assertSame($queryFile, $databaseItem->getQueryFile());
-        $this->assertTrue($databaseItem->getKeepData());
+        $this->assertInstanceOf(DatabaseItemInterface::class, $databaseItem);
     }
 
     public function testGetTableName()

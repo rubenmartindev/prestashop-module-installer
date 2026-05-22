@@ -28,4 +28,24 @@ interface TabItemInterface
      * @return bool
      */
     public function isActive();
+
+    /**
+     * @return bool
+     */
+    public function isEnabled();
+
+    /**
+     * @return string|null
+     */
+    public function getIcon();
+
+    /**
+     * @return string|null
+     */
+    public function getWording();
+
+    /**
+     * @return string|null
+     */
+    public function getWordingDomain();
 }

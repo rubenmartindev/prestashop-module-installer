@@ -2,14 +2,21 @@
 
 namespace RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Item;
 
+use Configuration;
 use Language;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Item\Exception\ClassNameIsEmptyException;
-use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Item\Exception\ClassNameIsNotStringException;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Item\Exception\ClassNameTypeIsInvalidException;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Item\Exception\IconIsEmptyException;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Item\Exception\IconTypeIsInvalidException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Item\Exception\NameIsEmptyException;
-use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Item\Exception\NameIsNotStringOrArrayException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Item\Exception\NameMissingLanguageIsoCodeEnException;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Item\Exception\NameTypeIsInvalidException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Item\Exception\ParentIdIsEmptyException;
-use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Item\Exception\ParentIdIsNotStringOrArrayException;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Item\Exception\ParentIdTypeIsInvalidException;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Item\Exception\WordingDomainIsEmptyException;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Item\Exception\WordingDomainTypeIsInvalidException;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Item\Exception\WordingIsEmptyException;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Item\Exception\WordingTypeIsInvalidException;
 use Tab;
 
 class TabItem implements TabItemInterface
@@ -17,7 +24,7 @@ class TabItem implements TabItemInterface
     /** @var string */
     private $className;
 
-    /** @var array<string, string> */
+    /** @var array<int, string> */
     private $name;
 
     /** @var int|string */
@@ -29,29 +36,58 @@ class TabItem implements TabItemInterface
     /** @var bool */
     private $active;
 
+    /** @var bool */
+    private $enabled;
+
+    /** @var string|null */
+    private $icon;
+
+    /** @var string */
+    private $wording;
+
+    /** @var string */
+    private $wordingDomain;
+
     /**
      * @param string $className
      * @param string|array<string, string> $name
      * @param int|string $parentId
      * @param int $position
      * @param bool $active
+     * @param bool $enabled
+     * @param string|null $icon
+     * @param string|null $wording
+     * @param string|null $wordingDomain
      */
     public function __construct(
         $className,
         $name,
         $parentId = -1,
         $position = 0,
-        $active = true
+        $active = true,
+        $enabled = true,
+        $icon = null,
+        $wording = null,
+        $wordingDomain = null
     ) {
         $this->ensureClassNameIsValid($className);
         $this->ensureNameIsValid($name);
         $this->ensureParentIdIsValid($parentId);
+        $this->ensureIconIsValid($icon);
+        $this->ensureWordingIsValid($wording);
+        $this->ensureWordingDomainIsValid($wordingDomain);
 
-        $this->className    = $className;
-        $this->name         = $this->formattedName($name);
-        $this->parentId     = $this->findParentId($parentId);
-        $this->position     = (int) $position;
-        $this->active       = (bool) $active;
+        $defaultLanguageId = (int) Configuration::get('PS_LANG_DEFAULT');
+
+        $this->className        = $className;
+        $this->name             = $this->formattedName($name);
+        $this->parentId         = $this->findParentId($parentId);
+        $this->position         = (int) $position;
+        $this->active           = (bool) $active;
+        $this->enabled          = (bool) $enabled;
+        $this->icon             = $icon;
+        $this->wording          = null === $wording ? $this->name[$defaultLanguageId] : $wording;
+        $this->wordingDomain    = null === $wordingDomain ? 'Admin.Navigation.Menu' : $wordingDomain;
     }
 
     /**
@@ -95,17 +131,49 @@ class TabItem implements TabItemInterface
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function isEnabled()
+    {
+        return $this->enabled;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getIcon()
+    {
+        return $this->icon;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getWording()
+    {
+        return $this->wording;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getWordingDomain()
+    {
+        return $this->wordingDomain;
+    }
+
+    /**
      * @param string $className
      *
      * @return void
      *
-     * @throws ClassNameIsNotStringException
+     * @throws ClassNameTypeIsInvalidException
      * @throws ClassNameIsEmptyException
      */
     private function ensureClassNameIsValid($className)
     {
         if (!\is_string($className)) {
-            throw new ClassNameIsNotStringException('The $className is not a string');
+            throw new ClassNameTypeIsInvalidException('The $className is not a string');
         }
 
         if (empty($className)) {
@@ -118,13 +186,13 @@ class TabItem implements TabItemInterface
      *
      * @return void
      *
-     * @throws NameIsNotStringOrArrayException
+     * @throws NameTypeIsInvalidException
      * @throws NameIsEmptyException
      */
     private function ensureNameIsValid($name)
     {
         if (!\is_string($name) && !\is_array($name)) {
-            throw new NameIsNotStringOrArrayException('The $name is not a string or array');
+            throw new NameTypeIsInvalidException('The $name is not a string or array');
         }
 
         if (empty($name)) {
@@ -137,17 +205,86 @@ class TabItem implements TabItemInterface
      *
      * @return void
      *
-     * @throws ParentIdIsNotStringOrArrayException
+     * @throws ParentIdTypeIsInvalidException
      * @throws ParentIdIsEmptyException
      */
     private function ensureParentIdIsValid($parentId)
     {
         if (!\is_numeric($parentId) && !\is_string($parentId)) {
-            throw new ParentIdIsNotStringOrArrayException('The $parentId is not a string or numeric');
+            throw new ParentIdTypeIsInvalidException('The $parentId is not a string or numeric');
         }
 
         if (\is_string($parentId) && empty($parentId)) {
             throw new ParentIdIsEmptyException('The $parentId is empty');
+        }
+    }
+
+    /**
+     * @param string|null $icon
+     *
+     * @return void
+     *
+     * @throws IconTypeIsInvalidException
+     * @throws IconIsEmptyException
+     */
+    private function ensureIconIsValid($icon)
+    {
+        if (null === $icon) {
+            return;
+        }
+
+        if (!\is_string($icon)) {
+            throw new IconTypeIsInvalidException('The $icon is not a string');
+        }
+
+        if (empty($icon)) {
+            throw new IconIsEmptyException('The $icon is empty');
+        }
+    }
+
+    /**
+     * @param string|null $wording
+     *
+     * @return void
+     *
+     * @throws WordingTypeIsInvalidException
+     * @throws WordingIsEmptyException
+     */
+    private function ensureWordingIsValid($wording)
+    {
+        if (null === $wording) {
+            return;
+        }
+
+        if (!\is_string($wording)) {
+            throw new WordingTypeIsInvalidException('The $wording is not a string');
+        }
+
+        if (empty($wording)) {
+            throw new WordingIsEmptyException('The $wording is empty');
+        }
+    }
+
+    /**
+     * @param string|null $wordingDomain
+     *
+     * @return void
+     *
+     * @throws WordingDomainTypeIsInvalidException
+     * @throws WordingDomainIsEmptyException
+     */
+    private function ensureWordingDomainIsValid($wordingDomain)
+    {
+        if (null === $wordingDomain) {
+            return;
+        }
+
+        if (!\is_string($wordingDomain)) {
+            throw new WordingDomainTypeIsInvalidException('The $wordingDomain is not a string');
+        }
+
+        if (empty($wordingDomain)) {
+            throw new WordingDomainIsEmptyException('The $wordingDomain is empty');
         }
     }
 

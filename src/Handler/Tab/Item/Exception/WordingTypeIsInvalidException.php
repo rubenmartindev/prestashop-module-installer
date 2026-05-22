@@ -2,6 +2,6 @@
 
 namespace RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Item\Exception;
 
-class ClassNameIsNotStringException extends TabItemException
+class WordingTypeIsInvalidException extends TabItemException
 {
 }

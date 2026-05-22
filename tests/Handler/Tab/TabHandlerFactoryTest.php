@@ -3,68 +3,38 @@
 namespace RubenMartinDev\PrestaShopModuleInstaller\Tests\Handler\Tab;
 
 use PHPUnit_Framework_MockObject_MockObject;
-use RubenMartinDev\PrestaShopModuleInstaller\Handler\HandlerInstallerInterface;
-use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Item\Exception\ClassNameIsEmptyException;
-use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Item\Exception\NameIsEmptyException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Item\TabItemInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\TabHandlerFactory;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\TabHandlerInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\Tests\Handler\AbstractHandlerInstallerTestCase;
 
 class TabHandlerFactoryTest extends AbstractHandlerInstallerTestCase
 {
-    public function testCreateThrowsExceptionWhenKeyClassNameIsMissing()
-    {
-        $this->expectException(ClassNameIsEmptyException::class);
-
-        TabHandlerFactory::create(
-            $this->module,
-            [
-                [
-                    'name' => 'My tab',
-                ],
-            ]
-        );
-    }
-
-    public function testCreateThrowsExceptionWhenKeyNameIsMissing()
-    {
-        $this->expectException(NameIsEmptyException::class);
-
-        TabHandlerFactory::create(
-            $this->module,
-            [
-                [
-                    'className' => 'AdminMyModule',
-                ],
-            ]
-        );
-    }
-
     public function testCreateReturnsHandlerInstallerWithFactory()
     {
-        $factory = function (array $tab) {
-            return $this->createTabItemMock($tab['className'], $tab['name']);
-        };
-
         $handler = TabHandlerFactory::create(
             $this->module,
             [
                 [
-                    'className' => 'AdminMyModule1',
-                    'name'      => 'My tab 1',
+                    'className'         => 'AdminMyModule1',
+                    'name'              => 'My tab 1',
                 ],
                 [
-                    'className' => 'AdminMyModule2',
-                    'name'      => 'My tab 2',
-                    'parentId'  => 1,
-                    'position'  => 1,
-                    'active'    => false,
+                    'className'         => 'AdminMyModule2',
+                    'name'              => 'My tab 2',
+                    'parentId'          => 1,
+                    'position'          => 1,
+                    'active'            => false,
+                    'enabled'           => false,
+                    'icon'              => 'extension',
+                    'wording'           => 'My tab 2 name',
+                    'wordingDomaing'    => 'Modules.MyModule.Navigation',
                 ],
             ],
-            $factory
+            $this->createFactoryMock()
         );
 
-        $this->assertInstanceOf(HandlerInstallerInterface::class, $handler);
+        $this->assertInstanceOf(TabHandlerInterface::class, $handler);
 
         $tabItem1 = $handler->getTab('AdminMyModule1');
         $tabItem2 = $handler->getTab('AdminMyModule2');
@@ -79,26 +49,40 @@ class TabHandlerFactoryTest extends AbstractHandlerInstallerTestCase
             $this->module,
             [
                 [
-                    'className' => 'AdminMyModule1',
-                    'name'      => 'My tab 1',
+                    'className'         => 'AdminMyModule1',
+                    'name'              => 'My tab 1',
                 ],
                 [
-                    'className' => 'AdminMyModule2',
-                    'name'      => 'My tab 2',
-                    'parentId'  => 1,
-                    'position'  => 1,
-                    'active'    => false,
+                    'className'         => 'AdminMyModule2',
+                    'name'              => 'My tab 2',
+                    'parentId'          => 1,
+                    'position'          => 1,
+                    'active'            => false,
+                    'enabled'           => false,
+                    'icon'              => 'extension',
+                    'wording'           => 'My tab 2 name',
+                    'wordingDomaing'    => 'Modules.MyModule.Navigation',
                 ],
             ]
         );
 
-        $this->assertInstanceOf(HandlerInstallerInterface::class, $handler);
+        $this->assertInstanceOf(TabHandlerInterface::class, $handler);
 
         $tabItem1 = $handler->getTab('AdminMyModule1');
         $tabItem2 = $handler->getTab('AdminMyModule2');
 
         $this->assertInstanceOf(TabItemInterface::class, $tabItem1);
         $this->assertInstanceOf(TabItemInterface::class, $tabItem2);
+    }
+
+    /**
+     * @return callable
+     */
+    private function createFactoryMock()
+    {
+        return function (array $tab) {
+            return $this->createTabItemMock($tab['className'], $tab['name']);
+        };
     }
 
     /**

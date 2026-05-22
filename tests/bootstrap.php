@@ -1,6 +1,7 @@
 <?php
 
 use RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes\Collection;
+use RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes\Configuration;
 use RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes\Db\Db;
 use RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes\Exception\PrestaShopDatabaseException;
 use RubenMartinDev\PrestaShopModuleInstaller\Tests\Stubs\Classes\Exception\PrestaShopException;
@@ -16,6 +17,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 $stubs = [
     Collection::class                   => 'Collection',
+    Configuration::class                => 'Configuration',
     Db::class                           => 'Db',
     Language::class                     => 'Language',
     Module::class                       => 'Module',

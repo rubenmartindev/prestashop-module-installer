@@ -13,6 +13,10 @@ use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Item\TabItemInterface;
  *   parentId?: int|string,
  *   position?: int,
  *   active?: bool,
+ *   enabled?: bool,
+ *   icon?: string|null,
+ *   wording?: string|null,
+ *   wordingDomain?: string|null,
  * }
  * @phpstan-type TTabs TTab[]
  */
@@ -59,6 +63,22 @@ class TabHandlerFactory
 
         if (isset($tab['active'])) {
             $arguments[] = $tab['active'];
+        }
+
+        if (isset($tab['enabled'])) {
+            $arguments[] = $tab['enabled'];
+        }
+
+        if (\array_key_exists('icon', $tab)) {
+            $arguments[] = $tab['icon'];
+        }
+
+        if (\array_key_exists('wording', $tab)) {
+            $arguments[] = $tab['wording'];
+        }
+
+        if (\array_key_exists('wordingDomain', $tab)) {
+            $arguments[] = $tab['wordingDomain'];
         }
 
         return new TabItem(...$arguments);

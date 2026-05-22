@@ -80,12 +80,16 @@ class TabHandler extends AbstractHandlerInstaller implements TabHandlerInterface
         foreach ($this->tabs as $tab) {
             $prestashopTab = new Tab();
 
-            $prestashopTab->name        = $tab->getName();
-            $prestashopTab->class_name  = $tab->getClassName();
-            $prestashopTab->module      = $this->getModule()->name;
-            $prestashopTab->id_parent   = $tab->getParentId();
-            $prestashopTab->position    = $tab->getPosition();
-            $prestashopTab->active      = $tab->isActive();
+            $prestashopTab->name            = $tab->getName();
+            $prestashopTab->class_name      = $tab->getClassName();
+            $prestashopTab->module          = $this->getModule()->name;
+            $prestashopTab->id_parent       = $tab->getParentId();
+            $prestashopTab->position        = $tab->getPosition();
+            $prestashopTab->active          = $tab->isActive();
+            $prestashopTab->enabled         = $tab->isEnabled();
+            $prestashopTab->icon            = $tab->getIcon();
+            $prestashopTab->wording         = $tab->getWording();
+            $prestashopTab->wordingDomain   = $tab->getWordingDomain();
 
             if (!$prestashopTab->add()) {
                 throw new FailedToCreateTabException("Tab {$tab->getClassName()} not created");
