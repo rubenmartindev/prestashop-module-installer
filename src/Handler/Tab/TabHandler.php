@@ -89,7 +89,7 @@ class TabHandler extends AbstractHandlerInstaller implements TabHandlerInterface
             $prestashopTab->enabled         = $tab->isEnabled();
             $prestashopTab->icon            = $tab->getIcon();
             $prestashopTab->wording         = $tab->getWording();
-            $prestashopTab->wordingDomain   = $tab->getWordingDomain();
+            $prestashopTab->wording_domain  = $tab->getWordingDomain();
 
             if (!$prestashopTab->add()) {
                 throw new FailedToCreateTabException("Tab {$tab->getClassName()} not created");
