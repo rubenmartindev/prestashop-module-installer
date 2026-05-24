@@ -37,6 +37,11 @@ interface TabItemInterface
     /**
      * @return string|null
      */
+    public function getRouteName();
+
+    /**
+     * @return string|null
+     */
     public function getIcon();
 
     /**

@@ -14,6 +14,7 @@ use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Item\TabItemInterface;
  *   position?: int,
  *   active?: bool,
  *   enabled?: bool,
+ *   routeName?: string|null,
  *   icon?: string|null,
  *   wording?: string|null,
  *   wordingDomain?: string|null,
@@ -67,6 +68,10 @@ class TabHandlerFactory
 
         if (isset($tab['enabled'])) {
             $arguments[] = $tab['enabled'];
+        }
+
+        if (\array_key_exists('routeName', $tab)) {
+            $arguments[] = $tab['routeName'];
         }
 
         if (\array_key_exists('icon', $tab)) {

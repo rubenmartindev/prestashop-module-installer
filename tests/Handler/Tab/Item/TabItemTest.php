@@ -122,7 +122,7 @@ class TabItemTest extends TestCase
 
     public function testConstructWithOptionalParameters()
     {
-        $item = new TabItem('AdminMyModule', 'My tab', 1, 5, false, false, 'icon', 'My tab', 'Modules.MyModule.Navigation');
+        $item = new TabItem('AdminMyModule', 'My tab', 1, 5, false, false, 'admin_my-module_my-tab', 'icon', 'My tab', 'Modules.MyModule.Navigation');
 
         $this->assertInstanceOf(TabItemInterface::class, $item);
     }
@@ -139,6 +139,7 @@ class TabItemTest extends TestCase
         $this->assertSame(0, $item->getPosition());
         $this->assertTrue($item->isActive());
         $this->assertTrue($item->isEnabled());
+        $this->assertNull($item->getRouteName());
         $this->assertNull($item->getIcon());
         $this->assertSame('My tab', $item->getWording());
         $this->assertSame('Admin.Navigation.Menu', $item->getWordingDomain());
@@ -146,7 +147,7 @@ class TabItemTest extends TestCase
 
     public function testGettersWithOptionalParameters()
     {
-        $item = new TabItem('AdminMyModule', 'My tab', 1, 5, false, false, 'extension', 'My tab name', 'Modules.MyModule.Navigation');
+        $item = new TabItem('AdminMyModule', 'My tab', 1, 5, false, false, 'admin_my-module_my-tab', 'extension', 'My tab name', 'Modules.MyModule.Navigation');
 
         $this->assertSame('AdminMyModule', $item->getClassName());
         $this->assertCount(2, $item->getName());
@@ -156,6 +157,7 @@ class TabItemTest extends TestCase
         $this->assertSame(5, $item->getPosition());
         $this->assertFalse($item->isActive());
         $this->assertFalse($item->isEnabled());
+        $this->assertSame('admin_my-module_my-tab', $item->getRouteName());
         $this->assertSame('extension', $item->getIcon());
         $this->assertSame('My tab name', $item->getWording());
         $this->assertSame('Modules.MyModule.Navigation', $item->getWordingDomain());

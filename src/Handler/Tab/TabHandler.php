@@ -78,8 +78,11 @@ class TabHandler extends AbstractHandlerInstaller implements TabHandlerInterface
     public function install()
     {
         foreach ($this->tabs as $tab) {
+            $prestashopTabId = (int) Tab::getIdFromClassName($tab->getClassName());
+
             $prestashopTab = new Tab();
 
+            $prestashopTab->id              = $prestashopTabId;
             $prestashopTab->name            = $tab->getName();
             $prestashopTab->class_name      = $tab->getClassName();
             $prestashopTab->module          = $this->getModule()->name;
@@ -91,7 +94,7 @@ class TabHandler extends AbstractHandlerInstaller implements TabHandlerInterface
             $prestashopTab->wording         = $tab->getWording();
             $prestashopTab->wording_domain  = $tab->getWordingDomain();
 
-            if (!$prestashopTab->add()) {
+            if (!$prestashopTab->save()) {
                 throw new FailedToCreateTabException("Tab {$tab->getClassName()} not created");
             }
         }

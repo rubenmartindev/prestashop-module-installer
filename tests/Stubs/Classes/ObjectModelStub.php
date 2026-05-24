@@ -11,6 +11,9 @@ abstract class ObjectModelStub
     public static $forceReturnFalseOnUpdate = false;
 
     /** @var bool */
+    public static $forceReturnFalseOnSave = false;
+
+    /** @var bool */
     public static $forceReturnFalseOnDelete = false;
 
     /** @var int */
@@ -28,6 +31,15 @@ abstract class ObjectModelStub
     public function update($null_values = false)
     {
         if (self::$forceReturnFalseOnUpdate) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function save($null_values = false, $auto_date = true)
+    {
+        if (self::$forceReturnFalseOnSave) {
             return false;
         }
 

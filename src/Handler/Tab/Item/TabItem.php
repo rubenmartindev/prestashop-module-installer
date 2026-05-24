@@ -13,6 +13,8 @@ use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Item\Exception\NameMiss
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Item\Exception\NameTypeIsInvalidException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Item\Exception\ParentIdIsEmptyException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Item\Exception\ParentIdTypeIsInvalidException;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Item\Exception\RouteNameIsEmptyException;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Item\Exception\RouteNameTypeIsInvalidException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Item\Exception\WordingDomainIsEmptyException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Item\Exception\WordingDomainTypeIsInvalidException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\Item\Exception\WordingIsEmptyException;
@@ -40,6 +42,9 @@ class TabItem implements TabItemInterface
     private $enabled;
 
     /** @var string|null */
+    private $routeName;
+
+    /** @var string|null */
     private $icon;
 
     /** @var string */
@@ -55,6 +60,7 @@ class TabItem implements TabItemInterface
      * @param int $position
      * @param bool $active
      * @param bool $enabled
+     * @param string|null $routeName
      * @param string|null $icon
      * @param string|null $wording
      * @param string|null $wordingDomain
@@ -66,6 +72,7 @@ class TabItem implements TabItemInterface
         $position = 0,
         $active = true,
         $enabled = true,
+        $routeName = null,
         $icon = null,
         $wording = null,
         $wordingDomain = null
@@ -73,6 +80,7 @@ class TabItem implements TabItemInterface
         $this->ensureClassNameIsValid($className);
         $this->ensureNameIsValid($name);
         $this->ensureParentIdIsValid($parentId);
+        $this->ensureRouteNameIsValid($routeName);
         $this->ensureIconIsValid($icon);
         $this->ensureWordingIsValid($wording);
         $this->ensureWordingDomainIsValid($wordingDomain);
@@ -85,6 +93,7 @@ class TabItem implements TabItemInterface
         $this->position         = (int) $position;
         $this->active           = (bool) $active;
         $this->enabled          = (bool) $enabled;
+        $this->routeName        = $routeName;
         $this->icon             = $icon;
         $this->wording          = null === $wording ? $this->name[$defaultLanguageId] : $wording;
         $this->wordingDomain    = null === $wordingDomain ? 'Admin.Navigation.Menu' : $wordingDomain;
@@ -136,6 +145,14 @@ class TabItem implements TabItemInterface
     public function isEnabled()
     {
         return $this->enabled;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getRouteName()
+    {
+        return $this->routeName;
     }
 
     /**
@@ -216,6 +233,29 @@ class TabItem implements TabItemInterface
 
         if (\is_string($parentId) && empty($parentId)) {
             throw new ParentIdIsEmptyException('The $parentId is empty');
+        }
+    }
+
+    /**
+     * @param string|null $routeName
+     *
+     * @return void
+     *
+     * @throws RouteNameTypeIsInvalidException
+     * @throws RouteNameIsEmptyException
+     */
+    private function ensureRouteNameIsValid($routeName)
+    {
+        if (null === $routeName) {
+            return;
+        }
+
+        if (!\is_string($routeName)) {
+            throw new RouteNameTypeIsInvalidException('The $routeName is not a string');
+        }
+
+        if (empty($routeName)) {
+            throw new RouteNameIsEmptyException('The $routeName is empty');
         }
     }
 

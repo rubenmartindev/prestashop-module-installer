@@ -129,7 +129,7 @@ class TabHandlerTest extends AbstractHandlerInstallerTestCase
     {
         $this->expectException(FailedToCreateTabException::class);
 
-        TabStub::$forceReturnFalseOnAdd = true;
+        TabStub::$forceReturnFalseOnSave = true;
 
         $handler = new TabHandler($this->module, [
             $this->createTabItemMock('AdminMyModule', 'My tab'),
