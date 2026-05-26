@@ -7,6 +7,7 @@ use RubenMartinDev\PrestaShopModuleInstaller\Database\ValueObject\Exception\Tabl
 use RubenMartinDev\PrestaShopModuleInstaller\Database\ValueObject\Exception\TableNameIsNotValidException;
 use RubenMartinDev\PrestaShopModuleInstaller\Database\ValueObject\Exception\TableNameTypeIsInvalidException;
 use RubenMartinDev\PrestaShopModuleInstaller\Database\ValueObject\TableName;
+use RubenMartinDev\PrestaShopModuleInstaller\ValueObject\ValueObjectInterface;
 
 final class TableNameTest extends TestCase
 {
@@ -35,7 +36,7 @@ final class TableNameTest extends TestCase
     {
         $tableName = new TableName('my_table');
 
-        $this->assertInstanceOf(TableName::class, $tableName);
+        $this->assertInstanceOf(ValueObjectInterface::class, $tableName);
     }
 
     public function testIsEqualsReturnsFalseWhenIsNotSameValues()

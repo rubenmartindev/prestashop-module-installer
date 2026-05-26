@@ -4,6 +4,7 @@ namespace RubenMartinDev\PrestaShopModuleInstaller\Tests\Database\ValueObject;
 
 use PHPUnit\Framework\TestCase;
 use RubenMartinDev\PrestaShopModuleInstaller\Database\ValueObject\KeepData;
+use RubenMartinDev\PrestaShopModuleInstaller\ValueObject\ValueObjectInterface;
 
 final class KeepDataTest extends TestCase
 {
@@ -12,8 +13,8 @@ final class KeepDataTest extends TestCase
         $keepData1 = new KeepData(true);
         $keepData2 = new KeepData(false);
 
-        $this->assertInstanceOf(KeepData::class, $keepData1);
-        $this->assertInstanceOf(KeepData::class, $keepData2);
+        $this->assertInstanceOf(ValueObjectInterface::class, $keepData1);
+        $this->assertInstanceOf(ValueObjectInterface::class, $keepData2);
     }
 
     public function testIsEqualsReturnsFalseWhenIsNotSameValues()

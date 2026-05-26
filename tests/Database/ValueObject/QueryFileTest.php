@@ -10,6 +10,7 @@ use RubenMartinDev\PrestaShopModuleInstaller\Database\ValueObject\Exception\Quer
 use RubenMartinDev\PrestaShopModuleInstaller\Database\ValueObject\Exception\QueryFileNotExistsException;
 use RubenMartinDev\PrestaShopModuleInstaller\Database\ValueObject\Exception\QueryFileTypeIsInvalidException;
 use RubenMartinDev\PrestaShopModuleInstaller\Database\ValueObject\QueryFile;
+use RubenMartinDev\PrestaShopModuleInstaller\ValueObject\ValueObjectInterface;
 
 final class QueryFileTest extends TestCase
 {
@@ -68,8 +69,8 @@ final class QueryFileTest extends TestCase
         $queryFile1 = new QueryFile(vfsStream::url('root/redeable.sql'));
         $queryFile2 = new QueryFile(null);
 
-        $this->assertInstanceOf(QueryFile::class, $queryFile1);
-        $this->assertInstanceOf(QueryFile::class, $queryFile2);
+        $this->assertInstanceOf(ValueObjectInterface::class, $queryFile1);
+        $this->assertInstanceOf(ValueObjectInterface::class, $queryFile2);
     }
 
     public function testIsEqualsReturnsFalseWhenIsNotSameValues()

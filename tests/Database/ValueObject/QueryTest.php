@@ -6,6 +6,7 @@ use PHPUnit\Framework\TestCase;
 use RubenMartinDev\PrestaShopModuleInstaller\Database\ValueObject\Exception\QueryIsEmptyException;
 use RubenMartinDev\PrestaShopModuleInstaller\Database\ValueObject\Exception\QueryTypeIsInvalidException;
 use RubenMartinDev\PrestaShopModuleInstaller\Database\ValueObject\Query;
+use RubenMartinDev\PrestaShopModuleInstaller\ValueObject\ValueObjectInterface;
 
 final class QueryTest extends TestCase
 {
@@ -28,8 +29,8 @@ final class QueryTest extends TestCase
         $query1 = new Query('SELECT * FROM my_table');
         $query2 = new Query(null);
 
-        $this->assertInstanceOf(Query::class, $query1);
-        $this->assertInstanceOf(Query::class, $query2);
+        $this->assertInstanceOf(ValueObjectInterface::class, $query1);
+        $this->assertInstanceOf(ValueObjectInterface::class, $query2);
     }
 
     public function testIsEqualsReturnsFalseWhenIsNotSameValues()
