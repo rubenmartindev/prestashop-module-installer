@@ -3,8 +3,6 @@
 namespace RubenMartinDev\PrestaShopModuleInstaller\Database\Handler;
 
 use Module;
-use RubenMartinDev\PrestaShopModuleInstaller\Database\Handler\DatabaseHandler;
-use RubenMartinDev\PrestaShopModuleInstaller\Database\Handler\DatabaseHandlerInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\Database\Item\DatabaseItemFactory;
 use RubenMartinDev\PrestaShopModuleInstaller\Database\Item\DatabaseItemInterface;
 
