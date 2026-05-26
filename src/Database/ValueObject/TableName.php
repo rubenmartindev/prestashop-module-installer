@@ -29,19 +29,6 @@ final class TableName implements ValueObjectInterface
 
     /**
      * {@inheritDoc}
-     */
-    public function isEquals($value)
-    {
-        $value = $value instanceof ValueObjectInterface
-            ? $value->getValue()
-            : $value
-        ;
-
-        return $value === $this->tableName;
-    }
-
-    /**
-     * {@inheritDoc}
      *
      * @return string
      */

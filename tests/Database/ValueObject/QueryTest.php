@@ -33,39 +33,6 @@ final class QueryTest extends TestCase
         $this->assertInstanceOf(ValueObjectInterface::class, $query2);
     }
 
-    public function testIsEqualsReturnsFalseWhenIsNotSameValues()
-    {
-        $value1 = 'SELECT * FROM my_table';
-        $value2 = 'SELECT * FROM another_table';
-        $value3 = null;
-
-        $query1 = new Query($value1);
-        $query2 = new Query($value2);
-        $query3 = new Query($value3);
-
-        $this->assertFalse($query1->isEquals($value2));
-        $this->assertFalse($query1->isEquals($value3));
-        $this->assertFalse($query1->isEquals($query2));
-        $this->assertFalse($query1->isEquals($query3));
-    }
-
-    public function testIsEqualsReturnsTrueWhenIsSameValues()
-    {
-        $value1 = 'SELECT * FROM my_table';
-        $value2 = null;
-
-        $queryWithString1 = new Query($value1);
-        $queryWithString2 = new Query($value1);
-
-        $queryWithNull1 = new Query($value2);
-        $queryWithNull2 = new Query($value2);
-
-        $this->assertTrue($queryWithString1->isEquals($value1));
-        $this->assertTrue($queryWithString1->isEquals($queryWithString2));
-        $this->assertTrue($queryWithNull1->isEquals($value2));
-        $this->assertTrue($queryWithNull1->isEquals($queryWithNull2));
-    }
-
     public function testIsEmptyReturnsFalseWhenIsNotEmpty()
     {
         $query = new Query('SELECT * FROM my_table');

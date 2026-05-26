@@ -30,19 +30,6 @@ final class Query implements ValueObjectInterface
     }
 
     /**
-     * {@inheritDoc}
-     */
-    public function isEquals($value)
-    {
-        $value = $value instanceof ValueObjectInterface
-            ? $value->getValue()
-            : $value
-        ;
-
-        return $value === $this->query;
-    }
-
-    /**
      * @return bool
      */
     public function isEmpty()

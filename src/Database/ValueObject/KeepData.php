@@ -19,19 +19,6 @@ final class KeepData implements ValueObjectInterface
 
     /**
      * {@inheritDoc}
-     */
-    public function isEquals($value)
-    {
-        $value = $value instanceof ValueObjectInterface
-            ? $value->getValue()
-            : $value
-        ;
-
-        return $value === $this->keepData;
-    }
-
-    /**
-     * {@inheritDoc}
      *
      * @return bool
      */

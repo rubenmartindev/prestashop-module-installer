@@ -17,24 +17,6 @@ final class KeepDataTest extends TestCase
         $this->assertInstanceOf(ValueObjectInterface::class, $keepData2);
     }
 
-    public function testIsEqualsReturnsFalseWhenIsNotSameValues()
-    {
-        $keepData1 = new KeepData(true);
-        $keepData2 = new KeepData(false);
-
-        $this->assertFalse($keepData1->isEquals(false));
-        $this->assertFalse($keepData1->isEquals($keepData2));
-    }
-
-    public function testIsEqualsReturnsTrueWhenIsSameValues()
-    {
-        $keepData1 = new KeepData(true);
-        $keepData2 = new KeepData(true);
-
-        $this->assertTrue($keepData1->isEquals(true));
-        $this->assertTrue($keepData1->isEquals($keepData2));
-    }
-
     public function testGetValueReturnsBool()
     {
         $keepData1 = new KeepData(true);

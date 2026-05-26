@@ -73,39 +73,6 @@ final class QueryFileTest extends TestCase
         $this->assertInstanceOf(ValueObjectInterface::class, $queryFile2);
     }
 
-    public function testIsEqualsReturnsFalseWhenIsNotSameValues()
-    {
-        $value1 = vfsStream::url('root/redeable.sql');
-        $value2 = vfsStream::url('root/another_redeable.sql');
-        $value3 = null;
-
-        $queryFile1 = new QueryFile($value1);
-        $queryFile2 = new QueryFile($value2);
-        $queryFile3 = new QueryFile($value3);
-
-        $this->assertFalse($queryFile1->isEquals($value2));
-        $this->assertFalse($queryFile1->isEquals($value3));
-        $this->assertFalse($queryFile1->isEquals($queryFile2));
-        $this->assertFalse($queryFile1->isEquals($queryFile3));
-    }
-
-    public function testIsEqualsReturnsTrueWhenIsSameValues()
-    {
-        $value1 = vfsStream::url('root/redeable.sql');
-        $value2 = null;
-
-        $queryFileWithString1 = new QueryFile($value1);
-        $queryFileWithString2 = new QueryFile($value1);
-
-        $queryFileWithNull1 = new QueryFile($value2);
-        $queryFileWithNull2 = new QueryFile($value2);
-
-        $this->assertTrue($queryFileWithString1->isEquals($value1));
-        $this->assertTrue($queryFileWithString1->isEquals($queryFileWithString2));
-        $this->assertTrue($queryFileWithNull1->isEquals($value2));
-        $this->assertTrue($queryFileWithNull1->isEquals($queryFileWithNull2));
-    }
-
     public function testIsEmptyReturnsFalseWhenIsNotEmpty()
     {
         $queryFile = new QueryFile(vfsStream::url('root/redeable.sql'));

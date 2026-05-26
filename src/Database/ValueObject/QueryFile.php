@@ -33,19 +33,6 @@ final class QueryFile implements ValueObjectInterface
     }
 
     /**
-     * {@inheritDoc}
-     */
-    public function isEquals($value)
-    {
-        $value = $value instanceof ValueObjectInterface
-            ? $value->getValue()
-            : $value
-        ;
-
-        return $value === $this->queryFile;
-    }
-
-    /**
      * @return bool
      */
     public function isEmpty()

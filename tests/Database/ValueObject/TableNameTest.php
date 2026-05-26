@@ -39,29 +39,6 @@ final class TableNameTest extends TestCase
         $this->assertInstanceOf(ValueObjectInterface::class, $tableName);
     }
 
-    public function testIsEqualsReturnsFalseWhenIsNotSameValues()
-    {
-        $value1 = 'my_table_1';
-        $value2 = 'my_table_2';
-
-        $tableName1 = new TableName($value1);
-        $tableName2 = new TableName($value2);
-
-        $this->assertFalse($tableName1->isEquals($value2));
-        $this->assertFalse($tableName1->isEquals($tableName2));
-    }
-
-    public function testIsEqualsReturnsTrueWhenIsSameValues()
-    {
-        $value = 'my_table';
-
-        $tableName1 = new TableName($value);
-        $tableName2 = new TableName($value);
-
-        $this->assertTrue($tableName1->isEquals($value));
-        $this->assertTrue($tableName1->isEquals($tableName2));
-    }
-
     public function testGetValueReturnsString()
     {
         $value = 'my_table';
