@@ -25,12 +25,6 @@ final class DatabaseItem implements DatabaseItemInterface
     /** @var string|null */
     private $sql = null;
 
-    /**
-     * @param TableName $tableName
-     * @param Query $query
-     * @param QueryFile $queryFile
-     * @param KeepData $keepData
-     */
     public function __construct(
         TableName $tableName,
         Query $query,

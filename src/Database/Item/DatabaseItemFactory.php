@@ -8,7 +8,7 @@ use RubenMartinDev\PrestaShopModuleInstaller\Database\ValueObject\QueryFile;
 use RubenMartinDev\PrestaShopModuleInstaller\Database\ValueObject\TableName;
 
 /**
- * @phpstan-type TIableName string
+ * @phpstan-type TTableName string
  * @phpstan-type TQuery string|null
  * @phpstan-type TQueryFile string|null
  * @phpstan-type TKeepData bool
