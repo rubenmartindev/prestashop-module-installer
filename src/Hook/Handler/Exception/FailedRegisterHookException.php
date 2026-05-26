@@ -1,6 +1,6 @@
 <?php
 
-namespace RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\Exception;
+namespace RubenMartinDev\PrestaShopModuleInstaller\Hook\Handler\Exception;
 
 class FailedRegisterHookException extends HookHandlerException
 {

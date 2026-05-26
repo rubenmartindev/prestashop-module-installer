@@ -1,0 +1,98 @@
+<?php
+
+namespace RubenMartinDev\PrestaShopModuleInstaller\Tests\Hook\Handler;
+
+use PHPUnit\Framework\TestCase;
+use PHPUnit_Framework_MockObject_MockObject;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\Exception\ItemTypeIsInvalidException;
+use RubenMartinDev\PrestaShopModuleInstaller\Hook\Handler\Exception\FailedRegisterHookException;
+use RubenMartinDev\PrestaShopModuleInstaller\Hook\Handler\HookHandler;
+use RubenMartinDev\PrestaShopModuleInstaller\Hook\Handler\HookHandlerInterface;
+use RubenMartinDev\PrestaShopModuleInstaller\Hook\Item\HookItemInterface;
+use RubenMartinDev\PrestaShopModuleInstaller\Hook\ValueObject\Name;
+use RubenMartinDev\PrestaShopModuleInstaller\Hook\ValueObject\PrestaShopVersion;
+use RubenMartinDev\PrestaShopModuleInstaller\Tests\Resources\ModuleTrait;
+use RubenMartinDev\PrestaShopModuleInstaller\Tests\Resources\Stubs\Classes\Module\ModuleStub;
+
+final class HookHandlerTest extends TestCase
+{
+    use ModuleTrait;
+
+    public function testConstructThrowsExceptionWhenItemsIsInvalid()
+    {
+        $this->expectException(ItemTypeIsInvalidException::class);
+
+        new HookHandler(
+            $this->getModule(),
+            ['foobar']
+        );
+    }
+
+    public function testConstructReturnsHandler()
+    {
+        $handler = new HookHandler(
+            $this->getModule(),
+            [$this->createItemMock('displayHeader')]
+        );
+
+        $this->assertInstanceOf(HookHandlerInterface::class, $handler);
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testInstallThrowsExceptionWhenRegisteringHookFails()
+    {
+        $this->expectException(FailedRegisterHookException::class);
+
+        ModuleStub::$forceReturnFalseOnRegisterHook = true;
+
+        $handler = new HookHandler(
+            $this->getModule(),
+            [$this->createItemMock('displayHeader')]
+        );
+
+        $handler->install();
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testInstallReturnsTrue()
+    {
+        \define('_PS_VERSION_', 1.0);
+
+        $handler = new HookHandler(
+            $this->getModule(),
+            [$this->createItemMock('displayHeader')]
+        );
+
+        $this->assertTrue($handler->install());
+    }
+
+    public function testUninstallReturnsTrue()
+    {
+        $handler = new HookHandler(
+            $this->getModule(),
+            [$this->createItemMock('displayHeader')]
+        );
+
+        $this->assertTrue($handler->uninstall());
+    }
+
+    /**
+     * @param string $name
+     * @param array $prestashopVersion
+     *
+     * @return HookItemInterface|PHPUnit_Framework_MockObject_MockObject
+     */
+    private function createItemMock($name, $prestashopVersion = ['min' => null, 'max' => null])
+    {
+        $item = $this->createMock(HookItemInterface::class);
+
+        $item->method('getName')->willReturn(new Name($name));
+        $item->method('getPrestaShopVersion')->willReturn(new PrestaShopVersion($prestashopVersion));
+
+        return $item;
+    }
+}
