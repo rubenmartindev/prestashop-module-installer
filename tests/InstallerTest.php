@@ -7,9 +7,12 @@ use PHPUnit\Framework\TestCase;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\HandlerInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\Installer;
 use RubenMartinDev\PrestaShopModuleInstaller\InstallerInterface;
+use RubenMartinDev\PrestaShopModuleInstaller\Tests\Resources\ModuleTrait;
 
 class InstallerTest extends TestCase
 {
+    use ModuleTrait;
+
     public function testConstructorReturnsInstaller()
     {
         $installer1 = new Installer([]);
@@ -17,6 +20,48 @@ class InstallerTest extends TestCase
 
         $this->assertInstanceOf(InstallerInterface::class, $installer1);
         $this->assertInstanceOf(InstallerInterface::class, $installer2);
+    }
+
+    public function testCreateFromReturnInstallerWithoutHandlers()
+    {
+        $installer = Installer::createFrom(
+            $this->getModule(),
+            []
+        );
+
+        $this->assertInstanceOf(InstallerInterface::class, $installer);
+    }
+
+    public function testCreateFromReturnInstallerWithHandlers()
+    {
+        $installer = Installer::createFrom(
+            $this->getModule(),
+            [
+                'database'  => [
+                    [
+                        'tableName' => 'my_table',
+                    ],
+                ],
+                'hooks'     => [
+                    [
+                        'name'      => 'displayHeader',
+                    ],
+                ],
+                'tabs'      => [
+                    [
+                        'className' => 'AdminMyModule',
+                        'name'      => 'My tab'
+                    ],
+                ],
+                'foobar'    => [
+                    [
+                        'baar' => true,
+                    ],
+                ],
+            ]
+        );
+
+        $this->assertInstanceOf(InstallerInterface::class, $installer);
     }
 
     public function testInstall()
