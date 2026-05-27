@@ -48,7 +48,15 @@ final class DatabaseHandlerFactory
      */
     private static function defaultFactory(array $item)
     {
-        $arguments = \array_values($item);
+        $defaultArguments = [
+            'tableName' => '',
+            'query'     => null,
+            'queryFile' => null,
+            'keepData'  => false,
+        ];
+
+        $arguments = \array_merge($defaultArguments, $item);
+        $arguments = \array_values($arguments);
 
         return DatabaseItemFactory::create(...$arguments);
     }

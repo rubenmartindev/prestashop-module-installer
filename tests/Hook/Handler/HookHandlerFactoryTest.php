@@ -52,4 +52,19 @@ final class HookHandlerFactoryTest extends TestCase
 
         $this->assertInstanceOf(HookHandlerInterface::class, $handler);
     }
+
+    public function testCreateReturnsDatabaseHandlerWithArrayWithoutAnOrder()
+    {
+        $handler = HookHandlerFactory::create(
+            $this->getModule(),
+            [
+                [
+                    'prestashopVersion' => '>=1.6.0.0',
+                    'name'              => 'displayFooter',
+                ],
+            ]
+        );
+
+        $this->assertInstanceOf(HookHandlerInterface::class, $handler);
+    }
 }

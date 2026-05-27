@@ -73,4 +73,21 @@ final class DatabaseHandlerFactoryTest extends TestCase
 
         $this->assertInstanceOf(DatabaseHandlerInterface::class, $handler);
     }
+
+    public function testCreateReturnsDatabaseHandlerWithArrayWithoutAnOrder()
+    {
+        $handler = DatabaseHandlerFactory::create(
+            $this->getModule(),
+            [
+                [
+                    'keepData'  => true,
+                    'query'     => 'CREATE TABLE my_table_2',
+                    'queryFile' => vfsStream::url('root/my_table_2.sql'),
+                    'tableName' => 'my_table_2',
+                ],
+            ]
+        );
+
+        $this->assertInstanceOf(DatabaseHandlerInterface::class, $handler);
+    }
 }

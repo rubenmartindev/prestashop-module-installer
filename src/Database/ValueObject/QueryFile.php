@@ -63,9 +63,11 @@ final class QueryFile implements ValueObjectInterface
             return;
         }
 
-        if (false === \is_string($queryFile)) {
-            throw new QueryFileTypeIsInvalidException('The QueryFile is not a string or null');
+        if (true === \is_string($queryFile)) {
+            return;
         }
+
+        throw new QueryFileTypeIsInvalidException('The QueryFile is not a string or null');
     }
 
     /**

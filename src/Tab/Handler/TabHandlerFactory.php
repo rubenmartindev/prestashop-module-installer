@@ -60,7 +60,21 @@ final class TabHandlerFactory
      */
     private static function defaultFactory(array $item)
     {
-        $arguments = \array_values($item);
+        $defaultArguments = [
+            'className'     => '',
+            'name'          => '',
+            'parentId'      => -1,
+            'position'      => 0,
+            'isActive'      => true,
+            'isEnabled'     => true,
+            'routeName'     => null,
+            'icon'          => null,
+            'wording'       => null,
+            'wordingDomain' => null,
+        ];
+
+        $arguments = \array_merge($defaultArguments, $item);
+        $arguments = \array_values($arguments);
 
         return TabItemFactory::create(...$arguments);
     }

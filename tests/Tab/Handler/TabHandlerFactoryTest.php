@@ -70,4 +70,27 @@ final class TabHandlerFactoryTest extends TestCase
 
         $this->assertInstanceOf(TabHandlerInterface::class, $handler);
     }
+
+    public function testCreateReturnsDatabaseHandlerWithArrayWithoutAnOrder()
+    {
+        $handler = TabHandlerFactory::create(
+            $this->getModule(),
+            [
+                [
+                    'wording'       => 'My tag',
+                    'wordingDomain' => 'Modules.MyModule.Navigation',
+                    'icon'          => 'extension',
+                    'isActive'      => false,
+                    'isEnabled'     => false,
+                    'className'     => 'AdminMyTab2',
+                    'name'          => [1 => 'My tab2 1', 2 => 'My tab2 2'],
+                    'parentId'      => 1,
+                    'position'      => 5,
+                    'routeName'     => 'admin_my_module_my_tab',
+                ],
+            ]
+        );
+
+        $this->assertInstanceOf(TabHandlerInterface::class, $handler);
+    }
 }

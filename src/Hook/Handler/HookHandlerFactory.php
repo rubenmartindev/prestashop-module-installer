@@ -45,7 +45,13 @@ final class HookHandlerFactory
      */
     private static function defaultFactory(array $item)
     {
-        $arguments = \array_values($item);
+        $defaultArguments = [
+            'name'              => '',
+            'prestashopVersion' => null,
+        ];
+
+        $arguments = \array_merge($defaultArguments, $item);
+        $arguments = \array_values($arguments);
 
         return HookItemFactory::create(...$arguments);
     }
