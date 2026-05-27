@@ -49,6 +49,44 @@ final class TabHandlerTest extends TestCase
         $this->assertInstanceOf(TabHandlerInterface::class, $handler);
     }
 
+    public function testCreateFromReturnHandlerWithRequireParameters()
+    {
+        $handler = TabHandler::createFrom(
+            $this->getModule(),
+            [
+                [
+                    'className' => 'AdminMyTab1',
+                    'name'      => 'My tab 1',
+                ],
+            ]
+        );
+
+        $this->assertInstanceOf(TabHandlerInterface::class, $handler);
+    }
+
+    public function testCreateFromReturnHandlerWithOptionalParameters()
+    {
+        $handler = TabHandler::createFrom(
+            $this->getModule(),
+            [
+                [
+                    'className'     => 'AdminMyTab2',
+                    'name'          => [1 => 'My tab2 1', 2 => 'My tab2 2'],
+                    'parentId'      => 1,
+                    'position'      => 5,
+                    'isActive'      => false,
+                    'isEnabled'     => false,
+                    'routeName'     => 'admin_my_module_my_tab',
+                    'icon'          => 'extension',
+                    'wording'       => 'My tag',
+                    'wordingDomain' => 'Modules.MyModule.Navigation',
+                ],
+            ]
+        );
+
+        $this->assertInstanceOf(TabHandlerInterface::class, $handler);
+    }
+
     /**
      * @runInSeparateProcess
      */

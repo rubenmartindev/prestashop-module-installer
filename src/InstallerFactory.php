@@ -9,6 +9,7 @@ use RubenMartinDev\PrestaShopModuleInstaller\Database\Handler\DatabaseHandlerInt
 use RubenMartinDev\PrestaShopModuleInstaller\Hook\Handler\HookHandler;
 use RubenMartinDev\PrestaShopModuleInstaller\Hook\Handler\HookHandlerFactory;
 use RubenMartinDev\PrestaShopModuleInstaller\Hook\Handler\HookHandlerInterface;
+use RubenMartinDev\PrestaShopModuleInstaller\Tab\Handler\TabHandler;
 use RubenMartinDev\PrestaShopModuleInstaller\Tab\Handler\TabHandlerFactory;
 use RubenMartinDev\PrestaShopModuleInstaller\Tab\Handler\TabHandlerInterface;
 
@@ -97,6 +98,6 @@ class InstallerFactory
      */
     private static function defaultTabsFactory(Module $module, array $items)
     {
-        return TabHandlerFactory::create($module, $items);
+        return TabHandler::createFrom($module, $items);
     }
 }
