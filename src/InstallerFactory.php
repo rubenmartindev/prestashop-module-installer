@@ -21,8 +21,8 @@ class InstallerFactory
      * @param Module $module
      * @param array{
      *   database?: TDatabase,
-     *   items?: THooks,
-     *   items?: TTabs,
+     *   hooks?: THooks,
+     *   tabs?: TTabs,
      * } $handlers
      * @param callable(Module $module, TDatabase $items): DatabaseHandlerInterface|null $factoryDatabase
      * @param callable(Module $module, THooks $items): HookHandlerInterface|null $factoryHooks
@@ -44,15 +44,20 @@ class InstallerFactory
         foreach ($handlers as $name => &$items) {
             if ('database' === $name) {
                 $items = $factoryDatabase($module, $items);
+                continue;
             }
 
-            if ('items' === $name) {
+            if ('hooks' === $name) {
                 $items = $factoryHooks($module, $items);
+                continue;
             }
 
-            if ('items' === $name) {
+            if ('tabs' === $name) {
                 $items = $factoryTabs($module, $items);
+                continue;
             }
+
+            unset($handlers[$name]);
         }
 
         $handlers = \array_values($handlers);
