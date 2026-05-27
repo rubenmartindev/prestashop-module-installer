@@ -80,6 +80,35 @@ final class TabItem implements TabItemInterface
     /**
      * {@inheritDoc}
      */
+    public static function createFrom(
+        $className,
+        $name,
+        $parentId = -1,
+        $position = 0,
+        $isActive = true,
+        $isEnabled = true,
+        $routeName = null,
+        $icon = null,
+        $wording = null,
+        $wordingDomain = null
+    ) {
+        return new static(
+            new ClassName($className),
+            new Name($name),
+            new ParentId($parentId),
+            new Position($position),
+            new IsActive($isActive),
+            new IsEnabled($isEnabled),
+            new RouteName($routeName),
+            new Icon($icon),
+            new Wording($wording),
+            new WordingDomain($wordingDomain)
+        );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getClassName()
     {
         return $this->className;

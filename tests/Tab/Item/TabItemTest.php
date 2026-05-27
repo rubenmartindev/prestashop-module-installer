@@ -121,6 +121,34 @@ final class TabItemTest extends TestCase
         $this->assertSame('Admin.Navigation.Menu', $item->getWordingDomain()->getValue());
     }
 
+    public function testCreateFromReturnTabItemWithRequireParameters()
+    {
+        $item = TabItem::createFrom(
+            'AdminMyTab',
+            'My tab'
+        );
+
+        $this->assertInstanceOf(TabItemInterface::class, $item);
+    }
+
+    public function testCreateFromReturnTabItemWithOptionalParameters()
+    {
+        $item = TabItem::createFrom(
+            'AdminMyTab2',
+            [1 => 'My tab2 1', 2 => 'My tab2 2'],
+            1,
+            5,
+            false,
+            false,
+            'admin_my_module_my_tab',
+            'extension',
+            'My tag',
+            'Modules.MyModule.Navigation'
+        );
+
+        $this->assertInstanceOf(TabItemInterface::class, $item);
+    }
+
     public function testGetClassNameReturnsValueObject()
     {
         $this->assertSame($this->className, $this->item->getClassName());

@@ -3,6 +3,7 @@
 namespace RubenMartinDev\PrestaShopModuleInstaller\Tab\Handler;
 
 use Module;
+use RubenMartinDev\PrestaShopModuleInstaller\Tab\Item\TabItem;
 use RubenMartinDev\PrestaShopModuleInstaller\Tab\Item\TabItemFactory;
 use RubenMartinDev\PrestaShopModuleInstaller\Tab\Item\TabItemInterface;
 
@@ -76,6 +77,6 @@ final class TabHandlerFactory
         $arguments = \array_merge($defaultArguments, $item);
         $arguments = \array_values($arguments);
 
-        return TabItemFactory::create(...$arguments);
+        return TabItem::createFrom(...$arguments);
     }
 }
