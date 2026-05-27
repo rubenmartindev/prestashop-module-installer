@@ -6,6 +6,7 @@ use Module;
 use RubenMartinDev\PrestaShopModuleInstaller\Database\Handler\DatabaseHandler;
 use RubenMartinDev\PrestaShopModuleInstaller\Database\Handler\DatabaseHandlerFactory;
 use RubenMartinDev\PrestaShopModuleInstaller\Database\Handler\DatabaseHandlerInterface;
+use RubenMartinDev\PrestaShopModuleInstaller\Hook\Handler\HookHandler;
 use RubenMartinDev\PrestaShopModuleInstaller\Hook\Handler\HookHandlerFactory;
 use RubenMartinDev\PrestaShopModuleInstaller\Hook\Handler\HookHandlerInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\Tab\Handler\TabHandlerFactory;
@@ -85,7 +86,7 @@ class InstallerFactory
      */
     private static function defaultHooksFactory(Module $module, array $items)
     {
-        return HookHandlerFactory::create($module, $items);
+        return HookHandler::createFrom($module, $items);
     }
 
     /**

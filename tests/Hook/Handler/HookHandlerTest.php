@@ -38,6 +38,35 @@ final class HookHandlerTest extends TestCase
         $this->assertInstanceOf(HookHandlerInterface::class, $handler);
     }
 
+    public function testCreateFromReturnHandlerWithRequireParameters()
+    {
+        $handler = HookHandler::createFrom(
+            $this->getModule(),
+            [
+                [
+                    'name'              => 'displayHeader',
+                ],
+            ]
+        );
+
+        $this->assertInstanceOf(HookHandlerInterface::class, $handler);
+    }
+
+    public function testCreateFromReturnHandlerWithOptionalParameters()
+    {
+        $handler = HookHandler::createFrom(
+            $this->getModule(),
+            [
+                [
+                    'name'              => 'displayFooter',
+                    'prestashopVersion' => '>=1.6.0.0',
+                ],
+            ]
+        );
+
+        $this->assertInstanceOf(HookHandlerInterface::class, $handler);
+    }
+
     /**
      * @runInSeparateProcess
      */

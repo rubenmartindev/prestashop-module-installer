@@ -6,6 +6,7 @@ use Module;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\AbstractHandler;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Exception\ItemTypeIsInvalidException;
 use RubenMartinDev\PrestaShopModuleInstaller\Hook\Handler\Exception\FailedRegisterHookException;
+use RubenMartinDev\PrestaShopModuleInstaller\Hook\Item\HookItem;
 use RubenMartinDev\PrestaShopModuleInstaller\Hook\Item\HookItemInterface;
 use RubenMartinDev\PrestaShopVersionChecker\PrestaShopVersionChecker;
 
@@ -14,6 +15,29 @@ use RubenMartinDev\PrestaShopVersionChecker\PrestaShopVersionChecker;
  */
 final class HookHandler extends AbstractHandler implements HookHandlerInterface
 {
+    /**
+     * {@inheritDoc}
+     */
+    public static function createFrom(Module $module, array $items)
+    {
+        $items = \array_map(
+            function (array $item) {
+                $defaultArguments = [
+                    'name'              => '',
+                    'prestashopVersion' => null,
+                ];
+
+                $arguments = \array_merge($defaultArguments, $item);
+                $arguments = \array_values($arguments);
+
+                return HookItem::createFrom(...$arguments);
+            },
+            $items
+        );
+
+        return new static($module, $items);
+    }
+
     /**
      * {@inheritDoc}
      */
