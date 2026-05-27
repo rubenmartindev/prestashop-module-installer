@@ -2,37 +2,34 @@
 
 namespace RubenMartinDev\PrestaShopModuleInstaller\Tests;
 
-use Module;
-use org\bovigo\vfs\vfsStream;
-use PHPUnit_Framework_MockObject_MockObject;
 use PHPUnit\Framework\TestCase;
-use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\DatabaseHandlerInterface;
-use RubenMartinDev\PrestaShopModuleInstaller\Handler\HandlerInstallerInterface;
-use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\HookHandlerInterface;
-use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\TabHandlerInterface;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\HandlerInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\InstallerFactory;
 use RubenMartinDev\PrestaShopModuleInstaller\InstallerInterface;
+use RubenMartinDev\PrestaShopModuleInstaller\Tests\Resources\ModuleTrait;
 
 class InstallerFactoryTest extends TestCase
 {
-    public function testCreateReturnsInstallerWithCallbacks()
+    use ModuleTrait;
+
+    public function testCreateReturnsInstallerWithFactories()
     {
         $factoryDatabase = function () {
-            return $this->createHandlerInstallerMock(DatabaseHandlerInterface::class);
+            return $this->createMock(HandlerInterface::class);
         };
         $factoryHooks = function () {
-            return $this->createHandlerInstallerMock(HookHandlerInterface::class);
+            return $this->createMock(HandlerInterface::class);
         };
         $factoryTabs = function () {
-            return $this->createHandlerInstallerMock(TabHandlerInterface::class);
+            return $this->createMock(HandlerInterface::class);
         };
 
         $installer = InstallerFactory::create(
-            $this->createModuleMock(),
+            $this->getModule(),
             [
-                'database'  => [],
-                'hooks'     => [],
-                'tabs'      => [],
+                'database'  => ['foobar'],
+                'hooks'     => ['foobar'],
+                'tabs'      => ['foobar'],
             ],
             $factoryDatabase,
             $factoryHooks,
@@ -40,32 +37,16 @@ class InstallerFactoryTest extends TestCase
         );
 
         $this->assertInstanceOf(InstallerInterface::class, $installer);
-
-        $handler1 = $installer->getHandler(0);
-        $handler2 = $installer->getHandler(1);
-        $handler3 = $installer->getHandler(2);
-
-        $this->assertInstanceOf(DatabaseHandlerInterface::class, $handler1);
-        $this->assertInstanceOf(HookHandlerInterface::class, $handler2);
-        $this->assertInstanceOf(TabHandlerInterface::class, $handler3);
     }
 
-    public function testCreateReturnsInstallerWithoutCallbacks()
+    public function testCreateReturnsInstallerWithoutFactories()
     {
-        $directory = vfsStream::setup();
-
-        vfsStream::newFile('my_table.sql')
-            ->withContent('CREATE TABLE IF NOT EXISTS `{{DB_PREFIX}}my_table` (id INT) ENGINE={{ENGINE_TYPE}};')
-            ->at($directory)
-        ;
-
         $installer = InstallerFactory::create(
-            $this->createModuleMock(),
+            $this->getModule(),
             [
                 'database'  => [
                     [
                         'tableName' => 'my_table',
-                        'queryFile' => vfsStream::url('root/my_table.sql'),
                     ],
                 ],
                 'hooks'     => [
@@ -83,31 +64,5 @@ class InstallerFactoryTest extends TestCase
         );
 
         $this->assertInstanceOf(InstallerInterface::class, $installer);
-
-        $handler1 = $installer->getHandler(0);
-        $handler2 = $installer->getHandler(1);
-        $handler3 = $installer->getHandler(2);
-
-        $this->assertInstanceOf(DatabaseHandlerInterface::class, $handler1);
-        $this->assertInstanceOf(HookHandlerInterface::class, $handler2);
-        $this->assertInstanceOf(TabHandlerInterface::class, $handler3);
-    }
-
-    /**
-     * @param class-string $className
-     *
-     * @return HandlerInstallerInterface|PHPUnit_Framework_MockObject_MockObject
-     */
-    private function createHandlerInstallerMock($className)
-    {
-        return $this->createMock($className);
-    }
-
-    /**
-     * @return Module|PHPUnit_Framework_MockObject_MockObject
-     */
-    private function createModuleMock()
-    {
-        return $this->getMockForAbstractClass(Module::class);
     }
 }

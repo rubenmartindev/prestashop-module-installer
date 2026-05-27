@@ -2,62 +2,19 @@
 
 namespace RubenMartinDev\PrestaShopModuleInstaller;
 
-use RubenMartinDev\PrestaShopModuleInstaller\Handler\HandlerInstallerInterface;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\HandlerInterface;
 
 class Installer implements InstallerInterface
 {
-    /** @var array<int, HandlerInstallerInterface> */
+    /** @var array<int, HandlerInterface> */
     private $handlers = [];
 
     /**
-     * @param array<int, HandlerInstallerInterface> $handlers
+     * @param array<int, HandlerInterface> $handlers
      */
     public function __construct(array $handlers)
     {
-        foreach ($handlers as $priority => $handler) {
-            $this->addHandler($priority, $handler);
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function addHandler($priority, HandlerInstallerInterface $handler)
-    {
-        $this->handlers[$priority] = $handler;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getHandler($priority)
-    {
-        return isset($this->handlers[$priority])
-            ? $this->handlers[$priority]
-            : null
-        ;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function removeHandler($priority)
-    {
-        if (isset($this->handlers[$priority])) {
-            unset($this->handlers[$priority]);
-        }
-
-        return $this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getHandlers()
-    {
-        return $this->handlers;
+        $this->handlers = $handlers;
     }
 
     /**

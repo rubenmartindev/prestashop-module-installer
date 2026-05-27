@@ -4,95 +4,26 @@ namespace RubenMartinDev\PrestaShopModuleInstaller\Tests;
 
 use PHPUnit_Framework_MockObject_MockObject;
 use PHPUnit\Framework\TestCase;
-use RubenMartinDev\PrestaShopModuleInstaller\Handler\HandlerInstallerInterface;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\HandlerInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\Installer;
+use RubenMartinDev\PrestaShopModuleInstaller\InstallerInterface;
 
 class InstallerTest extends TestCase
 {
-    public function testConstructor()
+    public function testConstructorReturnsInstaller()
     {
-        $handler = $this->createHandlerInstallerMock();
+        $installer1 = new Installer([]);
+        $installer2 = new Installer([$this->createHandlerMock()]);
 
-        $installer = new Installer([
-            $handler,
-        ]);
-
-        $this->assertSame($handler, $installer->getHandler(0));
-    }
-
-    public function testAddHandler()
-    {
-        $handler1 = $this->createHandlerInstallerMock();
-        $handler2 = $this->createHandlerInstallerMock();
-
-        $installer = new Installer([
-            $handler1,
-        ]);
-
-        $installer->addHandler(1, $handler2);
-
-        $this->assertSame($handler1, $installer->getHandler(0));
-        $this->assertSame($handler2, $installer->getHandler(1));
-    }
-
-    public function testGetHandlerReturnsNullWhenNotFound()
-    {
-        $installer = new Installer([
-            $this->createHandlerInstallerMock(),
-        ]);
-
-        $this->assertNull($installer->getHandler(-1));
-    }
-
-    public function testGetHandlerReturnsHandlerWhenFound()
-    {
-        $handler = $this->createHandlerInstallerMock();
-
-        $installer = new Installer([
-            $handler,
-        ]);
-
-        $this->assertSame($handler, $installer->getHandler(0));
-    }
-
-    public function testRemoveHandler()
-    {
-        $handler1 = $this->createHandlerInstallerMock();
-        $handler2 = $this->createHandlerInstallerMock();
-
-        $installer = new Installer([
-            $handler1,
-            $handler2,
-        ]);
-
-        $installer->removeHandler(1);
-
-        $this->assertSame($handler1, $installer->getHandler(0));
-        $this->assertNull($installer->getHandler(1));
-    }
-
-    public function testGetHandlers()
-    {
-        $handler1 = $this->createHandlerInstallerMock();
-        $handler2 = $this->createHandlerInstallerMock();
-
-        $installer = new Installer([
-            $handler1,
-            $handler2,
-        ]);
-
-        $handlers = $installer->getHandlers();
-
-        $this->assertCount(2, $handlers);
-        $this->assertSame($handler1, $handlers[0]);
-        $this->assertSame($handler2, $handlers[1]);
+        $this->assertInstanceOf(InstallerInterface::class, $installer1);
+        $this->assertInstanceOf(InstallerInterface::class, $installer2);
     }
 
     public function testInstall()
     {
         $installer = new Installer([
-            $this->createHandlerInstallerMock(),
-            $this->createHandlerInstallerMock(),
+            $this->createHandlerMock(),
+            $this->createHandlerMock(),
         ]);
 
         $this->assertTrue($installer->install());
@@ -101,19 +32,19 @@ class InstallerTest extends TestCase
     public function testUninstall()
     {
         $installer = new Installer([
-            $this->createHandlerInstallerMock(),
-            $this->createHandlerInstallerMock(),
+            $this->createHandlerMock(),
+            $this->createHandlerMock(),
         ]);
 
         $this->assertTrue($installer->uninstall());
     }
 
     /**
-     * @return HandlerInstallerInterface|PHPUnit_Framework_MockObject_MockObject
+     * @return HandlerInterface|PHPUnit_Framework_MockObject_MockObject
      */
-    private function createHandlerInstallerMock()
+    private function createHandlerMock()
     {
-        $handler = $this->createMock(HandlerInstallerInterface::class);
+        $handler = $this->createMock(HandlerInterface::class);
 
         $handler->method('install')->willReturn(true);
         $handler->method('uninstall')->willReturn(true);

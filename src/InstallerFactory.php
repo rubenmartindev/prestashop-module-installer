@@ -3,17 +3,17 @@
 namespace RubenMartinDev\PrestaShopModuleInstaller;
 
 use Module;
-use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\DatabaseHandlerFactory;
-use RubenMartinDev\PrestaShopModuleInstaller\Handler\Database\DatabaseHandlerInterface;
-use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\HookHandlerFactory;
-use RubenMartinDev\PrestaShopModuleInstaller\Handler\Hook\HookHandlerInterface;
-use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\TabHandlerFactory;
-use RubenMartinDev\PrestaShopModuleInstaller\Handler\Tab\TabHandlerInterface;
+use RubenMartinDev\PrestaShopModuleInstaller\Database\Handler\DatabaseHandlerFactory;
+use RubenMartinDev\PrestaShopModuleInstaller\Database\Handler\DatabaseHandlerInterface;
+use RubenMartinDev\PrestaShopModuleInstaller\Hook\Handler\HookHandlerFactory;
+use RubenMartinDev\PrestaShopModuleInstaller\Hook\Handler\HookHandlerInterface;
+use RubenMartinDev\PrestaShopModuleInstaller\Tab\Handler\TabHandlerFactory;
+use RubenMartinDev\PrestaShopModuleInstaller\Tab\Handler\TabHandlerInterface;
 
 /**
- * @phpstan-import-type TQueries from DatabaseHandlerFactory as TDatabase
- * @phpstan-import-type THooks from HookHandlerFactory as THooks
- * @phpstan-import-type TTabs from TabHandlerFactory as TTabs
+ * @phpstan-import-type TItems from DatabaseHandlerFactory as TDatabase
+ * @phpstan-import-type TItems from HookHandlerFactory as THooks
+ * @phpstan-import-type TItems from TabHandlerFactory as TTabs
  */
 class InstallerFactory
 {
@@ -21,12 +21,12 @@ class InstallerFactory
      * @param Module $module
      * @param array{
      *   database?: TDatabase,
-     *   hooks?: THooks,
-     *   tabs?: TTabs,
+     *   items?: THooks,
+     *   items?: TTabs,
      * } $handlers
-     * @param callable(Module $module, TDatabase $queries): DatabaseHandlerInterface|null $factoryDatabase
-     * @param callable(Module $module, THooks $hooks): HookHandlerInterface|null $factoryHooks
-     * @param callable(Module $module, TTabs $tabs): TabHandlerInterface|null $factoryTabs
+     * @param callable(Module $module, TDatabase $items): DatabaseHandlerInterface|null $factoryDatabase
+     * @param callable(Module $module, THooks $items): HookHandlerInterface|null $factoryHooks
+     * @param callable(Module $module, TTabs $items): TabHandlerInterface|null $factoryTabs
      *
      * @return InstallerInterface
      */
@@ -41,17 +41,17 @@ class InstallerFactory
         $factoryHooks       = \is_callable($factoryHooks)       ? $factoryHooks     : [self::class, 'defaultHooksFactory'];
         $factoryTabs        = \is_callable($factoryTabs)        ? $factoryTabs      : [self::class, 'defaultTabsFactory'];
 
-        foreach ($handlers as $name => &$properties) {
+        foreach ($handlers as $name => &$items) {
             if ('database' === $name) {
-                $properties = $factoryDatabase($module, $properties);
+                $items = $factoryDatabase($module, $items);
             }
 
-            if ('hooks' === $name) {
-                $properties = $factoryHooks($module, $properties);
+            if ('items' === $name) {
+                $items = $factoryHooks($module, $items);
             }
 
-            if ('tabs' === $name) {
-                $properties = $factoryTabs($module, $properties);
+            if ('items' === $name) {
+                $items = $factoryTabs($module, $items);
             }
         }
 
@@ -62,34 +62,34 @@ class InstallerFactory
 
     /**
      * @param Module $module
-     * @param TDatabase $queries
+     * @param TDatabase $items
      *
      * @return DatabaseHandlerInterface
      */
-    private static function defaultDatabaseFactory(Module $module, array $queries)
+    private static function defaultDatabaseFactory(Module $module, array $items)
     {
-        return DatabaseHandlerFactory::create($module, $queries);
+        return DatabaseHandlerFactory::create($module, $items);
     }
 
     /**
      * @param Module $module
-     * @param THooks $hooks
+     * @param THooks $items
      *
      * @return HookHandlerInterface
      */
-    private static function defaultHooksFactory(Module $module, array $hooks)
+    private static function defaultHooksFactory(Module $module, array $items)
     {
-        return HookHandlerFactory::create($module, $hooks);
+        return HookHandlerFactory::create($module, $items);
     }
 
     /**
      * @param Module $module
-     * @param TTabs $tabs
+     * @param TTabs $items
      *
      * @return TabHandlerInterface
      */
-    private static function defaultTabsFactory(Module $module, array $tabs)
+    private static function defaultTabsFactory(Module $module, array $items)
     {
-        return TabHandlerFactory::create($module, $tabs);
+        return TabHandlerFactory::create($module, $items);
     }
 }
