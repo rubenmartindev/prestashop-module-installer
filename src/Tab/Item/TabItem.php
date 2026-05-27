@@ -13,7 +13,7 @@ use RubenMartinDev\PrestaShopModuleInstaller\Tab\ValueObject\RouteName;
 use RubenMartinDev\PrestaShopModuleInstaller\Tab\ValueObject\Wording;
 use RubenMartinDev\PrestaShopModuleInstaller\Tab\ValueObject\WordingDomain;
 
-class TabItem implements TabItemInterface
+final class TabItem implements TabItemInterface
 {
     /** @var ClassName */
     private $className;

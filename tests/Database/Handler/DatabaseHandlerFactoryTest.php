@@ -10,7 +10,7 @@ use RubenMartinDev\PrestaShopModuleInstaller\Database\Handler\DatabaseHandlerInt
 use RubenMartinDev\PrestaShopModuleInstaller\Database\Item\DatabaseItemInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\Tests\Resources\ModuleTrait;
 
-class DatabaseHandlerFactoryTest extends TestCase
+final class DatabaseHandlerFactoryTest extends TestCase
 {
     use ModuleTrait;
 

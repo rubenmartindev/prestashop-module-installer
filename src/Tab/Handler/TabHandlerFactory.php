@@ -32,7 +32,7 @@ use RubenMartinDev\PrestaShopModuleInstaller\Tab\Item\TabItemInterface;
  * }
  * @phpstan-type TItems TItem[]
  */
-class TabHandlerFactory
+final class TabHandlerFactory
 {
     /**
      * @param Module $module
