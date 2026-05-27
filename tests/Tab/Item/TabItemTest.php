@@ -124,48 +124,40 @@ final class TabItemTest extends TestCase
     public function testGetClassNameReturnsValueObject()
     {
         $this->assertSame($this->className, $this->item->getClassName());
-
     }
 
     public function testGetNameReturnsValueObject()
     {
         $this->assertSame($this->name, $this->item->getName());
-
     }
 
     public function testGetParentIdReturnsValueObject()
     {
         $this->assertSame($this->parentId, $this->item->getParentId());
-
     }
 
     public function testGetPositionReturnsValueObject()
     {
         $this->assertSame($this->position, $this->item->getPosition());
-
     }
 
     public function testGetRouteNameReturnsValueObject()
     {
         $this->assertSame($this->routeName, $this->item->getRouteName());
-
     }
 
     public function testGetIconReturnsValueObject()
     {
         $this->assertSame($this->icon, $this->item->getIcon());
-
     }
 
     public function testGetWordingReturnsValueObject()
     {
         $this->assertSame($this->wording, $this->item->getWording());
-
     }
 
     public function testGetWordingDomainReturnsValueObject()
     {
         $this->assertSame($this->wordingDomain, $this->item->getWordingDomain());
-
     }
 }

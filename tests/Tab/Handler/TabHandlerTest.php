@@ -60,8 +60,8 @@ final class TabHandlerTest extends TestCase
 
         $handler = new TabHandler(
             $this->getModule(),
-            [$this->createItemMock('AdminMyTab'),
-        ]);
+            [$this->createItemMock('AdminMyTab')]
+        );
 
         $handler->install();
     }
@@ -70,8 +70,8 @@ final class TabHandlerTest extends TestCase
     {
         $handler = new TabHandler(
             $this->getModule(),
-            [$this->createItemMock('AdminMyTab'),
-        ]);
+            [$this->createItemMock('AdminMyTab')]
+        );
 
         $this->assertTrue($handler->install());
     }
