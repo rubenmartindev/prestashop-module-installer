@@ -2,6 +2,8 @@
 
 namespace RubenMartinDev\PrestaShopModuleInstaller\Tests\Database\Handler;
 
+use org\bovigo\vfs\vfsStream;
+use org\bovigo\vfs\vfsStreamContainer;
 use PHPUnit_Framework_MockObject_MockObject;
 use PHPUnit\Framework\TestCase;
 use RubenMartinDev\PrestaShopModuleInstaller\Database\Handler\DatabaseHandler;
@@ -18,6 +20,21 @@ final class DatabaseHandlerTest extends TestCase
 {
     use ModuleTrait;
 
+    /** @var vfsStreamContainer */
+    private $directory;
+
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->directory = vfsStream::setup();
+
+        vfsStream::newFile('my_table.sql')
+            ->withContent('CREATE TABLE my_table')
+            ->at($this->directory)
+        ;
+    }
+
     public function testConstructThrowsExceptionWhenItemsIsInvalid()
     {
         $this->expectException(ItemTypeIsInvalidException::class);
@@ -28,6 +45,37 @@ final class DatabaseHandlerTest extends TestCase
     public function testConstructReturnsHandler()
     {
         $handler = new DatabaseHandler($this->getModule(), [$this->createItemMock('my_table')]);
+
+        $this->assertInstanceOf(DatabaseHandlerInterface::class, $handler);
+    }
+
+    public function testCreateFromReturnHandlerWithRequireParameters()
+    {
+        $handler = Databasehandler::createFrom(
+            $this->getModule(),
+            [
+                [
+                    'tableName' => 'my_table_1',
+                ],
+            ]
+        );
+
+        $this->assertInstanceOf(DatabaseHandlerInterface::class, $handler);
+    }
+
+    public function testCreateFromReturnHandlerWithOptionalParameters()
+    {
+        $handler = Databasehandler::createFrom(
+            $this->getModule(),
+            [
+                [
+                    'tableName' => 'my_table',
+                    'query'     => 'CREATE TABLE my_table',
+                    'queryFile' => vfsStream::url('root/my_table.sql'),
+                    'keepData'  => true,
+                ],
+            ]
+        );
 
         $this->assertInstanceOf(DatabaseHandlerInterface::class, $handler);
     }

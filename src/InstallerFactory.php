@@ -3,6 +3,7 @@
 namespace RubenMartinDev\PrestaShopModuleInstaller;
 
 use Module;
+use RubenMartinDev\PrestaShopModuleInstaller\Database\Handler\DatabaseHandler;
 use RubenMartinDev\PrestaShopModuleInstaller\Database\Handler\DatabaseHandlerFactory;
 use RubenMartinDev\PrestaShopModuleInstaller\Database\Handler\DatabaseHandlerInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\Hook\Handler\HookHandlerFactory;
@@ -73,7 +74,7 @@ class InstallerFactory
      */
     private static function defaultDatabaseFactory(Module $module, array $items)
     {
-        return DatabaseHandlerFactory::create($module, $items);
+        return DatabaseHandler::createFrom($module, $items);
     }
 
     /**

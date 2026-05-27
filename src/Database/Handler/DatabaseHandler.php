@@ -6,6 +6,7 @@ use Db;
 use Module;
 use PrestaShopDatabaseException;
 use RubenMartinDev\PrestaShopModuleInstaller\Database\Handler\Exception\FailedToExecuteQueryException;
+use RubenMartinDev\PrestaShopModuleInstaller\Database\Item\DatabaseItem;
 use RubenMartinDev\PrestaShopModuleInstaller\Database\Item\DatabaseItemInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\AbstractHandler;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Exception\ItemTypeIsInvalidException;
@@ -15,6 +16,31 @@ use RubenMartinDev\PrestaShopModuleInstaller\Handler\Exception\ItemTypeIsInvalid
  */
 final class DatabaseHandler extends AbstractHandler implements DatabaseHandlerInterface
 {
+    /**
+     * {@inheritDoc}
+     */
+    public static function createFrom(Module $module, array $items)
+    {
+        $items = \array_map(
+            function (array $item) {
+                $defaultArguments = [
+                    'tableName' => '',
+                    'query'     => null,
+                    'queryFile' => null,
+                    'keepData'  => false,
+                ];
+
+                $arguments = \array_merge($defaultArguments, $item);
+                $arguments = \array_values($arguments);
+
+                return DatabaseItem::createFrom(...$arguments);
+            },
+            $items
+        );
+
+        return new static($module, $items);
+    }
+
     /**
      * {@inheritDoc}
      */
