@@ -8,13 +8,17 @@ use RubenMartinDev\PrestaShopModuleInstaller\Database\ValueObject\Exception\Tabl
 use RubenMartinDev\PrestaShopModuleInstaller\ValueObject\ValueObjectInterface;
 use Validate;
 
+/**
+ * @phpstan-type TTableName string
+ * @phpstan-type TParamTableName TTableName
+ */
 final class TableName implements ValueObjectInterface
 {
-    /** @var string */
+    /** @var TTableName */
     private $tableName;
 
     /**
-     * @param string $tableName
+     * @param TParamTableName $tableName
      */
     public function __construct($tableName)
     {
@@ -30,7 +34,7 @@ final class TableName implements ValueObjectInterface
     /**
      * {@inheritDoc}
      *
-     * @return string
+     * @return TTableName
      */
     public function getValue()
     {
@@ -38,7 +42,7 @@ final class TableName implements ValueObjectInterface
     }
 
     /**
-     * @param string $tableName
+     * @param TParamTableName $tableName
      *
      * @return void
      *
@@ -52,7 +56,7 @@ final class TableName implements ValueObjectInterface
     }
 
     /**
-     * @param string $tableName
+     * @param TParamTableName $tableName
      *
      * @return void
      *

@@ -40,6 +40,23 @@ final class DatabaseItem implements DatabaseItemInterface
     /**
      * {@inheritDoc}
      */
+    public static function createFrom(
+        $tableName,
+        $query = null,
+        $queryFile = null,
+        $keepData = false
+    ) {
+        return new static(
+            new TableName($tableName),
+            new Query($query),
+            new QueryFile($queryFile),
+            new KeepData($keepData)
+        );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getTableName()
     {
         return $this->tableName;

@@ -8,13 +8,17 @@ use RubenMartinDev\PrestaShopModuleInstaller\Database\ValueObject\Exception\Quer
 use RubenMartinDev\PrestaShopModuleInstaller\Database\ValueObject\Exception\QueryFileTypeIsInvalidException;
 use RubenMartinDev\PrestaShopModuleInstaller\ValueObject\ValueObjectInterface;
 
+/**
+ * @phpstan-type TQueryFile string|null
+ * @phpstan-type TParamQueryFile TQueryFile
+ */
 final class QueryFile implements ValueObjectInterface
 {
-    /** @var string|null */
+    /** @var TQueryFile */
     private $queryFile = null;
 
     /**
-     * @param string|null $queryFile
+     * @param TParamQueryFile $queryFile
      */
     public function __construct($queryFile)
     {
@@ -43,7 +47,7 @@ final class QueryFile implements ValueObjectInterface
     /**
      * {@inheritDoc}
      *
-     * @return string|null
+     * @return TQueryFile
      */
     public function getValue()
     {
@@ -51,7 +55,7 @@ final class QueryFile implements ValueObjectInterface
     }
 
     /**
-     * @param string|null $queryFile
+     * @param TParamQueryFile $queryFile
      *
      * @return void
      *
@@ -71,7 +75,7 @@ final class QueryFile implements ValueObjectInterface
     }
 
     /**
-     * @param string|null $queryFile
+     * @param TParamQueryFile $queryFile
      *
      * @return void
      *
@@ -85,7 +89,7 @@ final class QueryFile implements ValueObjectInterface
     }
 
     /**
-     * @param string|null $queryFile
+     * @param TParamQueryFile $queryFile
      *
      * @return void
      *

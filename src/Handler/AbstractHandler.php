@@ -17,6 +17,8 @@ abstract class AbstractHandler implements HandlerInterface
     /**
      * @param Module $module
      * @param mixed[] $items
+     *
+     * @throws ItemsIsEmptyException
      */
     public function __construct(Module $module, array $items)
     {

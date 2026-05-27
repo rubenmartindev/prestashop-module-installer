@@ -59,6 +59,25 @@ final class DatabaseItemTest extends TestCase
         $this->assertInstanceOf(DatabaseItemInterface::class, $item);
     }
 
+    public function testCreateFromReturnDatabaseItemWithRequireParameters()
+    {
+        $item = DatabaseItem::createFrom('my_table');
+
+        $this->assertInstanceOf(DatabaseItemInterface::class, $item);
+    }
+
+    public function testCreateFromReturnDatabaseItemWithOptionalParameters()
+    {
+        $item = DatabaseItem::createFrom(
+            'my_table',
+            'CREATE TABLE {{DB_PREFIX}}my_table_2 (id INT) engine={{ENGINE_TYPE}}',
+            vfsStream::url('root/my_table.sql'),
+            true
+        );
+
+        $this->assertInstanceOf(DatabaseItemInterface::class, $item);
+    }
+
     public function testGetTableNameReturnsValueObject()
     {
         $item = new DatabaseItem(

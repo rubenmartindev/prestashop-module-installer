@@ -7,12 +7,33 @@ use RubenMartinDev\PrestaShopModuleInstaller\Database\ValueObject\Query;
 use RubenMartinDev\PrestaShopModuleInstaller\Database\ValueObject\QueryFile;
 use RubenMartinDev\PrestaShopModuleInstaller\Database\ValueObject\TableName;
 
+/**
+ * @phpstan-import-type TParamTableName from TableName
+ * @phpstan-import-type TParamQuery from Query
+ * @phpstan-import-type TParamQueryFile from QueryFile
+ * @phpstan-import-type TParamKeepData from KeepData
+ */
 interface DatabaseItemInterface
 {
     const PLACEHOLDERS = [
         '{{DB_PREFIX}}'   => \_DB_PREFIX_,
         '{{ENGINE_TYPE}}' => \_MYSQL_ENGINE_,
     ];
+
+    /**
+     * @param TParamTableName $tableName
+     * @param TParamQuery $query
+     * @param TParamQueryFile $queryFile
+     * @param TParamKeepData $keepData
+     *
+     * @return static
+     */
+    public static function createFrom(
+        $tableName,
+        $query = null,
+        $queryFile = null,
+        $keepData = false
+    );
 
     /**
      * @return TableName

@@ -4,13 +4,17 @@ namespace RubenMartinDev\PrestaShopModuleInstaller\Database\ValueObject;
 
 use RubenMartinDev\PrestaShopModuleInstaller\ValueObject\ValueObjectInterface;
 
+/**
+ * @phpstan-type TKeepData bool
+ * @phpstan-type TParamKeepData TKeepData
+ */
 final class KeepData implements ValueObjectInterface
 {
-    /** @var bool */
+    /** @var TKeepData */
     private $keepData;
 
     /**
-     * @param bool $keepData
+     * @param TParamKeepData $keepData
      */
     public function __construct($keepData)
     {
@@ -20,7 +24,7 @@ final class KeepData implements ValueObjectInterface
     /**
      * {@inheritDoc}
      *
-     * @return bool
+     * @return TKeepData
      */
     public function getValue()
     {

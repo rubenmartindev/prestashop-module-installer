@@ -6,13 +6,17 @@ use RubenMartinDev\PrestaShopModuleInstaller\Database\ValueObject\Exception\Quer
 use RubenMartinDev\PrestaShopModuleInstaller\Database\ValueObject\Exception\QueryTypeIsInvalidException;
 use RubenMartinDev\PrestaShopModuleInstaller\ValueObject\ValueObjectInterface;
 
+/**
+ * @phpstan-type TQuery string|null
+ * @phpstan-type TParamQuery TQuery
+ */
 final class Query implements ValueObjectInterface
 {
-    /** @var string|null */
+    /** @var TQuery */
     private $query = null;
 
     /**
-     * @param string|null $query
+     * @param TParamQuery $query
      */
     public function __construct($query)
     {
@@ -40,7 +44,7 @@ final class Query implements ValueObjectInterface
     /**
      * {@inheritDoc}
      *
-     * @return string|null
+     * @return TQuery
      */
     public function getValue()
     {
@@ -48,7 +52,7 @@ final class Query implements ValueObjectInterface
     }
 
     /**
-     * @param string|null $query
+     * @param TParamQuery $query
      *
      * @return void
      *
@@ -66,7 +70,7 @@ final class Query implements ValueObjectInterface
     }
 
     /**
-     * @param string|null $query
+     * @param TParamQuery $query
      *
      * @return void
      *

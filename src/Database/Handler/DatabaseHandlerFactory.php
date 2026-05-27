@@ -3,20 +3,24 @@
 namespace RubenMartinDev\PrestaShopModuleInstaller\Database\Handler;
 
 use Module;
-use RubenMartinDev\PrestaShopModuleInstaller\Database\Item\DatabaseItemFactory;
+use RubenMartinDev\PrestaShopModuleInstaller\Database\Item\DatabaseItem;
 use RubenMartinDev\PrestaShopModuleInstaller\Database\Item\DatabaseItemInterface;
+use RubenMartinDev\PrestaShopModuleInstaller\Database\ValueObject\KeepData;
+use RubenMartinDev\PrestaShopModuleInstaller\Database\ValueObject\Query;
+use RubenMartinDev\PrestaShopModuleInstaller\Database\ValueObject\QueryFile;
+use RubenMartinDev\PrestaShopModuleInstaller\Database\ValueObject\TableName;
 
 /**
- * @phpstan-import-type TTableName from DatabaseItemFactory
- * @phpstan-import-type TQuery from DatabaseItemFactory
- * @phpstan-import-type TQueryFile from DatabaseItemFactory
- * @phpstan-import-type TKeepData from DatabaseItemFactory
+ * @phpstan-import-type TParamTableName from TableName
+ * @phpstan-import-type TParamQuery from Query
+ * @phpstan-import-type TParamQueryFile from QueryFile
+ * @phpstan-import-type TParamKeepData from KeepData
  *
  * @phpstan-type TItem array{
- *   tableName: TTableName,
- *   query?: TQuery,
- *   queryFile?: TQueryFile,
- *   keepData?: TKeepData,
+ *   tableName: TParamTableName,
+ *   query?: TParamQuery,
+ *   queryFile?: TParamQueryFile,
+ *   keepData?: TParamKeepData,
  * }
  * @phpstan-type TItems TItem[]
  */
@@ -58,6 +62,6 @@ final class DatabaseHandlerFactory
         $arguments = \array_merge($defaultArguments, $item);
         $arguments = \array_values($arguments);
 
-        return DatabaseItemFactory::create(...$arguments);
+        return DatabaseItem::createFrom(...$arguments);
     }
 }
