@@ -34,6 +34,23 @@ final class HookItemTest extends TestCase
         $this->assertInstanceOf(HookItemInterface::class, $item);
     }
 
+    public function testCreateFromReturnHookItemWithRequireParameters()
+    {
+        $item = HookItem::createFrom('displayHeader');
+
+        $this->assertInstanceOf(HookItemInterface::class, $item);
+    }
+
+    public function testCreateFromReturnHookItemWithOptionalParameters()
+    {
+        $item = HookItem::createFrom(
+            'displayHeader',
+            '>=1.6.0.0'
+        );
+
+        $this->assertInstanceOf(HookItemInterface::class, $item);
+    }
+
     public function testGetNameReturnsValueObject()
     {
         $item = new HookItem(

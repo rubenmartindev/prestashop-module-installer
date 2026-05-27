@@ -8,13 +8,17 @@ use RubenMartinDev\PrestaShopModuleInstaller\Hook\ValueObject\Exception\NameType
 use RubenMartinDev\PrestaShopModuleInstaller\ValueObject\ValueObjectInterface;
 use Validate;
 
+/**
+ * @phpstan-type TName string
+ * @phpstan-type TParamName TName
+ */
 final class Name implements ValueObjectInterface
 {
-    /** @var string */
+    /** @var TName */
     private $name;
 
     /**
-     * @param string $name
+     * @param TParamName $name
      */
     public function __construct($name)
     {
@@ -30,7 +34,7 @@ final class Name implements ValueObjectInterface
     /**
      * {@inheritDoc}
      *
-     * @return string
+     * @return TName
      */
     public function getValue()
     {
@@ -38,7 +42,7 @@ final class Name implements ValueObjectInterface
     }
 
     /**
-     * @param string $name
+     * @param TParamName $name
      *
      * @return void
      *
@@ -52,7 +56,7 @@ final class Name implements ValueObjectInterface
     }
 
     /**
-     * @param string $name
+     * @param TParamName $name
      *
      * @return void
      *

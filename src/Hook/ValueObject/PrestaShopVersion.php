@@ -8,19 +8,19 @@ use RubenMartinDev\PrestaShopModuleInstaller\ValueObject\ValueObjectInterface;
 use RubenMartinDev\PrestaShopVersionChecker\PrestaShopVersionChecker;
 
 /**
- * @phpstan-type TVersion string
- * @phpstan-type TOptionalVersion TVersion|null
- * @phpstan-type TArrayVersion array{min: TOptionalVersion, max: TOptionalVersion}
- * @phpstan-type TOptionalArrayVersion array{min: TOptionalVersion, max?: TOptionalVersion}
- * @phpstan-type TParamVersion TVersion|TOptionalArrayVersion|null
+ * @phpstan-type TPrestaShopVersion string
+ * @phpstan-type TOptionalPrestaShopVersion TPrestaShopVersion|null
+ * @phpstan-type TArrayPrestaShopVersion array{min: TOptionalPrestaShopVersion, max: TOptionalPrestaShopVersion}
+ * @phpstan-type TOptionalArrayPrestaShopVersion array{min: TOptionalPrestaShopVersion, max?: TOptionalPrestaShopVersion}
+ * @phpstan-type TParamPrestaShopVersion TPrestaShopVersion|TOptionalArrayPrestaShopVersion|null
  */
 final class PrestaShopVersion implements ValueObjectInterface
 {
-    /** @var TArrayVersion */
+    /** @var TArrayPrestaShopVersion */
     private $prestashopVersion;
 
     /**
-     * @param TParamVersion $prestashopVersion
+     * @param TParamPrestaShopVersion $prestashopVersion
      */
     public function __construct($prestashopVersion)
     {
@@ -35,7 +35,7 @@ final class PrestaShopVersion implements ValueObjectInterface
     /**
      * {@inheritDoc}
      *
-     * @return TArrayVersion
+     * @return TArrayPrestaShopVersion
      */
     public function getValue()
     {
@@ -43,7 +43,7 @@ final class PrestaShopVersion implements ValueObjectInterface
     }
 
     /**
-     * @return TOptionalVersion
+     * @return TOptionalPrestaShopVersion
      */
     public function getMinValue()
     {
@@ -51,7 +51,7 @@ final class PrestaShopVersion implements ValueObjectInterface
     }
 
     /**
-     * @return TOptionalVersion
+     * @return TOptionalPrestaShopVersion
      */
     public function getMaxValue()
     {
@@ -59,7 +59,7 @@ final class PrestaShopVersion implements ValueObjectInterface
     }
 
     /**
-     * @param TParamVersion $prestashopVersion
+     * @param TParamPrestaShopVersion $prestashopVersion
      *
      * @return void
      *
@@ -83,7 +83,7 @@ final class PrestaShopVersion implements ValueObjectInterface
     }
 
     /**
-     * @param TParamVersion $prestashopVersion
+     * @param TParamPrestaShopVersion $prestashopVersion
      *
      * @return void
      *
@@ -101,7 +101,7 @@ final class PrestaShopVersion implements ValueObjectInterface
     }
 
     /**
-     * @param TParamVersion $prestashopVersion
+     * @param TParamPrestaShopVersion $prestashopVersion
      *
      * @return void
      *
@@ -133,9 +133,9 @@ final class PrestaShopVersion implements ValueObjectInterface
     }
 
     /**
-     * @param TParamVersion $prestashopVersion
+     * @param TParamPrestaShopVersion $prestashopVersion
      *
-     * @return TArrayVersion
+     * @return TArrayPrestaShopVersion
      */
     private function formatter($prestashopVersion)
     {

@@ -24,6 +24,19 @@ final class HookItem implements HookItemInterface
     /**
      * {@inheritDoc}
      */
+    public static function createFrom(
+        $name,
+        $prestashopVersion = null
+    ) {
+        return new static(
+            new Name($name),
+            new PrestaShopVersion($prestashopVersion)
+        );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getName()
     {
         return $this->name;

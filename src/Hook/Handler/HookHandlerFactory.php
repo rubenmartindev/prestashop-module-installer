@@ -4,6 +4,7 @@ namespace RubenMartinDev\PrestaShopModuleInstaller\Hook\Handler;
 
 use Module;
 use RubenMartinDev\PrestaShopModuleInstaller\Hook\Handler\HookHandlerInterface;
+use RubenMartinDev\PrestaShopModuleInstaller\Hook\Item\HookItem;
 use RubenMartinDev\PrestaShopModuleInstaller\Hook\Item\HookItemFactory;
 use RubenMartinDev\PrestaShopModuleInstaller\Hook\Item\HookItemInterface;
 
@@ -53,6 +54,6 @@ final class HookHandlerFactory
         $arguments = \array_merge($defaultArguments, $item);
         $arguments = \array_values($arguments);
 
-        return HookItemFactory::create(...$arguments);
+        return HookItem::createFrom(...$arguments);
     }
 }
