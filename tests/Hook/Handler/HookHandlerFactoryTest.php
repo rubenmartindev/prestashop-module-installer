@@ -47,7 +47,7 @@ final class HookHandlerFactoryTest extends TestCase
                     'name'              => 'displayFooter',
                     'prestashopVersion' => '>=1.6.0.0',
                 ],
-            ],
+            ]
         );
 
         $this->assertInstanceOf(HookHandlerInterface::class, $handler);
