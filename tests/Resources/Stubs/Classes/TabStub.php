@@ -10,8 +10,11 @@ use PrestaShopCollection;
  */
 class TabStub extends ObjectModel
 {
-    /** @var string */
+    /** @see \Tab::$class_name */
     public $class_name;
+
+    /** @see \Tab::$module */
+    public $module;
 
     /**
      * @see \Tab::getIdFromClassName()
