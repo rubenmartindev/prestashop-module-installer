@@ -8,6 +8,14 @@ namespace RubenMartinDev\PrestaShopModuleInstaller\Tests\Resources\Stubs\Classes
 class ValidateStub
 {
     /**
+     * @see \Validate::isConfigName()
+     */
+    public static function isConfigName($config_name)
+    {
+        return preg_match('/^[a-zA-Z_0-9-]+$/', $config_name);
+    }
+
+    /**
      * @see \Validate::isHookName()
      */
     public static function isHookName($hook)

@@ -3,17 +3,20 @@
 namespace RubenMartinDev\PrestaShopModuleInstaller;
 
 use Module;
-use RubenMartinDev\PrestaShopModuleInstaller\Database\Handler\DatabaseHandler;
+use RubenMartinDev\PrestaShopModuleInstaller\Configuration\Handler\ConfigurationHandlerInterface;
+use RubenMartinDev\PrestaShopModuleInstaller\Database\Handler\DatabaseHandlerInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Exception\HandlerException;
-use RubenMartinDev\PrestaShopModuleInstaller\Hook\Handler\HookHandler;
-use RubenMartinDev\PrestaShopModuleInstaller\Tab\Handler\TabHandler;
+use RubenMartinDev\PrestaShopModuleInstaller\Hook\Handler\HookHandlerInterface;
+use RubenMartinDev\PrestaShopModuleInstaller\Tab\Handler\TabHandlerInterface;
 
 /**
- * @phpstan-import-type TItem from DatabaseHandler as TDatabase
- * @phpstan-import-type TItem from HookHandler as THook
- * @phpstan-import-type TItem from TabHandler as TTab
+ * @phpstan-import-type TItem from DatabaseHandlerInterface as TDatabase
+ * @phpstan-import-type TItem from HookHandlerInterface as THook
+ * @phpstan-import-type TItem from TabHandlerInterface as TTab
+ * @phpstan-import-type TItem from ConfigurationHandlerInterface as TConfiguration
  *
  * @phpstan-type THandlers array{
+ *   configuration?: TConfiguration[],
  *   database?: TDatabase[],
  *   hooks?: THook[],
  *   tabs?: TTab[],

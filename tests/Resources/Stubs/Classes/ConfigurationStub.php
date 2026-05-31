@@ -11,8 +11,14 @@ class ConfigurationStub
         'PS_LANG_DEFAULT' => 1,
     ];
 
+    /** @var bool */
+    public static $forceReturnFalseOnUpdateValue = false;
+
+    /** @var bool */
+    public static $forceReturnFalseOnDeleteByName = false;
+
     /**
-     * @see \Language::get()
+     * @see \Configuration::get()
      */
     public static function get($key, $idLang = null, $idShopGroup = null, $idShop = null, $default = false)
     {
@@ -21,5 +27,29 @@ class ConfigurationStub
         }
 
         return false;
+    }
+
+    /**
+     * @see \Configuration::updateValue()
+     */
+    public static function updateValue($key, $values, $html = false, $id_shop_group = null, $id_shop = null)
+    {
+        if (self::$forceReturnFalseOnUpdateValue) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @see \Configuration::deleteByName()
+     */
+    public static function deleteByName($key)
+    {
+        if (self::$forceReturnFalseOnDeleteByName) {
+            return false;
+        }
+
+        return true;
     }
 }

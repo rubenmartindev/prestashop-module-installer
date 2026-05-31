@@ -37,23 +37,28 @@ class InstallerTest extends TestCase
         $installer = Installer::createFrom(
             $this->getModule(),
             [
-                'database'  => [
+                'configuration' => [
+                    [
+                        'name'      => 'my_configuration',
+                    ]
+                ],
+                'database'      => [
                     [
                         'tableName' => 'my_table',
                     ],
                 ],
-                'hooks'     => [
+                'hooks'         => [
                     [
                         'name'      => 'displayHeader',
                     ],
                 ],
-                'tabs'      => [
+                'tabs'          => [
                     [
                         'className' => 'AdminMyModule',
                         'name'      => 'My tab'
                     ],
                 ],
-                'foobar'    => [
+                'foobar'        => [
                     [
                         'baar' => true,
                     ],

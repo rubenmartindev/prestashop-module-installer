@@ -3,6 +3,7 @@
 namespace RubenMartinDev\PrestaShopModuleInstaller;
 
 use Module;
+use RubenMartinDev\PrestaShopModuleInstaller\Configuration\Handler\ConfigurationHandler;
 use RubenMartinDev\PrestaShopModuleInstaller\Database\Handler\DatabaseHandler;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\HandlerInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\Hook\Handler\HookHandler;
@@ -28,6 +29,9 @@ class Installer implements InstallerInterface
     {
         foreach ($handlers as $name => &$items) {
             switch (true) {
+                case 'configuration' === $name:
+                    $items = ConfigurationHandler::createFrom($module, $items);
+                    break;
                 case 'database' === $name:
                     $items = DatabaseHandler::createFrom($module, $items);
                     break;
