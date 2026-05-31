@@ -66,6 +66,7 @@ final class TabHandler extends AbstractHandler implements TabHandlerInterface
             $prestashopTab->position        = $item->getPosition()->getValue();
             $prestashopTab->active          = $item->isActive()->getValue();
             $prestashopTab->enabled         = $item->isEnabled()->getValue();
+            $prestashopTab->route_name      = $item->getRouteName()->getValue();
             $prestashopTab->icon            = $item->getIcon()->getValue();
             $prestashopTab->wording         = $item->getWording()->getValue();
             $prestashopTab->wording_domain  = $item->getWordingDomain()->getValue();
