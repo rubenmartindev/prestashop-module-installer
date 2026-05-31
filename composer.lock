@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "rubenmartindev/prestashop-version-checker",
-            "version": "v1.1.0",
+            "version": "v1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rubenmartindev/prestashop-version-checker.git",
-                "reference": "1957b7c6b2afc9146d54511886e53ef17b09ebe8"
+                "reference": "6beb31a363a04cc1835529cd97f6c9ba23de4c7e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rubenmartindev/prestashop-version-checker/zipball/1957b7c6b2afc9146d54511886e53ef17b09ebe8",
-                "reference": "1957b7c6b2afc9146d54511886e53ef17b09ebe8",
+                "url": "https://api.github.com/repos/rubenmartindev/prestashop-version-checker/zipball/6beb31a363a04cc1835529cd97f6c9ba23de4c7e",
+                "reference": "6beb31a363a04cc1835529cd97f6c9ba23de4c7e",
                 "shasum": ""
             },
             "require": {
@@ -58,9 +58,9 @@
             ],
             "support": {
                 "issues": "https://github.com/rubenmartindev/prestashop-version-checker/issues",
-                "source": "https://github.com/rubenmartindev/prestashop-version-checker/tree/v1.1.0"
+                "source": "https://github.com/rubenmartindev/prestashop-version-checker/tree/v1.1.1"
             },
-            "time": "2026-05-17T05:19:46+00:00"
+            "time": "2026-05-31T10:05:22+00:00"
         }
     ],
     "packages-dev": [
