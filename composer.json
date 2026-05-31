@@ -1,7 +1,7 @@
 {
     "name": "rubenmartindev/prestashop-module-installer",
-    "description": "Install and uninstall helpers for PrestaShop modules (hooks, database, tabs, etc.)",
-    "keywords": ["prestashop", "modules", "install", "uninstall", "hooks", "database", "tabs"],
+    "description": "Install and uninstall helpers for PrestaShop modules (hooks, configuration, database and tabs)",
+    "keywords": ["prestashop", "modules", "install", "uninstall", "hooks", "configuration", "database", "tabs"],
     "license": "MIT",
     "type": "library",
     "authors": [
