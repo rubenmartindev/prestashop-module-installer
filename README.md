@@ -1,0 +1,431 @@
+# PrestaShop Module Installer
+
+`rubenmartindev/prestashop-module-installer` is a PHP library that provides
+install and uninstall helpers for PrestaShop modules.
+
+## Overview
+
+This library simplifies common PrestaShop module installation and uninstallation
+tasks, including:
+
+- hook registration and removal
+- configuration entry management
+- database table creation and removal
+- tab (menu) registration and removal
+
+It is designed to be used inside PrestaShop module lifecycle methods (install
+and uninstall).
+
+## Installation
+
+Install via Composer in your PrestaShop module:
+
+```bash
+composer require rubenmartindev/prestashop-module-installer
+```
+
+## Requirements
+
+- PHP >= 5.6.0
+- PrestaShop >=1.6
+
+## Usage
+
+`RubenMartinDev\PrestaShopModuleInstaller\Installer` is designed to be used
+inside your module. It defines the resources that will be installed or
+uninstalled.
+
+`Installer` uses a set of handlers (hooks, configuration, database, tabs). Each
+handler defines a set of items that are processed during installation and
+uninstallation.
+
+Once handlers and their items are configured, you only need to call `install()`
+or `uninstall()`.
+
+### Use the helper `Installer::createFrom()`
+
+The static method `Installer::createFrom()` makes it easy to create handlers and
+items from an array.
+
+```php
+use RubenMartinDev\PrestaShopModuleInstaller\Exception\InstallerException;
+use RubenMartinDev\PrestaShopModuleInstaller\Installer;
+
+class MyModule extends Module
+{
+    /** @var Installer */
+    private $installer;
+
+    public function __construct()
+    {
+        // ...
+
+        $this->installer = Installer::createFrom(
+            $this,
+            [
+                'configuration' => [
+                    [
+                        'name'      => 'is_enabled',
+                        'value'     => true,
+                    ],
+                ],
+                'database'      => [
+                    [
+                        'tableName' => 'my_table',
+                        'query'     => 'CREATE TABLE `{{DB_PREFIX}}my_table`;',
+                    ],
+                ],
+                'hooks'         => [
+                    [
+                        'name'      => 'displayHeader',
+                    ],
+                ],
+                'tabs'          => [
+                    [
+                        'className' => 'AdminMyTab',
+                        'name'      => 'My admin tab',
+                    ],
+                ],
+            ],
+        );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function install()
+    {
+        if (!parent::install()) {
+            return false;
+        }
+
+        try {
+            return $this->installer->install();
+        } catch (InstallerException $e) {
+            $this->_errors[] = $e->getMessage();
+        }
+
+        return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function uninstall()
+    {
+        if (!parent::uninstall()) {
+            return false;
+        }
+
+        try {
+            return $this->installer->uninstall();
+        } catch (InstallerException $e) {
+            $this->_errors[] = $e->getMessage();
+        }
+
+        return false;
+    }
+}
+```
+
+### Use as a service
+
+If your module uses its own container, for example using
+[`prestashop/module-lib-service-container`](https://github.com/PrestaShopCorp/module-lib-service-container),
+you can create your own service to simplify `Installer` configuration.
+
+The service factory receives the same arguments as `Installer::createFrom()`.
+
+```yml
+services:
+
+  my_module.installer:
+    class: RubenMartinDev\PrestaShopModuleInstaller\Installer
+    factory: [RubenMartinDev\PrestaShopModuleInstaller\Installer, createFrom]
+    public: true
+    arguments:
+      - '@my_module'
+      - configuration:
+        - name: is_enabled
+          value: true
+        database:
+        - tableName: my_table
+          query: 'CREATE TABLE `{{DB_PREFIX}}my_table`;'
+        hooks:
+        - name: displayHeader
+        tabs:
+        - className: AdminMyTab
+          name: My admin tab
+```
+
+Then retrieve the service from the container and call `install()` /
+`uninstall()` in the same way as in the previous example.
+
+## Installer Configuration
+
+The `Installer` has a list of handlers that will be processed during
+installation and uninstallation.
+
+To specify which handlers will be used, pass an array with
+[`configuration`](#configuration), [`hooks`](#hooks), [`database`](#database),
+or [`tabs`](#tabs), and the items each one contains.
+
+```php
+Installer::createFrom(
+    $myModule,
+    [
+        'configuration' => [
+            // ...
+        ],
+        'hooks'         => [
+            // ...
+        ],
+        'database'      => [
+            // ...
+        ],
+        'tabs'          => [
+            // ...
+        ],
+    ]
+);
+```
+
+## Handlers and Items
+
+Each handler contains a list of items executed during installation and
+uninstallation. Both handlers and items have the static method `createFrom()` to
+simplify configuration through an associative array.
+
+### Configuration
+
+This handler defines the new configuration entries (`ps_configuration`) that
+will be added to PrestaShop.
+
+#### Item
+
+Represents a single configuration entry.
+
+| Argument  | Type              | Default     | Description                       |
+|-----------|-------------------|-------------|-----------------------------------|
+| `name`    | `string`          | _Required_  | Configuration name.               |
+| `value`   | `callable\|mixed` | _Required_  | Value to store in configuration.  |
+| `prefix`  | `string\|null`    | `null`      | Prefix to add to `name`.          |
+
+If `value` is a callable, it must return a result.
+
+`value` transforms its value as follows:
+  - Booleans are converted to int (0 or 1).
+  - Arrays are converted to JSON.
+  - Objects are serialized.
+
+If `prefix` is null, the module name is used by default. Otherwise, it is
+prefixed to `name`.
+
+#### Example
+
+```php
+Installer::createFrom(
+    $myModule,
+    [
+        'configuration' => [
+            [
+                'name'    => 'my_boolean',    // --> MY_MODULE_MY_BOOLEAN
+                'value'   => true,            // --> 1
+            ],
+            [
+                'name'    => 'my_string',     // --> MY_PREFIX_MY_STRING
+                'value'   => 'abcdef',        // --> abcdef
+                'prefix'  => 'my_prefix'
+            ],
+            [
+                'name'    => 'my_array',      // --> MY_MODULE_MY_ARRAY
+                'value'   => [                // --> {"email": "contact@example.com"}
+                  'email'   => 'contact@example.com',
+                ],
+                'prefix'  => null,
+            ],
+            [
+                'name'    => 'my_object',     // --> MY_MODULE_MY_OBJECT
+                'value'   => new stdClass(),  // --> O:8:"stdClass":0:{}
+            ],
+            [
+                'name'    => 'my_callback',   // --> OTHER_PREFIX_MY_CALLBACK
+                'value'   => function () {    // --> my_value
+                    return 'my_value';
+                },
+                'prefix'  => 'other_prefix',
+            ],
+            // ...
+        ],
+        // ...
+    ],
+);
+```
+
+### Database
+
+This handler is used to create and remove tables in the database.
+
+#### Item
+
+Represents a single SQL statement.
+
+| Argument    | Type            | Default     | Description                                                       |
+|-------------|-----------------|-------------|-------------------------------------------------------------------|
+| `tableName` | `string`        | _Required_  | Table name.                                                       |
+| `query`     | `string\|null`  | `null`      | Raw SQL.                                                          |
+| `queryFile` | `string\|null`  | `null`      | Path to the SQL file.                                             |
+| `keepData`  | `bool`          | `false`     | Whether the table should be kept when the module is uninstalled.  |
+
+Both `query` and `queryFile` support the placeholders `{{DB_PREFIX}}`
+and `{{ENGINE_TYPE}}`, which correspond to the PrestaShop constants
+`_DB_PREFIX_` and `_MYSQL_ENGINE_` respectively.
+
+If both `query` and `queryFile` are set, the latter takes precedence and `query`
+will be ignored.
+
+#### Example
+
+```php
+Installer::createFrom(
+    $myModule,
+    [
+        'database' => [
+            [
+                'tableName' => 'my_table',
+                'query'     => 'CREATE TABLE `{{DB_PREFIX}}my_table`;',
+            ],
+            [
+                'tableName' => 'my_another_table',
+                'queryFile' => "{$myModule->getLocalPath()}/my_another_table.sql",
+                'keepData'  => true,
+            ],
+            // ...
+        ],
+        // ...
+    ],
+);
+```
+
+### Hooks
+
+This handler is used to register hooks.
+
+#### Item
+
+Represents a single hook.
+
+| Argument            | Type                  | Default     | Description                                   |
+|---------------------|-----------------------|-------------|-----------------------------------------------|
+| `name`              | `string`              | _Required_  | Hook name.                                    |
+| `prestashopVersion` | `string\|array\|null` | `null`      | PrestaShop version compatible with the hook.  |
+
+When `prestashopVersion` is null, the PrestaShop version is ignored and the hook
+will be registered. If it is a string, the PrestaShop version is checked and the
+hook will only be registered if the version constraint is satisfied. If it is an
+array it must contain at least the `min` key to specify the minimum PrestaShop
+version from which the hook will be registered, and the optional `max` key to
+specify up to which PrestaShop version the hook should be registered.
+
+`prestashopVersion` internally uses
+[rubenmartindev/prestashop-version-checker](https://github.com/rubenmartindev/prestashop-version-checker/)
+for version validation and checking.
+
+#### Example
+
+```php
+Installer::createFrom(
+    $myModule,
+    [
+        'hooks' => [
+            [
+                'name'              => 'displayHeader',
+            ],
+            [
+                'name'              => 'displayFooter',
+                'prestashopVersion' => '>=1.7',
+            ],
+            [
+                'name'              => 'displayAdminView',
+                'prestashopVersion' => ['min' => '>=1.7'],
+            ],
+            [
+                'name'              => 'displayAdminListBefore',
+                'prestashopVersion' => ['min' => '>=1.7', 'max' => '<8.0'],
+            ],
+            // ...
+        ],
+        // ...
+    ],
+);
+```
+
+### Tabs
+
+This handler defines and manages tabs (controllers).
+
+#### Item
+
+Represents a single tab.
+
+| Argument        | Type            | Default     | Description                         |
+|-----------------|-----------------|-------------|-------------------------------------|
+| `className`     | `string`        | _Required_  | Controller class name.              |
+| `name`          | `string\|array` | _Required_  | Name in the menu.                   |
+| `parentId`      | `string\|int`   | `-1`        | Parent controller ID or class name. |
+| `position`      | `int`           | `0`         | Position in the tabs tree.          |
+| `isActive`      | `bool`          | `true`      | Whether the tab is active.          |
+| `isEnabled`     | `bool`          | `true`      | Whether the tab is available.       |
+| `routeName`     | `string\|null`  | `null`      | Symfony route name.                 |
+| `icon`          | `string\|null`  | `null`      | Icon name used in the menu.         |
+| `wording`       | `string\|null`  | `null`      | Translation.                        |
+| `wordingDomain` | `string\|null`  | `null`      | Translation domain for the tab.     |
+
+When `name` is an array, it must be a numeric array. The array keys correspond to
+`id_lang`, and the default language ID key (`PS_LANG_DEFAULT`) must always be
+present.
+
+When `parentId` is a string, the tab ID will be resolved using the class name.
+
+When `wording` is null, it will be set using the value of `name` for the default
+PrestaShop language.
+
+When `wordingDomain` is null, it defaults to "Admin.Navigation.Menu".
+
+The `isEnabled`, `routeName`, `icon`, `wording`, and `wordingDomain` properties
+may be ignored depending on the PrestaShop version.
+
+#### Example
+
+```php
+Installer::createFrom(
+    $myModule,
+    [
+        'tabs' => [
+            [
+                'className'     => 'AdminMyTab',
+                'name'          => 'My admin tab',
+            ],
+            [
+                'className'     => 'AdminMyAnotherTab',
+                'name'          => [1 => 'My another tab in EN', 2 => 'My another tab in ES'],
+                'parentId'      => 10,
+                'position'      => 2,
+                'isActive'      => false,
+            ],
+            [
+                'className'     => 'AdminMyExtraTab',
+                'name'          => 'My extra tab',
+                'parentId'      => 'AdminParentOrders',
+                'position'      => 3,
+                'routeName'     => 'admin_my_module_my_extra_tab',
+                'icon'          => 'extension',
+                'wording'       => 'My extra tab',
+                'wordingDomain' => 'Modules.MyModule.Navigation',
+            ],
+            // ...
+        ],
+        // ...
+    ],
+);
+```
