@@ -40,35 +40,35 @@ class InstallerTest extends TestCase
         Installer::createFrom($this->getModule(), [new stdClass()]);
     }
 
-    public function testCreateFromReturnInstallerWithHandlers()
+    public function testCreateFromReturnInstaller()
     {
         $installer = Installer::createFrom(
             $this->getModule(),
             [
-                'configuration' => [
+                'configuration'         => [
                     [
-                        'name'      => 'my_configuration',
+                        'name'              => 'my_configuration',
                     ]
                 ],
-                'database'      => [
+                'database'              => [
                     [
-                        'tableName' => 'my_table',
+                        'tableName'         => 'my_table',
                     ],
                 ],
-                'hooks'         => [
+                'hooks'                 => [
                     [
-                        'name'      => 'displayHeader',
+                        'name'              => 'displayHeader',
                     ],
                 ],
-                'tabs'          => [
+                'tabs'                  => [
                     [
-                        'className' => 'AdminMyModule',
-                        'name'      => 'My tab'
+                        'className'         => 'AdminMyModule',
+                        'name'              => 'My tab'
                     ],
                 ],
-                'foobar'        => [
+                CustomHandler::class    => [
                     [
-                        'baar' => true,
+                        'foo'               => 'bar',
                     ],
                 ],
             ]

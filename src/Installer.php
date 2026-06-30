@@ -5,13 +5,22 @@ namespace RubenMartinDev\PrestaShopModuleInstaller;
 use Module;
 use RubenMartinDev\PrestaShopModuleInstaller\Configuration\Handler\ConfigurationHandler;
 use RubenMartinDev\PrestaShopModuleInstaller\Database\Handler\DatabaseHandler;
+use RubenMartinDev\PrestaShopModuleInstaller\Exception\InstallerException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\HandlerInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\Hook\Handler\HookHandler;
 use RubenMartinDev\PrestaShopModuleInstaller\Tab\Handler\TabHandler;
 
 class Installer implements InstallerInterface
 {
-    /** @var array<int, HandlerInterface> */
+    /** @var array<string, HandlerInterface> */
+    private static $mapHandlers = [
+        'configuration' => ConfigurationHandler::class,
+        'database'      => DatabaseHandler::class,
+        'hooks'         => HookHandler::class,
+        'tabs'          => TabHandler::class,
+    ];
+
+    /** @var array<HandlerInterface> */
     private $handlers = [];
 
     /**
@@ -30,26 +39,18 @@ class Installer implements InstallerInterface
     public static function createFrom(Module $module, array $handlers)
     {
         foreach ($handlers as $name => &$items) {
-            switch (true) {
-                case 'configuration' === $name:
-                    $items = ConfigurationHandler::createFrom($module, $items);
-                    break;
-                case 'database' === $name:
-                    $items = DatabaseHandler::createFrom($module, $items);
-                    break;
-                case 'hooks' === $name:
-                    $items = HookHandler::createFrom($module, $items);
-                    break;
-                case 'tabs' === $name:
-                    $items = TabHandler::createFrom($module, $items);
-                    break;
-                default:
-                    $items = null;
-                    break;
-            }
-        }
+            /** @var HandlerInterface */
+            $handlerClass = isset(self::$mapHandlers[$name]) ? self::$mapHandlers[$name] : $name;
 
-        $handlers = \array_filter($handlers);
+            if (false === is_subclass_of($handlerClass, HandlerInterface::class)) {
+                throw new InstallerException(\sprintf(
+                    'The class %s does not implement the HandlerInterface',
+                    $name
+                ));
+            }
+
+            $items = $handlerClass::createFrom($module, $items);
+        }
 
         return new static($handlers);
     }
