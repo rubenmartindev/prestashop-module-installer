@@ -4,32 +4,40 @@ namespace RubenMartinDev\PrestaShopModuleInstaller\Tests;
 
 use PHPUnit_Framework_MockObject_MockObject;
 use PHPUnit\Framework\TestCase;
+use RubenMartinDev\PrestaShopModuleInstaller\Exception\InstallerException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\HandlerInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\Installer;
 use RubenMartinDev\PrestaShopModuleInstaller\InstallerInterface;
+use RubenMartinDev\PrestaShopModuleInstaller\Tests\Resources\Handler\CustomHandler;
 use RubenMartinDev\PrestaShopModuleInstaller\Tests\Resources\ModuleTrait;
+use stdClass;
 
 class InstallerTest extends TestCase
 {
     use ModuleTrait;
 
-    public function testConstructorReturnsInstaller()
+    public function testConstructorThrowsExceptionWhenHandlersDoesNotImplementHandlerInterface()
     {
-        $installer1 = new Installer([]);
-        $installer2 = new Installer([$this->createHandlerMock()]);
+        $this->expectException(InstallerException::class);
 
-        $this->assertInstanceOf(InstallerInterface::class, $installer1);
-        $this->assertInstanceOf(InstallerInterface::class, $installer2);
+        new Installer([new stdClass()]);
     }
 
-    public function testCreateFromReturnInstallerWithoutHandlers()
+    public function testConstructorReturnsInstaller()
     {
-        $installer = Installer::createFrom(
-            $this->getModule(),
-            []
-        );
+        $installer = new Installer([
+            $this->createHandlerMock(),
+            CustomHandler::createFrom($this->getModule(), [])
+        ]);
 
         $this->assertInstanceOf(InstallerInterface::class, $installer);
+    }
+
+    public function testCreateFromThrowsExceptionWhenHandlerDoesNotImplementHandlerInterface()
+    {
+        $this->expectException(InstallerException::class);
+
+        Installer::createFrom($this->getModule(), [new stdClass()]);
     }
 
     public function testCreateFromReturnInstallerWithHandlers()
@@ -73,7 +81,7 @@ class InstallerTest extends TestCase
     {
         $installer = new Installer([
             $this->createHandlerMock(),
-            $this->createHandlerMock(),
+            CustomHandler::createFrom($this->getModule(), []),
         ]);
 
         $this->assertTrue($installer->install());
@@ -83,7 +91,7 @@ class InstallerTest extends TestCase
     {
         $installer = new Installer([
             $this->createHandlerMock(),
-            $this->createHandlerMock(),
+            CustomHandler::createFrom($this->getModule(), []),
         ]);
 
         $this->assertTrue($installer->uninstall());

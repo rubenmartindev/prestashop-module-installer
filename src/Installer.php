@@ -15,10 +15,12 @@ class Installer implements InstallerInterface
     private $handlers = [];
 
     /**
-     * @param array<int, HandlerInterface> $handlers
+     * @param array<HandlerInterface> $handlers
      */
     public function __construct(array $handlers)
     {
+        $this->ensureIsCollectionHandlers($handlers);
+
         $this->handlers = $handlers;
     }
 
@@ -74,5 +76,24 @@ class Installer implements InstallerInterface
         }
 
         return true;
+    }
+
+    /**
+     * @param array<HandlerInterface> $handlers
+     *
+     * @return void
+     *
+     * @throws InstallerException
+     */
+    private function ensureIsCollectionHandlers(array $handlers)
+    {
+        foreach ($handlers as $key => $handler) {
+            if (false === \is_subclass_of($handler, HandlerInterface::class)) {
+                throw new InstallerException(\sprintf(
+                    'Handler "%s" does not implement the HandlerInterface',
+                    $key
+                ));
+            }
+        }
     }
 }
