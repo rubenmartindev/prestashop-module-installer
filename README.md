@@ -429,3 +429,81 @@ Installer::createFrom(
     ],
 );
 ```
+
+### Custom Handler
+
+Although there are generic handlers for common tasks, you may need to carry out
+custom actions such as modifying files, creating new records or performing other
+tasks. To do this, you can create your own handler.
+
+```php
+namespace MyModule\Installer\Handler;
+
+use Customer;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\HandlerInterface;
+
+final class MyCustomHandler implements HandlerInterface
+{
+    private $items;
+
+    public function __construct(array $items)
+    {
+        $this->items = $items;
+    }
+
+    public static function createFrom(Module $module, array $items)
+    {
+        return new static($items);
+    }
+
+    public function install()
+    {
+        $isSuccessful = true;
+
+        foreach ($this->items as $item) {
+            $customer = new Customer();
+
+            $customer->lastname   = $item['lastname'];
+            $customer->firstname  = $item['firstname'];
+            $customer->email      = $item['email'];
+            $customer->passwd     = $item['passwd'];
+
+            $isSuccessful &= $customer->add();
+        }
+
+        return $isSuccessful;
+    }
+
+    public function uninstall()
+    {
+        $isSuccessful = true;
+
+        foreach ($this->items as $item) {
+            $customer = Customer::getByEmail($item['email']);
+
+            $isSuccessful &= $customer->delete();
+        }
+
+        return $isSuccessful;
+    }
+}
+```
+
+To register our custom handler, we must add it to the list of handlers in our
+`Installer`, using the FQCN of our class as the key.
+
+```php
+Installer::createFrom(
+    $myModule,
+    [
+        \MyModule\Installer\Handler\MyCustomHandler::class => [
+            [
+                'lastname'  => 'John',
+                'firstname' => 'Doe',
+                'email'     => 'customer@example.com',
+                'passwd'    => 'e64c7d89f26bd1972efa854d13d7dd61',
+            ],
+        ],
+    ]
+);
+```
