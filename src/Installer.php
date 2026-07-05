@@ -52,7 +52,43 @@ class Installer implements InstallerInterface
             $items = $handlerClass::createFrom($module, $items);
         }
 
+        $handlers = \array_values($handlers);
+
         return new static($handlers);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getHandlers()
+    {
+        return $this->handlers;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function addHandler(HandlerInterface $handler, $priority = null)
+    {
+        if (null === $priority) {
+            $this->handlers[] = $handler;
+        } else {
+            \array_splice($this->handlers, $priority, 0, [$handler]);
+        }
+
+        return $this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function removeHandler($prority)
+    {
+        if (isset($this->handlers[$prority])) {
+            unset($this->handlers[$prority]);
+        }
+
+        return $this;
     }
 
     /**
