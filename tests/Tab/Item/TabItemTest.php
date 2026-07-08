@@ -3,6 +3,7 @@
 namespace RubenMartinDev\PrestaShopModuleInstaller\Tests\Tab\Item;
 
 use PHPUnit\Framework\TestCase;
+use RubenMartinDev\PrestaShopModuleInstaller\Item\ItemInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\Tab\Item\TabItem;
 use RubenMartinDev\PrestaShopModuleInstaller\Tab\Item\TabItemInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\Tab\ValueObject\ClassName;
@@ -147,6 +148,11 @@ final class TabItemTest extends TestCase
         );
 
         $this->assertInstanceOf(TabItemInterface::class, $item);
+    }
+
+    public function testGetTypeReturnsString()
+    {
+        $this->assertEquals('tab', $this->item->getType());
     }
 
     public function testGetClassNameReturnsValueObject()

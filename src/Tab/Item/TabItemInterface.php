@@ -2,6 +2,7 @@
 
 namespace RubenMartinDev\PrestaShopModuleInstaller\Tab\Item;
 
+use RubenMartinDev\PrestaShopModuleInstaller\Item\ItemInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\Tab\ValueObject\ClassName;
 use RubenMartinDev\PrestaShopModuleInstaller\Tab\ValueObject\Icon;
 use RubenMartinDev\PrestaShopModuleInstaller\Tab\ValueObject\IsActive;
@@ -25,7 +26,7 @@ use RubenMartinDev\PrestaShopModuleInstaller\Tab\ValueObject\WordingDomain;
  * @phpstan-import-type TParamWording from Wording
  * @phpstan-import-type TParamWordingDomain from WordingDomain
  */
-interface TabItemInterface
+interface TabItemInterface extends ItemInterface
 {
     /**
      * @param TParamClassName $className

@@ -78,6 +78,18 @@ final class DatabaseItemTest extends TestCase
         $this->assertInstanceOf(DatabaseItemInterface::class, $item);
     }
 
+    public function testGetTypeReturnsString()
+    {
+        $item = new DatabaseItem(
+            $this->tableName,
+            $this->query,
+            $this->queryFile,
+            $this->keepData
+        );
+
+        $this->assertEquals('database', $item->getType());
+    }
+
     public function testGetTableNameReturnsValueObject()
     {
         $item = new DatabaseItem(

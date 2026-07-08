@@ -51,6 +51,16 @@ final class HookItemTest extends TestCase
         $this->assertInstanceOf(HookItemInterface::class, $item);
     }
 
+    public function testGetTypeReturnsString()
+    {
+        $item = new HookItem(
+            $this->name,
+            $this->prestashopVersion
+        );
+
+        $this->assertEquals('hook', $item->getType());
+    }
+
     public function testGetNameReturnsValueObject()
     {
         $item = new HookItem(
