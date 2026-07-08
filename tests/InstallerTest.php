@@ -77,6 +77,39 @@ class InstallerTest extends TestCase
         $this->assertInstanceOf(InstallerInterface::class, $installer);
     }
 
+    public function testGetHandlersReturnsHandlers()
+    {
+        $handlers = [
+            $this->createHandlerMock(),
+            CustomHandler::createFrom($this->getModule(), []),
+        ];
+
+        $installer = new Installer($handlers);
+
+        $this->assertSame($handlers, $installer->getHandlers());
+    }
+
+    public function testAddHandlerAddsHandler()
+    {
+        $installer = new Installer([$this->createHandlerMock()]);
+
+        $installer->addHandler(CustomHandler::createFrom($this->getModule(), []));
+
+        $this->assertCount(2, $installer->getHandlers());
+    }
+
+    public function testRemoveHandlerRemovesHandler()
+    {
+        $installer = new Installer([
+            $this->createHandlerMock(),
+            CustomHandler::createFrom($this->getModule(), []),
+        ]);
+
+        $installer->removeHandler(1);
+
+        $this->assertCount(1, $installer->getHandlers());
+    }
+
     public function testInstall()
     {
         $installer = new Installer([
