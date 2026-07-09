@@ -40,18 +40,18 @@ interface InstallerInterface
 
     /**
      * @param HandlerInterface $handler
-     * @param int|null $priority
+     * @param int|null $position
      *
      * @return static
      */
-    public function addHandler(HandlerInterface $handler, $priority = null);
+    public function addHandler(HandlerInterface $handler, $position = null);
 
     /**
-     * @param int $prority
+     * @param int $position
      *
      * @return static
      */
-    public function removeHandler($prority);
+    public function removeHandler($position);
 
     /**
      * @return bool

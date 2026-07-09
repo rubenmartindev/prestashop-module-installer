@@ -91,11 +91,15 @@ class InstallerTest extends TestCase
 
     public function testAddHandlerAddsHandler()
     {
-        $installer = new Installer([$this->createHandlerMock()]);
+        $item1 = $this->createHandlerMock();
+        $item2 = CustomHandler::createFrom($this->getModule(), []);
 
-        $installer->addHandler(CustomHandler::createFrom($this->getModule(), []));
+        $installer = new Installer([$item1]);
 
-        $this->assertCount(2, $installer->getHandlers());
+        $result = $installer->addHandler($item2, 5);
+
+        $this->assertSame([0 => $item1, 5 => $item2], $installer->getHandlers());
+        $this->assertSame($result, $installer);
     }
 
     public function testRemoveHandlerRemovesHandler()
