@@ -4,12 +4,13 @@ namespace RubenMartinDev\PrestaShopModuleInstaller\Hook\Item;
 
 use RubenMartinDev\PrestaShopModuleInstaller\Hook\ValueObject\Name;
 use RubenMartinDev\PrestaShopModuleInstaller\Hook\ValueObject\PrestaShopVersion;
+use RubenMartinDev\PrestaShopModuleInstaller\Item\ItemInterface;
 
 /**
  * @phpstan-import-type TParamName from Name
  * @phpstan-import-type TParamPrestaShopVersion from PrestaShopVersion
  */
-interface HookItemInterface
+interface HookItemInterface extends ItemInterface
 {
     /**
      * @param TParamName $name

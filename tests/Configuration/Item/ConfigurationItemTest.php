@@ -56,6 +56,13 @@ final class ConfigurationItemTest extends TestCase
         $this->assertInstanceOf(ConfigurationItemInterface::class, $item2);
     }
 
+    public function testGetTypeReturnsString()
+    {
+        $item = new ConfigurationItem($this->name, $this->value);
+
+        $this->assertEquals('configuration', $item->getType());
+    }
+
     public function testGetNameReturnsValueObject()
     {
         $item = new ConfigurationItem($this->name, $this->value);

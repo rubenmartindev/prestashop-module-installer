@@ -87,6 +87,50 @@ final class TabHandlerTest extends TestCase
         $this->assertInstanceOf(TabHandlerInterface::class, $handler);
     }
 
+    public function testGetItemsReturnsItems()
+    {
+        $item = $this->createItemMock('AdminMyTab');
+
+        $handler = new TabHandler(
+            $this->getModule(),
+            [$item]
+        );
+
+        $this->assertSame([$item], $handler->getItems());
+    }
+
+    public function testAddItemAddsItem()
+    {
+        $item1 = $this->createItemMock('AdminMyTab');
+        $item2 = $this->createItemMock('AdminMyOtherTab');
+
+        $handler = new TabHandler(
+            $this->getModule(),
+            [$item1]
+        );
+
+        $result = $handler->addItem($item2, 5);
+
+        $this->assertSame([0 => $item1, 5 => $item2], $handler->getItems());
+        $this->assertSame($result, $handler);
+    }
+
+    public function testRemoveItemRemovesItem()
+    {
+        $item1 = $this->createItemMock('AdminMyTab');
+        $item2 = $this->createItemMock('AdminMyOtherTab');
+
+        $handler = new TabHandler(
+            $this->getModule(),
+            [$item1, $item2]
+        );
+
+        $result = $handler->removeItem(0);
+
+        $this->assertSame([1 => $item2], $handler->getItems());
+        $this->assertSame($result, $handler);
+    }
+
     /**
      * @runInSeparateProcess
      */

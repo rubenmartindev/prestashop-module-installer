@@ -11,6 +11,9 @@ use RubenMartinDev\PrestaShopModuleInstaller\Configuration\Item\ConfigurationIte
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\AbstractHandler;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Exception\ItemTypeIsInvalidException;
 
+/**
+ * @method __construct(Module $module, ConfigurationItemInterface[] $items)
+ */
 final class ConfigurationHandler extends AbstractHandler implements ConfigurationHandlerInterface
 {
     /**

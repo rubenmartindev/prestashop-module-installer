@@ -67,6 +67,50 @@ final class HookHandlerTest extends TestCase
         $this->assertInstanceOf(HookHandlerInterface::class, $handler);
     }
 
+    public function testGetItemsReturnsItems()
+    {
+        $item = $this->createItemMock('displayHeader');
+
+        $handler = new HookHandler(
+            $this->getModule(),
+            [$item]
+        );
+
+        $this->assertSame([$item], $handler->getItems());
+    }
+
+    public function testAddItemAddsItem()
+    {
+        $item1 = $this->createItemMock('displayHeader');
+        $item2 = $this->createItemMock('displayFooter');
+
+        $handler = new HookHandler(
+            $this->getModule(),
+            [$item1]
+        );
+
+        $result = $handler->addItem($item2, 5);
+
+        $this->assertSame([0 => $item1, 5 => $item2], $handler->getItems());
+        $this->assertSame($result, $handler);
+    }
+
+    public function testRemoveItemRemovesItem()
+    {
+        $item1 = $this->createItemMock('displayHeader');
+        $item2 = $this->createItemMock('displayFooter');
+
+        $handler = new HookHandler(
+            $this->getModule(),
+            [$item1, $item2]
+        );
+
+        $result = $handler->removeItem(0);
+
+        $this->assertSame([1 => $item2], $handler->getItems());
+        $this->assertSame($result, $handler);
+    }
+
     /**
      * @runInSeparateProcess
      */

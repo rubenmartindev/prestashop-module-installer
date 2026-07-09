@@ -7,6 +7,8 @@ use RubenMartinDev\PrestaShopModuleInstaller\Hook\ValueObject\PrestaShopVersion;
 
 final class HookItem implements HookItemInterface
 {
+    const TYPE = 'hook';
+
     /** @var Name */
     private $name;
 
@@ -32,6 +34,14 @@ final class HookItem implements HookItemInterface
             new Name($name),
             new PrestaShopVersion($prestashopVersion)
         );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getType()
+    {
+        return self::TYPE;
     }
 
     /**

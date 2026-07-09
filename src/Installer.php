@@ -69,12 +69,14 @@ class Installer implements InstallerInterface
     /**
      * {@inheritDoc}
      */
-    public function addHandler(HandlerInterface $handler, $priority = null)
+    public function addHandler(HandlerInterface $handler, $position = null)
     {
-        if (null === $priority) {
+        if (null === $position) {
             $this->handlers[] = $handler;
+        } elseif (\array_key_exists($position, $this->handlers)) {
+            \array_splice($this->handlers, $position, 0, [$handler]);
         } else {
-            \array_splice($this->handlers, $priority, 0, [$handler]);
+            $this->handlers[$position] = $handler;
         }
 
         return $this;
@@ -83,10 +85,10 @@ class Installer implements InstallerInterface
     /**
      * {@inheritDoc}
      */
-    public function removeHandler($prority)
+    public function removeHandler($position)
     {
-        if (isset($this->handlers[$prority])) {
-            unset($this->handlers[$prority]);
+        if (isset($this->handlers[$position])) {
+            unset($this->handlers[$position]);
         }
 
         return $this;

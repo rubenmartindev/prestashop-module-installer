@@ -10,6 +10,8 @@ use RubenMartinDev\PrestaShopModuleInstaller\Database\ValueObject\TableName;
 
 final class DatabaseItem implements DatabaseItemInterface
 {
+    const TYPE = 'database';
+
     /** @var TableName */
     private $tableName;
 
@@ -52,6 +54,14 @@ final class DatabaseItem implements DatabaseItemInterface
             new QueryFile($queryFile),
             new KeepData($keepData)
         );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getType()
+    {
+        return self::TYPE;
     }
 
     /**

@@ -7,6 +7,8 @@ use RubenMartinDev\PrestaShopModuleInstaller\Configuration\ValueObject\Value;
 
 final class ConfigurationItem implements ConfigurationItemInterface
 {
+    const TYPE = 'configuration';
+
     /** @var Name */
     private $name;
 
@@ -35,6 +37,14 @@ final class ConfigurationItem implements ConfigurationItemInterface
             new Name($name, $prefix),
             new Value($value)
         );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getType()
+    {
+        return self::TYPE;
     }
 
     /**

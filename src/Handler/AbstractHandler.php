@@ -5,10 +5,11 @@ namespace RubenMartinDev\PrestaShopModuleInstaller\Handler;
 use Module;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Exception\ItemsIsEmptyException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Exception\ItemTypeIsInvalidException;
+use RubenMartinDev\PrestaShopModuleInstaller\Item\ItemInterface;
 
 abstract class AbstractHandler implements HandlerInterface
 {
-    /** @var mixed[] */
+    /** @var ItemInterface[] */
     private $items;
 
     /** @var Module */
@@ -16,7 +17,7 @@ abstract class AbstractHandler implements HandlerInterface
 
     /**
      * @param Module $module
-     * @param mixed[] $items
+     * @param ItemInterface[] $items
      *
      * @throws ItemsIsEmptyException
      */
@@ -36,6 +37,44 @@ abstract class AbstractHandler implements HandlerInterface
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function getItems()
+    {
+        return $this->items;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function addItem(ItemInterface $item, $position = null)
+    {
+        $this->ensureItemIsValid($item);
+
+        if (null === $position) {
+            $this->items[] = $item;
+        } elseif (\array_key_exists($position, $this->items)) {
+            \array_splice($this->items, $position, 0, [$item]);
+        } else {
+            $this->items[$position] = $item;
+        }
+
+        return $this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function removeItem($position)
+    {
+        if (isset($this->items[$position])) {
+            unset($this->items[$position]);
+        }
+
+        return $this;
+    }
+
+    /**
      * @param mixed $item
      *
      * @return void
@@ -50,13 +89,5 @@ abstract class AbstractHandler implements HandlerInterface
     protected function getModule()
     {
         return $this->module;
-    }
-
-    /**
-     * @return mixed[]
-     */
-    protected function getItems()
-    {
-        return $this->items;
     }
 }

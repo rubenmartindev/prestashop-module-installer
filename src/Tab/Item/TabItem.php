@@ -15,6 +15,8 @@ use RubenMartinDev\PrestaShopModuleInstaller\Tab\ValueObject\WordingDomain;
 
 final class TabItem implements TabItemInterface
 {
+    const TYPE = 'tab';
+
     /** @var ClassName */
     private $className;
 
@@ -104,6 +106,14 @@ final class TabItem implements TabItemInterface
             new Wording($wording),
             new WordingDomain($wordingDomain)
         );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getType()
+    {
+        return self::TYPE;
     }
 
     /**

@@ -6,6 +6,7 @@ use RubenMartinDev\PrestaShopModuleInstaller\Database\ValueObject\KeepData;
 use RubenMartinDev\PrestaShopModuleInstaller\Database\ValueObject\Query;
 use RubenMartinDev\PrestaShopModuleInstaller\Database\ValueObject\QueryFile;
 use RubenMartinDev\PrestaShopModuleInstaller\Database\ValueObject\TableName;
+use RubenMartinDev\PrestaShopModuleInstaller\Item\ItemInterface;
 
 /**
  * @phpstan-import-type TParamTableName from TableName
@@ -13,7 +14,7 @@ use RubenMartinDev\PrestaShopModuleInstaller\Database\ValueObject\TableName;
  * @phpstan-import-type TParamQueryFile from QueryFile
  * @phpstan-import-type TParamKeepData from KeepData
  */
-interface DatabaseItemInterface
+interface DatabaseItemInterface extends ItemInterface
 {
     const PLACEHOLDERS = [
         '{{DB_PREFIX}}'   => \_DB_PREFIX_,
