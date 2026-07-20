@@ -4,7 +4,6 @@ namespace RubenMartinDev\PrestaShopModuleInstaller\Hook\Handler;
 
 use Module;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\AbstractHandler;
-use RubenMartinDev\PrestaShopModuleInstaller\Handler\Exception\ItemTypeIsInvalidException;
 use RubenMartinDev\PrestaShopModuleInstaller\Hook\Handler\Exception\FailedRegisterHookException;
 use RubenMartinDev\PrestaShopModuleInstaller\Hook\Item\HookItem;
 use RubenMartinDev\PrestaShopModuleInstaller\Hook\Item\HookItemInterface;
@@ -15,21 +14,6 @@ use RubenMartinDev\PrestaShopVersionChecker\PrestaShopVersionChecker;
  */
 final class HookHandler extends AbstractHandler implements HookHandlerInterface
 {
-    /**
-     * {@inheritDoc}
-     */
-    public static function createFrom(Module $module, array $items)
-    {
-        $items = \array_map(
-            function (array $item) use ($module) {
-                return HookItem::createFrom($module, $item);
-            },
-            $items
-        );
-
-        return new static($module, $items);
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -70,10 +54,8 @@ final class HookHandler extends AbstractHandler implements HookHandlerInterface
     /**
      * {@inheritDoc}
      */
-    protected function ensureItemIsValid($item)
+    protected static function getItemClassName()
     {
-        if (!$item instanceof HookItemInterface) {
-            throw new ItemTypeIsInvalidException('The Item does not implement the HookItemInterface');
-        }
+        return HookItem::class;
     }
 }
