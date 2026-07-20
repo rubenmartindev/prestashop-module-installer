@@ -39,6 +39,23 @@ abstract class AbstractHandler implements HandlerInterface
     /**
      * {@inheritDoc}
      */
+    public static function createFrom(Module $module, array $items)
+    {
+        $itemClassName = static::getItemClassName();
+
+        $items = \array_map(
+            function (array $item) use ($module, $itemClassName) {
+                return $itemClassName::createFrom($module, $item);
+            },
+            $items
+        );
+
+        return new static($module, $items);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getItems()
     {
         return $this->items;
@@ -75,13 +92,9 @@ abstract class AbstractHandler implements HandlerInterface
     }
 
     /**
-     * @param mixed $item
-     *
-     * @return void
-     *
-     * @throws ItemTypeIsInvalidException
+     * @return class-string<ItemInterface>
      */
-    abstract protected function ensureItemIsValid($item);
+    abstract protected static function getItemClassName();
 
     /**
      * @return Module
@@ -89,5 +102,24 @@ abstract class AbstractHandler implements HandlerInterface
     protected function getModule()
     {
         return $this->module;
+    }
+
+    /**
+     * @param mixed $item
+     *
+     * @return void
+     *
+     * @throws ItemTypeIsInvalidException
+     */
+    protected function ensureItemIsValid($item)
+    {
+        $itemClassName = $this->getItemClassName();
+
+        if (!$item instanceof $itemClassName) {
+            throw new ItemTypeIsInvalidException(\sprintf(
+                "The Item does not implement the %s",
+                $itemClassName
+            ));
+        }
     }
 }
