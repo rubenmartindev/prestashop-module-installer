@@ -3,12 +3,11 @@
 namespace RubenMartinDev\PrestaShopModuleInstaller\Tests\Hook\Handler;
 
 use PHPUnit\Framework\TestCase;
-use PHPUnit_Framework_MockObject_MockObject;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Exception\ItemTypeIsInvalidException;
 use RubenMartinDev\PrestaShopModuleInstaller\Hook\Handler\Exception\FailedRegisterHookException;
 use RubenMartinDev\PrestaShopModuleInstaller\Hook\Handler\HookHandler;
 use RubenMartinDev\PrestaShopModuleInstaller\Hook\Handler\HookHandlerInterface;
-use RubenMartinDev\PrestaShopModuleInstaller\Hook\Item\HookItemInterface;
+use RubenMartinDev\PrestaShopModuleInstaller\Hook\Item\HookItem;
 use RubenMartinDev\PrestaShopModuleInstaller\Hook\ValueObject\Name;
 use RubenMartinDev\PrestaShopModuleInstaller\Hook\ValueObject\PrestaShopVersion;
 use RubenMartinDev\PrestaShopModuleInstaller\Tests\Resources\ModuleTrait;
@@ -157,15 +156,13 @@ final class HookHandlerTest extends TestCase
      * @param string $name
      * @param array $prestashopVersion
      *
-     * @return HookItemInterface|PHPUnit_Framework_MockObject_MockObject
+     * @return HookItem
      */
     private function createItemMock($name, $prestashopVersion = ['min' => null, 'max' => null])
     {
-        $item = $this->createMock(HookItemInterface::class);
-
-        $item->method('getName')->willReturn(new Name($name));
-        $item->method('getPrestaShopVersion')->willReturn(new PrestaShopVersion($prestashopVersion));
-
-        return $item;
+        return new HookItem(
+            new Name($name),
+            new PrestaShopVersion($prestashopVersion)
+        );
     }
 }

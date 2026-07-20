@@ -2,14 +2,13 @@
 
 namespace RubenMartinDev\PrestaShopModuleInstaller\Tests\Tab\Handler;
 
-use PHPUnit_Framework_MockObject_MockObject;
 use PHPUnit\Framework\TestCase;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Exception\ItemTypeIsInvalidException;
 use RubenMartinDev\PrestaShopModuleInstaller\Tab\Handler\Exception\FailedToCreateTabException;
 use RubenMartinDev\PrestaShopModuleInstaller\Tab\Handler\Exception\FailedToDeleteTabException;
 use RubenMartinDev\PrestaShopModuleInstaller\Tab\Handler\TabHandler;
 use RubenMartinDev\PrestaShopModuleInstaller\Tab\Handler\TabHandlerInterface;
-use RubenMartinDev\PrestaShopModuleInstaller\Tab\Item\TabItemInterface;
+use RubenMartinDev\PrestaShopModuleInstaller\Tab\Item\TabItem;
 use RubenMartinDev\PrestaShopModuleInstaller\Tab\ValueObject\ClassName;
 use RubenMartinDev\PrestaShopModuleInstaller\Tab\ValueObject\Icon;
 use RubenMartinDev\PrestaShopModuleInstaller\Tab\ValueObject\IsActive;
@@ -206,23 +205,21 @@ final class TabHandlerTest extends TestCase
      * @param string $className
      * @param array $name
      *
-     * @return TabItemInterface|PHPUnit_Framework_MockObject_MockObject
+     * @return TabItem
      */
     private function createItemMock($className, $name = 'My tab')
     {
-        $item = $this->createMock(TabItemInterface::class);
-
-        $item->method('getClassName')->willReturn(new ClassName($className));
-        $item->method('getName')->willReturn(new Name($name));
-        $item->method('getParentId')->willReturn(new ParentId(1));
-        $item->method('getPosition')->willReturn(new Position(5));
-        $item->method('isActive')->willReturn(new IsActive(false));
-        $item->method('isEnabled')->willReturn(new IsEnabled(false));
-        $item->method('getRouteName')->willReturn(new RouteName('adminadmin_my_module_my_tab'));
-        $item->method('getIcon')->willReturn(new Icon('extension'));
-        $item->method('getWording')->willReturn(new Wording('My tab'));
-        $item->method('getWordingDomain')->willReturn(new WordingDomain('Modules.MyModule.Navigation'));
-
-        return $item;
+        return new TabItem(
+            new ClassName($className),
+            new Name($name),
+            new ParentId(1),
+            new Position(5),
+            new IsActive(false),
+            new IsEnabled(false),
+            new RouteName('adminadmin_my_module_my_tab'),
+            new Icon('extension'),
+            new Wording('My tab'),
+            new WordingDomain('Modules.MyModule.Navigation')
+        );
     }
 }

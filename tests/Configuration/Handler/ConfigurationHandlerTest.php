@@ -3,11 +3,11 @@
 namespace RubenMartinDev\PrestaShopModuleInstaller\Tests\Configuration\Handler;
 
 use PHPUnit\Framework\TestCase;
-use PHPUnit_Framework_MockObject_MockObject;
 use RubenMartinDev\PrestaShopModuleInstaller\Configuration\Handler\ConfigurationHandler;
 use RubenMartinDev\PrestaShopModuleInstaller\Configuration\Handler\ConfigurationHandlerInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\Configuration\Handler\Exception\FailedAddConfigurationException;
 use RubenMartinDev\PrestaShopModuleInstaller\Configuration\Handler\Exception\FailedDeleteConfigurationException;
+use RubenMartinDev\PrestaShopModuleInstaller\Configuration\Item\ConfigurationItem;
 use RubenMartinDev\PrestaShopModuleInstaller\Configuration\Item\ConfigurationItemInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\Configuration\ValueObject\Name;
 use RubenMartinDev\PrestaShopModuleInstaller\Configuration\ValueObject\Value;
@@ -171,15 +171,13 @@ final class ConfigurationHandlerTest extends TestCase
      * @param string $name
      * @param mixed $value
      *
-     * @return ConfigurationItemInterface|PHPUnit_Framework_MockObject_MockObject
+     * @return ConfigurationItemInterface
      */
     private function createItemMock($name, $value)
     {
-        $item = $this->createMock(ConfigurationItemInterface::class);
-
-        $item->method('getName')->willReturn(new Name($name));
-        $item->method('getValue')->willReturn(new Value($value));
-
-        return $item;
+        return new ConfigurationItem(
+            new Name($name),
+            new Value($value)
+        );
     }
 }
