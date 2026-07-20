@@ -12,7 +12,8 @@
     ],
     "require": {
         "php": ">=5.6.0",
-        "rubenmartindev/prestashop-version-checker": "^1.1"
+        "rubenmartindev/prestashop-version-checker": "^1.1",
+        "symfony/options-resolver": "^3.4"
     },
     "require-dev": {
         "dealerdirect/phpcodesniffer-composer-installer": "^1.2",

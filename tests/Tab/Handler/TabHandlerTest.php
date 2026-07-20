@@ -55,8 +55,8 @@ final class TabHandlerTest extends TestCase
             $this->getModule(),
             [
                 [
-                    'className' => 'AdminMyTab1',
-                    'name'      => 'My tab 1',
+                    'class_name'    => 'AdminMyTab1',
+                    'name'          => 'My tab 1',
                 ],
             ]
         );
@@ -70,16 +70,16 @@ final class TabHandlerTest extends TestCase
             $this->getModule(),
             [
                 [
-                    'className'     => 'AdminMyTab2',
-                    'name'          => [1 => 'My tab2 1', 2 => 'My tab2 2'],
-                    'parentId'      => 1,
-                    'position'      => 5,
-                    'isActive'      => false,
-                    'isEnabled'     => false,
-                    'routeName'     => 'admin_my_module_my_tab',
-                    'icon'          => 'extension',
-                    'wording'       => 'My tag',
-                    'wordingDomain' => 'Modules.MyModule.Navigation',
+                    'class_name'        => 'AdminMyTab2',
+                    'name'              => [1 => 'My tab2 1', 2 => 'My tab2 2'],
+                    'parent_id'         => 1,
+                    'position'          => 5,
+                    'is_active'         => false,
+                    'is_enabled'        => false,
+                    'route_name'        => 'admin_my_module_my_tab',
+                    'icon'              => 'extension',
+                    'wording'           => 'My tag',
+                    'wording_domain'    => 'Modules.MyModule.Navigation',
                 ],
             ]
         );

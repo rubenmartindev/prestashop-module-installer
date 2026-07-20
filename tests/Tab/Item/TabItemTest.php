@@ -3,7 +3,6 @@
 namespace RubenMartinDev\PrestaShopModuleInstaller\Tests\Tab\Item;
 
 use PHPUnit\Framework\TestCase;
-use RubenMartinDev\PrestaShopModuleInstaller\Item\ItemInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\Tab\Item\TabItem;
 use RubenMartinDev\PrestaShopModuleInstaller\Tab\Item\TabItemInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\Tab\ValueObject\ClassName;
@@ -16,9 +15,12 @@ use RubenMartinDev\PrestaShopModuleInstaller\Tab\ValueObject\Position;
 use RubenMartinDev\PrestaShopModuleInstaller\Tab\ValueObject\RouteName;
 use RubenMartinDev\PrestaShopModuleInstaller\Tab\ValueObject\Wording;
 use RubenMartinDev\PrestaShopModuleInstaller\Tab\ValueObject\WordingDomain;
+use RubenMartinDev\PrestaShopModuleInstaller\Tests\Resources\ModuleTrait;
 
 final class TabItemTest extends TestCase
 {
+    use ModuleTrait;
+
     /** @var TabItemInterface */
     private $item;
 
@@ -125,8 +127,11 @@ final class TabItemTest extends TestCase
     public function testCreateFromReturnTabItemWithRequireParameters()
     {
         $item = TabItem::createFrom(
-            'AdminMyTab',
-            'My tab'
+            $this->getModule(),
+            [
+                'class_name'    => 'AdminMyTab',
+                'name'          => 'My tab',
+            ]
         );
 
         $this->assertInstanceOf(TabItemInterface::class, $item);
@@ -135,16 +140,19 @@ final class TabItemTest extends TestCase
     public function testCreateFromReturnTabItemWithOptionalParameters()
     {
         $item = TabItem::createFrom(
-            'AdminMyTab2',
-            [1 => 'My tab2 1', 2 => 'My tab2 2'],
-            1,
-            5,
-            false,
-            false,
-            'admin_my_module_my_tab',
-            'extension',
-            'My tag',
-            'Modules.MyModule.Navigation'
+            $this->getModule(),
+            [
+                'class_name'        => 'AdminMyTab2',
+                'name'              => [1 => 'My tab2 1', 2 => 'My tab2 2'],
+                'parent_id'         => 1,
+                'position'          => 5,
+                'is_active'         => false,
+                'is_enabled'        => false,
+                'route_name'        => 'admin_my_module_my_tab',
+                'icon'              => 'extension',
+                'wording'           => 'My tag',
+                'wording_domain'    => 'Modules.MyModule.Navigation',
+            ]
         );
 
         $this->assertInstanceOf(TabItemInterface::class, $item);

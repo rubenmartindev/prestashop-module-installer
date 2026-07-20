@@ -22,24 +22,8 @@ final class TabHandler extends AbstractHandler implements TabHandlerInterface
     public static function createFrom(Module $module, array $items)
     {
         $items = \array_map(
-            function (array $item) {
-                $defaultArguments = [
-                    'className'     => '',
-                    'name'          => '',
-                    'parentId'      => -1,
-                    'position'      => 0,
-                    'isActive'      => true,
-                    'isEnabled'     => true,
-                    'routeName'     => null,
-                    'icon'          => null,
-                    'wording'       => null,
-                    'wordingDomain' => null,
-                ];
-
-                $arguments = \array_merge($defaultArguments, $item);
-                $arguments = \array_values($arguments);
-
-                return TabItem::createFrom(...$arguments);
+            function (array $item) use ($module) {
+                return TabItem::createFrom($module, $item);
             },
             $items
         );

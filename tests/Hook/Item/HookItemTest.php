@@ -7,9 +7,12 @@ use RubenMartinDev\PrestaShopModuleInstaller\Hook\Item\HookItem;
 use RubenMartinDev\PrestaShopModuleInstaller\Hook\Item\HookItemInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\Hook\ValueObject\Name;
 use RubenMartinDev\PrestaShopModuleInstaller\Hook\ValueObject\PrestaShopVersion;
+use RubenMartinDev\PrestaShopModuleInstaller\Tests\Resources\ModuleTrait;
 
 final class HookItemTest extends TestCase
 {
+    use ModuleTrait;
+
     /** @var Name */
     private $name;
 
@@ -36,7 +39,7 @@ final class HookItemTest extends TestCase
 
     public function testCreateFromReturnHookItemWithRequireParameters()
     {
-        $item = HookItem::createFrom('displayHeader');
+        $item = HookItem::createFrom($this->getModule(), ['name' => 'displayHeader']);
 
         $this->assertInstanceOf(HookItemInterface::class, $item);
     }
@@ -44,8 +47,11 @@ final class HookItemTest extends TestCase
     public function testCreateFromReturnHookItemWithOptionalParameters()
     {
         $item = HookItem::createFrom(
-            'displayHeader',
-            '>=1.6.0.0'
+            $this->getModule(),
+            [
+                'name'                  => 'displayHeader',
+                'prestashop_version'    => '>=1.6.0.0',
+            ]
         );
 
         $this->assertInstanceOf(HookItemInterface::class, $item);
