@@ -2,13 +2,17 @@
 
 namespace RubenMartinDev\PrestaShopModuleInstaller\Tests\Resources\Stubs\Classes;
 
-use ObjectModel;
 use PrestaShopCollection;
 
 /**
  * @see \Tab
+ *
+ * @property bool $forceReturnFalseOnAdd
+ * @property bool $forceReturnFalseOnSave
+ * @property bool $forceReturnFalseOnUpdate
+ * @property bool $forceReturnFalseOnDelete
  */
-class TabStub extends ObjectModel
+class TabStub extends \ObjectModel
 {
     /** @see \Tab::$class_name */
     public $class_name;

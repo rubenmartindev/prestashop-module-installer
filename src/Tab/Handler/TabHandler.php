@@ -4,7 +4,6 @@ namespace RubenMartinDev\PrestaShopModuleInstaller\Tab\Handler;
 
 use Module;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\AbstractHandler;
-use RubenMartinDev\PrestaShopModuleInstaller\Handler\Exception\ItemTypeIsInvalidException;
 use RubenMartinDev\PrestaShopModuleInstaller\Tab\Handler\Exception\FailedToCreateTabException;
 use RubenMartinDev\PrestaShopModuleInstaller\Tab\Handler\Exception\FailedToDeleteTabException;
 use RubenMartinDev\PrestaShopModuleInstaller\Tab\Item\TabItem;
@@ -16,21 +15,6 @@ use Tab;
  */
 final class TabHandler extends AbstractHandler implements TabHandlerInterface
 {
-    /**
-     * {@inheritDoc}
-     */
-    public static function createFrom(Module $module, array $items)
-    {
-        $items = \array_map(
-            function (array $item) use ($module) {
-                return TabItem::createFrom($module, $item);
-            },
-            $items
-        );
-
-        return new static($module, $items);
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -83,10 +67,8 @@ final class TabHandler extends AbstractHandler implements TabHandlerInterface
     /**
      * {@inheritDoc}
      */
-    protected function ensureItemIsValid($item)
+    protected static function getItemClassName()
     {
-        if (!$item instanceof TabItemInterface) {
-            throw new ItemTypeIsInvalidException('The Item does not implement the TabItemInterface');
-        }
+        return TabItem::class;
     }
 }
