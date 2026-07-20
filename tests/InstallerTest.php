@@ -52,7 +52,7 @@ class InstallerTest extends TestCase
                 ],
                 'database'              => [
                     [
-                        'tableName'         => 'my_table',
+                        'table_name'        => 'my_table',
                     ],
                 ],
                 'hooks'                 => [
@@ -62,7 +62,7 @@ class InstallerTest extends TestCase
                 ],
                 'tabs'                  => [
                     [
-                        'className'         => 'AdminMyModule',
+                        'class_name'        => 'AdminMyModule',
                         'name'              => 'My tab'
                     ],
                 ],
