@@ -9,28 +9,12 @@ use RubenMartinDev\PrestaShopModuleInstaller\Configuration\Handler\Exception\Fai
 use RubenMartinDev\PrestaShopModuleInstaller\Configuration\Item\ConfigurationItem;
 use RubenMartinDev\PrestaShopModuleInstaller\Configuration\Item\ConfigurationItemInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\AbstractHandler;
-use RubenMartinDev\PrestaShopModuleInstaller\Handler\Exception\ItemTypeIsInvalidException;
 
 /**
  * @method __construct(Module $module, ConfigurationItemInterface[] $items)
  */
 final class ConfigurationHandler extends AbstractHandler implements ConfigurationHandlerInterface
 {
-    /**
-     * {@inheritDoc}
-     */
-    public static function createFrom(Module $module, array $items)
-    {
-        $items = \array_map(
-            function (array $item) use ($module) {
-                return ConfigurationItem::createFrom($module, $item);
-            },
-            $items
-        );
-
-        return new static($module, $items);
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -71,10 +55,8 @@ final class ConfigurationHandler extends AbstractHandler implements Configuratio
     /**
      * {@inheritDoc}
      */
-    protected function ensureItemIsValid($item)
+    protected static function getItemClassName()
     {
-        if (!$item instanceof ConfigurationItemInterface) {
-            throw new ItemTypeIsInvalidException('The Item does not implement the ConfigurationItemInterface');
-        }
+        return ConfigurationItem::class;
     }
 }
