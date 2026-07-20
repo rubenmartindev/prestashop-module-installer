@@ -7,9 +7,12 @@ use RubenMartinDev\PrestaShopModuleInstaller\Configuration\Item\ConfigurationIte
 use RubenMartinDev\PrestaShopModuleInstaller\Configuration\Item\ConfigurationItemInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\Configuration\ValueObject\Name;
 use RubenMartinDev\PrestaShopModuleInstaller\Configuration\ValueObject\Value;
+use RubenMartinDev\PrestaShopModuleInstaller\Tests\Resources\ModuleTrait;
 
 final class ConfigurationItemTest extends TestCase
 {
+    use ModuleTrait;
+
     /** @var Name */
     private $name;
 
@@ -40,8 +43,8 @@ final class ConfigurationItemTest extends TestCase
             return 'my value';
         };
 
-        $item1 = ConfigurationItem::createFrom('my_configuration', 'my value');
-        $item2 = ConfigurationItem::createFrom('my_configuration', $callback);
+        $item1 = ConfigurationItem::createFrom($this->getModule(), ['name' => 'my_configuration', 'value' => 'my value']);
+        $item2 = ConfigurationItem::createFrom($this->getModule(), ['name' => 'my_configuration', 'value' => $callback]);
 
         $this->assertInstanceOf(ConfigurationItemInterface::class, $item1);
         $this->assertInstanceOf(ConfigurationItemInterface::class, $item2);
@@ -49,8 +52,8 @@ final class ConfigurationItemTest extends TestCase
 
     public function testCreateFromReturnConfigurationItemWithOptionalParameters()
     {
-        $item1 = ConfigurationItem::createFrom('my_configuration', 'my value', null);
-        $item2 = ConfigurationItem::createFrom('my_configuration', 'my value', 'my_prefix');
+        $item1 = ConfigurationItem::createFrom($this->getModule(), ['name' => 'my_configuration', 'value' => 'my value', 'prefix' => null]);
+        $item2 = ConfigurationItem::createFrom($this->getModule(), ['name' => 'my_configuration', 'value' => 'my value', 'prefix' => 'my_prefix']);
 
         $this->assertInstanceOf(ConfigurationItemInterface::class, $item1);
         $this->assertInstanceOf(ConfigurationItemInterface::class, $item2);

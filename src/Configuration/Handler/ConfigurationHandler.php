@@ -23,16 +23,7 @@ final class ConfigurationHandler extends AbstractHandler implements Configuratio
     {
         $items = \array_map(
             function (array $item) use ($module) {
-                $defaultArguments = [
-                    'name'      => '',
-                    'value'     => null,
-                    'prefix'    => $module->name,
-                ];
-
-                $arguments = \array_merge($defaultArguments, $item);
-                $arguments = \array_values($arguments);
-
-                return ConfigurationItem::createFrom(...$arguments);
+                return ConfigurationItem::createFrom($module, $item);
             },
             $items
         );
