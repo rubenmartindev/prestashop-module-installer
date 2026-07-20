@@ -22,18 +22,8 @@ final class DatabaseHandler extends AbstractHandler implements DatabaseHandlerIn
     public static function createFrom(Module $module, array $items)
     {
         $items = \array_map(
-            function (array $item) {
-                $defaultArguments = [
-                    'tableName' => '',
-                    'query'     => null,
-                    'queryFile' => null,
-                    'keepData'  => false,
-                ];
-
-                $arguments = \array_merge($defaultArguments, $item);
-                $arguments = \array_values($arguments);
-
-                return DatabaseItem::createFrom(...$arguments);
+            function (array $item) use ($module) {
+                return DatabaseItem::createFrom($module, $item);
             },
             $items
         );

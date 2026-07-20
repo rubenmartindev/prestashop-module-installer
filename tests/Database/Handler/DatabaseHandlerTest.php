@@ -55,7 +55,7 @@ final class DatabaseHandlerTest extends TestCase
             $this->getModule(),
             [
                 [
-                    'tableName' => 'my_table_1',
+                    'table_name' => 'my_table_1',
                 ],
             ]
         );
@@ -69,10 +69,10 @@ final class DatabaseHandlerTest extends TestCase
             $this->getModule(),
             [
                 [
-                    'tableName' => 'my_table',
-                    'query'     => 'CREATE TABLE my_table',
-                    'queryFile' => vfsStream::url('root/my_table.sql'),
-                    'keepData'  => true,
+                    'table_name'    => 'my_table',
+                    'query'         => 'CREATE TABLE my_table',
+                    'query_file'    => vfsStream::url('root/my_table.sql'),
+                    'keep_data'     => true,
                 ],
             ]
         );
