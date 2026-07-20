@@ -4,13 +4,14 @@ namespace RubenMartinDev\PrestaShopModuleInstaller\Tests\Database\Handler;
 
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamContainer;
-use PHPUnit_Framework_MockObject_MockObject;
 use PHPUnit\Framework\TestCase;
 use RubenMartinDev\PrestaShopModuleInstaller\Database\Handler\DatabaseHandler;
 use RubenMartinDev\PrestaShopModuleInstaller\Database\Handler\DatabaseHandlerInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\Database\Handler\Exception\FailedToExecuteQueryException;
-use RubenMartinDev\PrestaShopModuleInstaller\Database\Item\DatabaseItemInterface;
+use RubenMartinDev\PrestaShopModuleInstaller\Database\Item\DatabaseItem;
 use RubenMartinDev\PrestaShopModuleInstaller\Database\ValueObject\KeepData;
+use RubenMartinDev\PrestaShopModuleInstaller\Database\ValueObject\Query;
+use RubenMartinDev\PrestaShopModuleInstaller\Database\ValueObject\QueryFile;
 use RubenMartinDev\PrestaShopModuleInstaller\Database\ValueObject\TableName;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Exception\ItemTypeIsInvalidException;
 use RubenMartinDev\PrestaShopModuleInstaller\Tests\Resources\ModuleTrait;
@@ -182,16 +183,15 @@ final class DatabaseHandlerTest extends TestCase
      * @param string $tableName
      * @param bool $keepData
      *
-     * @return DatabaseItemInterface|PHPUnit_Framework_MockObject_MockObject
+     * @return DatabaseItem
      */
     private function createItemMock($tableName, $keepData = false)
     {
-        $item = $this->createMock(DatabaseItemInterface::class);
-
-        $item->method('getTableName')->willReturn(new TableName($tableName));
-        $item->method('getKeepData')->willReturn(new KeepData($keepData));
-        $item->method('getSQL')->willReturn("CREATE TABLE `{$tableName}`");
-
-        return $item;
+        return new DatabaseItem(
+            new TableName($tableName),
+            new Query("CREATE TABLE `{$tableName}`"),
+            new QueryFile(null),
+            new KeepData($keepData)
+        );
     }
 }
