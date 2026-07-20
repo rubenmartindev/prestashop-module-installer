@@ -58,8 +58,8 @@ final class HookHandlerTest extends TestCase
             $this->getModule(),
             [
                 [
-                    'name'              => 'displayFooter',
-                    'prestashopVersion' => '>=1.6.0.0',
+                    'name'                  => 'displayFooter',
+                    'prestashop_version'    => '>=1.6.0.0',
                 ],
             ]
         );

@@ -21,16 +21,8 @@ final class HookHandler extends AbstractHandler implements HookHandlerInterface
     public static function createFrom(Module $module, array $items)
     {
         $items = \array_map(
-            function (array $item) {
-                $defaultArguments = [
-                    'name'              => '',
-                    'prestashopVersion' => null,
-                ];
-
-                $arguments = \array_merge($defaultArguments, $item);
-                $arguments = \array_values($arguments);
-
-                return HookItem::createFrom(...$arguments);
+            function (array $item) use ($module) {
+                return HookItem::createFrom($module, $item);
             },
             $items
         );
