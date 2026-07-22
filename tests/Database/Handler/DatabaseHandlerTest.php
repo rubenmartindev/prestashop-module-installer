@@ -4,13 +4,14 @@ namespace RubenMartinDev\PrestaShopModuleInstaller\Tests\Database\Handler;
 
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamContainer;
-use PHPUnit_Framework_MockObject_MockObject;
 use PHPUnit\Framework\TestCase;
 use RubenMartinDev\PrestaShopModuleInstaller\Database\Handler\DatabaseHandler;
 use RubenMartinDev\PrestaShopModuleInstaller\Database\Handler\DatabaseHandlerInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\Database\Handler\Exception\FailedToExecuteQueryException;
-use RubenMartinDev\PrestaShopModuleInstaller\Database\Item\DatabaseItemInterface;
+use RubenMartinDev\PrestaShopModuleInstaller\Database\Item\DatabaseItem;
 use RubenMartinDev\PrestaShopModuleInstaller\Database\ValueObject\KeepData;
+use RubenMartinDev\PrestaShopModuleInstaller\Database\ValueObject\Query;
+use RubenMartinDev\PrestaShopModuleInstaller\Database\ValueObject\QueryFile;
 use RubenMartinDev\PrestaShopModuleInstaller\Database\ValueObject\TableName;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Exception\ItemTypeIsInvalidException;
 use RubenMartinDev\PrestaShopModuleInstaller\Tests\Resources\ModuleTrait;
@@ -55,7 +56,7 @@ final class DatabaseHandlerTest extends TestCase
             $this->getModule(),
             [
                 [
-                    'tableName' => 'my_table_1',
+                    'table_name' => 'my_table_1',
                 ],
             ]
         );
@@ -69,15 +70,59 @@ final class DatabaseHandlerTest extends TestCase
             $this->getModule(),
             [
                 [
-                    'tableName' => 'my_table',
-                    'query'     => 'CREATE TABLE my_table',
-                    'queryFile' => vfsStream::url('root/my_table.sql'),
-                    'keepData'  => true,
+                    'table_name'    => 'my_table',
+                    'query'         => 'CREATE TABLE my_table',
+                    'query_file'    => vfsStream::url('root/my_table.sql'),
+                    'keep_data'     => true,
                 ],
             ]
         );
 
         $this->assertInstanceOf(DatabaseHandlerInterface::class, $handler);
+    }
+
+    public function testGetItemsReturnsItems()
+    {
+        $item = $this->createItemMock('my_table');
+
+        $handler = new DatabaseHandler(
+            $this->getModule(),
+            [$item]
+        );
+
+        $this->assertSame([$item], $handler->getItems());
+    }
+
+    public function testAddItemAddsItem()
+    {
+        $item1 = $this->createItemMock('my_table');
+        $item2 = $this->createItemMock('my_other_table');
+
+        $handler = new DatabaseHandler(
+            $this->getModule(),
+            [$item1]
+        );
+
+        $result = $handler->addItem($item2, 5);
+
+        $this->assertSame([0 => $item1, 5 => $item2], $handler->getItems());
+        $this->assertSame($result, $handler);
+    }
+
+    public function testRemoveItemRemovesItem()
+    {
+        $item1 = $this->createItemMock('my_table');
+        $item2 = $this->createItemMock('my_other_table');
+
+        $handler = new DatabaseHandler(
+            $this->getModule(),
+            [$item1, $item2]
+        );
+
+        $result = $handler->removeItem(0);
+
+        $this->assertSame([1 => $item2], $handler->getItems());
+        $this->assertSame($result, $handler);
     }
 
     /**
@@ -138,16 +183,15 @@ final class DatabaseHandlerTest extends TestCase
      * @param string $tableName
      * @param bool $keepData
      *
-     * @return DatabaseItemInterface|PHPUnit_Framework_MockObject_MockObject
+     * @return DatabaseItem
      */
     private function createItemMock($tableName, $keepData = false)
     {
-        $item = $this->createMock(DatabaseItemInterface::class);
-
-        $item->method('getTableName')->willReturn(new TableName($tableName));
-        $item->method('getKeepData')->willReturn(new KeepData($keepData));
-        $item->method('getSQL')->willReturn("CREATE TABLE `{$tableName}`");
-
-        return $item;
+        return new DatabaseItem(
+            new TableName($tableName),
+            new Query("CREATE TABLE `{$tableName}`"),
+            new QueryFile(null),
+            new KeepData($keepData)
+        );
     }
 }

@@ -2,14 +2,25 @@
 
 namespace RubenMartinDev\PrestaShopModuleInstaller\Database\Item;
 
+use Module;
 use RubenMartinDev\PrestaShopModuleInstaller\Database\Item\Exception\SQLIsEmptyException;
 use RubenMartinDev\PrestaShopModuleInstaller\Database\ValueObject\KeepData;
 use RubenMartinDev\PrestaShopModuleInstaller\Database\ValueObject\Query;
 use RubenMartinDev\PrestaShopModuleInstaller\Database\ValueObject\QueryFile;
 use RubenMartinDev\PrestaShopModuleInstaller\Database\ValueObject\TableName;
+use Symfony\Component\OptionsResolver\Options;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * @phpstan-import-type TParamTableName from TableName
+ * @phpstan-import-type TParamQuery from Query
+ * @phpstan-import-type TParamQueryFile from QueryFile
+ * @phpstan-import-type TParamKeepData from KeepData
+ */
 final class DatabaseItem implements DatabaseItemInterface
 {
+    const TYPE = 'database';
+
     /** @var TableName */
     private $tableName;
 
@@ -39,19 +50,32 @@ final class DatabaseItem implements DatabaseItemInterface
 
     /**
      * {@inheritDoc}
+     *
+     * @param array{
+     *   table_name: TParamTableName,
+     *   query?: TParamQuery,
+     *   query_file?: TParamQueryFile,
+     *   keep_data?: TParamKeepData,
+     * } $properties
      */
-    public static function createFrom(
-        $tableName,
-        $query = null,
-        $queryFile = null,
-        $keepData = false
-    ) {
+    public static function createFrom(Module $module, array $properties)
+    {
+        $properties = self::createOptionsResolver($module)->resolve($properties);
+
         return new static(
-            new TableName($tableName),
-            new Query($query),
-            new QueryFile($queryFile),
-            new KeepData($keepData)
+            $properties['table_name'],
+            $properties['query'],
+            $properties['query_file'],
+            $properties['keep_data']
         );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getType()
+    {
+        return self::TYPE;
     }
 
     /**
@@ -115,5 +139,41 @@ final class DatabaseItem implements DatabaseItemInterface
         }
 
         return $this->sql = $sql;
+    }
+
+    /**
+     * @param Module $module
+     *
+     * @return OptionsResolver
+     */
+    private static function createOptionsResolver(Module $module)
+    {
+        $resolver = new OptionsResolver();
+
+        $resolver->setRequired('table_name');
+
+        $resolver->setDefault('query', null);
+        $resolver->setDefault('query_file', null);
+        $resolver->setDefault('keep_data', false);
+
+        $resolver->setAllowedTypes('table_name', 'string');
+        $resolver->setAllowedTypes('query', ['string', 'null']);
+        $resolver->setAllowedTypes('query_file', ['string', 'null']);
+        $resolver->setAllowedTypes('keep_data', 'bool');
+
+        $resolver->setNormalizer('table_name', function (Options $options, $value) {
+            return new TableName($value);
+        });
+        $resolver->setNormalizer('query', function (Options $options, $value) {
+            return new Query($value);
+        });
+        $resolver->setNormalizer('query_file', function (Options $options, $value) {
+            return new QueryFile($value);
+        });
+        $resolver->setNormalizer('keep_data', function (Options $options, $value) {
+            return new KeepData($value);
+        });
+
+        return $resolver;
     }
 }

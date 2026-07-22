@@ -6,6 +6,7 @@ use Module;
 use RubenMartinDev\PrestaShopModuleInstaller\Configuration\Handler\Exception\ConfigurationHandlerException;
 use RubenMartinDev\PrestaShopModuleInstaller\Configuration\ValueObject\Name;
 use RubenMartinDev\PrestaShopModuleInstaller\Configuration\ValueObject\Value;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\HandlerInterface;
 
 /**
  * @phpstan-import-type TParamName from Name
@@ -18,14 +19,12 @@ use RubenMartinDev\PrestaShopModuleInstaller\Configuration\ValueObject\Value;
  *   prefix?: TParamPrefix,
  * }
  */
-interface ConfigurationHandlerInterface
+interface ConfigurationHandlerInterface extends HandlerInterface
 {
     /**
      * {@inheritDoc}
      *
      * @param TItem[] $items
-     *
-     * @return static
      */
     public static function createFrom(Module $module, array $items);
 

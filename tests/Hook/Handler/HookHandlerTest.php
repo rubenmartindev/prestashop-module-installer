@@ -3,12 +3,11 @@
 namespace RubenMartinDev\PrestaShopModuleInstaller\Tests\Hook\Handler;
 
 use PHPUnit\Framework\TestCase;
-use PHPUnit_Framework_MockObject_MockObject;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Exception\ItemTypeIsInvalidException;
 use RubenMartinDev\PrestaShopModuleInstaller\Hook\Handler\Exception\FailedRegisterHookException;
 use RubenMartinDev\PrestaShopModuleInstaller\Hook\Handler\HookHandler;
 use RubenMartinDev\PrestaShopModuleInstaller\Hook\Handler\HookHandlerInterface;
-use RubenMartinDev\PrestaShopModuleInstaller\Hook\Item\HookItemInterface;
+use RubenMartinDev\PrestaShopModuleInstaller\Hook\Item\HookItem;
 use RubenMartinDev\PrestaShopModuleInstaller\Hook\ValueObject\Name;
 use RubenMartinDev\PrestaShopModuleInstaller\Hook\ValueObject\PrestaShopVersion;
 use RubenMartinDev\PrestaShopModuleInstaller\Tests\Resources\ModuleTrait;
@@ -58,13 +57,57 @@ final class HookHandlerTest extends TestCase
             $this->getModule(),
             [
                 [
-                    'name'              => 'displayFooter',
-                    'prestashopVersion' => '>=1.6.0.0',
+                    'name'                  => 'displayFooter',
+                    'prestashop_version'    => '>=1.6.0.0',
                 ],
             ]
         );
 
         $this->assertInstanceOf(HookHandlerInterface::class, $handler);
+    }
+
+    public function testGetItemsReturnsItems()
+    {
+        $item = $this->createItemMock('displayHeader');
+
+        $handler = new HookHandler(
+            $this->getModule(),
+            [$item]
+        );
+
+        $this->assertSame([$item], $handler->getItems());
+    }
+
+    public function testAddItemAddsItem()
+    {
+        $item1 = $this->createItemMock('displayHeader');
+        $item2 = $this->createItemMock('displayFooter');
+
+        $handler = new HookHandler(
+            $this->getModule(),
+            [$item1]
+        );
+
+        $result = $handler->addItem($item2, 5);
+
+        $this->assertSame([0 => $item1, 5 => $item2], $handler->getItems());
+        $this->assertSame($result, $handler);
+    }
+
+    public function testRemoveItemRemovesItem()
+    {
+        $item1 = $this->createItemMock('displayHeader');
+        $item2 = $this->createItemMock('displayFooter');
+
+        $handler = new HookHandler(
+            $this->getModule(),
+            [$item1, $item2]
+        );
+
+        $result = $handler->removeItem(0);
+
+        $this->assertSame([1 => $item2], $handler->getItems());
+        $this->assertSame($result, $handler);
     }
 
     /**
@@ -113,15 +156,13 @@ final class HookHandlerTest extends TestCase
      * @param string $name
      * @param array $prestashopVersion
      *
-     * @return HookItemInterface|PHPUnit_Framework_MockObject_MockObject
+     * @return HookItem
      */
     private function createItemMock($name, $prestashopVersion = ['min' => null, 'max' => null])
     {
-        $item = $this->createMock(HookItemInterface::class);
-
-        $item->method('getName')->willReturn(new Name($name));
-        $item->method('getPrestaShopVersion')->willReturn(new PrestaShopVersion($prestashopVersion));
-
-        return $item;
+        return new HookItem(
+            new Name($name),
+            new PrestaShopVersion($prestashopVersion)
+        );
     }
 }

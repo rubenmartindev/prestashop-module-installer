@@ -6,6 +6,7 @@ use Module;
 use RubenMartinDev\PrestaShopModuleInstaller\Configuration\Handler\ConfigurationHandlerInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\Database\Handler\DatabaseHandlerInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Exception\HandlerException;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\HandlerInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\Hook\Handler\HookHandlerInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\Tab\Handler\TabHandlerInterface;
 
@@ -31,6 +32,26 @@ interface InstallerInterface
      * @return static
      */
     public static function createFrom(Module $module, array $handlers);
+
+    /**
+     * @return array<int, HandlerInterface>
+     */
+    public function getHandlers();
+
+    /**
+     * @param HandlerInterface $handler
+     * @param int|null $position
+     *
+     * @return static
+     */
+    public function addHandler(HandlerInterface $handler, $position = null);
+
+    /**
+     * @param int $position
+     *
+     * @return static
+     */
+    public function removeHandler($position);
 
     /**
      * @return bool

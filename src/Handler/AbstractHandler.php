@@ -5,10 +5,11 @@ namespace RubenMartinDev\PrestaShopModuleInstaller\Handler;
 use Module;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Exception\ItemsIsEmptyException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Exception\ItemTypeIsInvalidException;
+use RubenMartinDev\PrestaShopModuleInstaller\Item\ItemInterface;
 
 abstract class AbstractHandler implements HandlerInterface
 {
-    /** @var mixed[] */
+    /** @var ItemInterface[] */
     private $items;
 
     /** @var Module */
@@ -16,7 +17,7 @@ abstract class AbstractHandler implements HandlerInterface
 
     /**
      * @param Module $module
-     * @param mixed[] $items
+     * @param ItemInterface[] $items
      *
      * @throws ItemsIsEmptyException
      */
@@ -36,13 +37,64 @@ abstract class AbstractHandler implements HandlerInterface
     }
 
     /**
-     * @param mixed $item
-     *
-     * @return void
-     *
-     * @throws ItemTypeIsInvalidException
+     * {@inheritDoc}
      */
-    abstract protected function ensureItemIsValid($item);
+    public static function createFrom(Module $module, array $items)
+    {
+        $itemClassName = static::getItemClassName();
+
+        $items = \array_map(
+            function (array $item) use ($module, $itemClassName) {
+                return $itemClassName::createFrom($module, $item);
+            },
+            $items
+        );
+
+        return new static($module, $items);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getItems()
+    {
+        return $this->items;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function addItem(ItemInterface $item, $position = null)
+    {
+        $this->ensureItemIsValid($item);
+
+        if (null === $position) {
+            $this->items[] = $item;
+        } elseif (\array_key_exists($position, $this->items)) {
+            \array_splice($this->items, $position, 0, [$item]);
+        } else {
+            $this->items[$position] = $item;
+        }
+
+        return $this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function removeItem($position)
+    {
+        if (isset($this->items[$position])) {
+            unset($this->items[$position]);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return class-string<ItemInterface>
+     */
+    abstract protected static function getItemClassName();
 
     /**
      * @return Module
@@ -53,10 +105,21 @@ abstract class AbstractHandler implements HandlerInterface
     }
 
     /**
-     * @return mixed[]
+     * @param mixed $item
+     *
+     * @return void
+     *
+     * @throws ItemTypeIsInvalidException
      */
-    protected function getItems()
+    protected function ensureItemIsValid($item)
     {
-        return $this->items;
+        $itemClassName = $this->getItemClassName();
+
+        if (!$item instanceof $itemClassName) {
+            throw new ItemTypeIsInvalidException(\sprintf(
+                "The Item does not implement the %s",
+                $itemClassName
+            ));
+        }
     }
 }

@@ -5,6 +5,8 @@ namespace RubenMartinDev\PrestaShopModuleInstaller\Configuration\ValueObject;
 use RubenMartinDev\PrestaShopModuleInstaller\ValueObject\ValueObjectInterface;
 
 /**
+ * @todo Push the callable logic into this class
+ *
  * @phpstan-type TValue mixed
  * @phpstan-type TParamValue TValue
  */

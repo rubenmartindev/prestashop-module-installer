@@ -13,7 +13,7 @@ use RubenMartinDev\PrestaShopModuleInstaller\Tab\Handler\TabHandler;
 class Installer implements InstallerInterface
 {
     /** @var array<string, HandlerInterface> */
-    private static $mapHandlers = [
+    const MAP_HANDLERS = [
         'configuration' => ConfigurationHandler::class,
         'database'      => DatabaseHandler::class,
         'hooks'         => HookHandler::class,
@@ -28,7 +28,11 @@ class Installer implements InstallerInterface
      */
     public function __construct(array $handlers)
     {
-        $this->ensureIsCollectionHandlers($handlers);
+        foreach ($handlers as $handler) {
+            if (false === \is_subclass_of($handler, HandlerInterface::class)) {
+                throw InstallerException::forInvalidHandler($handler);
+            }
+        }
 
         $this->handlers = $handlers;
     }
@@ -40,19 +44,54 @@ class Installer implements InstallerInterface
     {
         foreach ($handlers as $name => &$items) {
             /** @var HandlerInterface */
-            $handlerClass = isset(self::$mapHandlers[$name]) ? self::$mapHandlers[$name] : $name;
+            $handlerClass = \array_key_exists($name, self::MAP_HANDLERS) ? self::MAP_HANDLERS[$name] : $name;
 
-            if (false === is_subclass_of($handlerClass, HandlerInterface::class)) {
-                throw new InstallerException(\sprintf(
-                    'The class %s does not implement the HandlerInterface',
-                    $name
-                ));
+            if (false === \is_subclass_of($handlerClass, HandlerInterface::class)) {
+                throw InstallerException::forInvalidHandler($handlerClass);
             }
 
             $items = $handlerClass::createFrom($module, $items);
         }
 
+        $handlers = \array_values($handlers);
+
         return new static($handlers);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getHandlers()
+    {
+        return $this->handlers;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function addHandler(HandlerInterface $handler, $position = null)
+    {
+        if (null === $position) {
+            $this->handlers[] = $handler;
+        } elseif (\array_key_exists($position, $this->handlers)) {
+            \array_splice($this->handlers, $position, 0, [$handler]);
+        } else {
+            $this->handlers[$position] = $handler;
+        }
+
+        return $this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function removeHandler($position)
+    {
+        if (isset($this->handlers[$position])) {
+            unset($this->handlers[$position]);
+        }
+
+        return $this;
     }
 
     /**
@@ -77,24 +116,5 @@ class Installer implements InstallerInterface
         }
 
         return true;
-    }
-
-    /**
-     * @param array<HandlerInterface> $handlers
-     *
-     * @return void
-     *
-     * @throws InstallerException
-     */
-    private function ensureIsCollectionHandlers(array $handlers)
-    {
-        foreach ($handlers as $key => $handler) {
-            if (false === \is_subclass_of($handler, HandlerInterface::class)) {
-                throw new InstallerException(\sprintf(
-                    'Handler "%s" does not implement the HandlerInterface',
-                    $key
-                ));
-            }
-        }
     }
 }

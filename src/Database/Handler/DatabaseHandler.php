@@ -9,38 +9,12 @@ use RubenMartinDev\PrestaShopModuleInstaller\Database\Handler\Exception\FailedTo
 use RubenMartinDev\PrestaShopModuleInstaller\Database\Item\DatabaseItem;
 use RubenMartinDev\PrestaShopModuleInstaller\Database\Item\DatabaseItemInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\AbstractHandler;
-use RubenMartinDev\PrestaShopModuleInstaller\Handler\Exception\ItemTypeIsInvalidException;
 
 /**
  * @method __construct(Module $module, DatabaseItemInterface[] $items)
  */
 final class DatabaseHandler extends AbstractHandler implements DatabaseHandlerInterface
 {
-    /**
-     * {@inheritDoc}
-     */
-    public static function createFrom(Module $module, array $items)
-    {
-        $items = \array_map(
-            function (array $item) {
-                $defaultArguments = [
-                    'tableName' => '',
-                    'query'     => null,
-                    'queryFile' => null,
-                    'keepData'  => false,
-                ];
-
-                $arguments = \array_merge($defaultArguments, $item);
-                $arguments = \array_values($arguments);
-
-                return DatabaseItem::createFrom(...$arguments);
-            },
-            $items
-        );
-
-        return new static($module, $items);
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -74,16 +48,6 @@ final class DatabaseHandler extends AbstractHandler implements DatabaseHandlerIn
     }
 
     /**
-     * {@inheritDoc}
-     */
-    protected function ensureItemIsValid($item)
-    {
-        if (!$item instanceof DatabaseItemInterface) {
-            throw new ItemTypeIsInvalidException('The Item does not implement the DatabaseItemInterface');
-        }
-    }
-
-    /**
      * @param string $query
      *
      * @return void
@@ -99,5 +63,13 @@ final class DatabaseHandler extends AbstractHandler implements DatabaseHandlerIn
                 \sprintf('An error occurred while executing the query: %s', $query)
             );
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected static function getItemClassName()
+    {
+        return DatabaseItem::class;
     }
 }

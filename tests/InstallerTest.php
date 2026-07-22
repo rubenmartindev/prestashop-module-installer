@@ -52,7 +52,7 @@ class InstallerTest extends TestCase
                 ],
                 'database'              => [
                     [
-                        'tableName'         => 'my_table',
+                        'table_name'        => 'my_table',
                     ],
                 ],
                 'hooks'                 => [
@@ -62,7 +62,7 @@ class InstallerTest extends TestCase
                 ],
                 'tabs'                  => [
                     [
-                        'className'         => 'AdminMyModule',
+                        'class_name'        => 'AdminMyModule',
                         'name'              => 'My tab'
                     ],
                 ],
@@ -75,6 +75,43 @@ class InstallerTest extends TestCase
         );
 
         $this->assertInstanceOf(InstallerInterface::class, $installer);
+    }
+
+    public function testGetHandlersReturnsHandlers()
+    {
+        $handlers = [
+            $this->createHandlerMock(),
+            CustomHandler::createFrom($this->getModule(), []),
+        ];
+
+        $installer = new Installer($handlers);
+
+        $this->assertSame($handlers, $installer->getHandlers());
+    }
+
+    public function testAddHandlerAddsHandler()
+    {
+        $item1 = $this->createHandlerMock();
+        $item2 = CustomHandler::createFrom($this->getModule(), []);
+
+        $installer = new Installer([$item1]);
+
+        $result = $installer->addHandler($item2, 5);
+
+        $this->assertSame([0 => $item1, 5 => $item2], $installer->getHandlers());
+        $this->assertSame($result, $installer);
+    }
+
+    public function testRemoveHandlerRemovesHandler()
+    {
+        $installer = new Installer([
+            $this->createHandlerMock(),
+            CustomHandler::createFrom($this->getModule(), []),
+        ]);
+
+        $installer->removeHandler(1);
+
+        $this->assertCount(1, $installer->getHandlers());
     }
 
     public function testInstall()

@@ -3,11 +3,11 @@
 namespace RubenMartinDev\PrestaShopModuleInstaller\Tests\Configuration\Handler;
 
 use PHPUnit\Framework\TestCase;
-use PHPUnit_Framework_MockObject_MockObject;
 use RubenMartinDev\PrestaShopModuleInstaller\Configuration\Handler\ConfigurationHandler;
 use RubenMartinDev\PrestaShopModuleInstaller\Configuration\Handler\ConfigurationHandlerInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\Configuration\Handler\Exception\FailedAddConfigurationException;
 use RubenMartinDev\PrestaShopModuleInstaller\Configuration\Handler\Exception\FailedDeleteConfigurationException;
+use RubenMartinDev\PrestaShopModuleInstaller\Configuration\Item\ConfigurationItem;
 use RubenMartinDev\PrestaShopModuleInstaller\Configuration\Item\ConfigurationItemInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\Configuration\ValueObject\Name;
 use RubenMartinDev\PrestaShopModuleInstaller\Configuration\ValueObject\Value;
@@ -69,6 +69,50 @@ final class ConfigurationHandlerTest extends TestCase
         $this->assertInstanceOf(ConfigurationHandlerInterface::class, $handler);
     }
 
+    public function testGetItemsReturnsItems()
+    {
+        $item = $this->createItemMock('my_configuration', 'my value');
+
+        $handler = new ConfigurationHandler(
+            $this->getModule(),
+            [$item]
+        );
+
+        $this->assertSame([$item], $handler->getItems());
+    }
+
+    public function testAddItemAddsItem()
+    {
+        $item1 = $this->createItemMock('my_configuration', 'my value');
+        $item2 = $this->createItemMock('my_other_configuration', 'my other value');
+
+        $handler = new ConfigurationHandler(
+            $this->getModule(),
+            [$item1]
+        );
+
+        $result = $handler->addItem($item2, 5);
+
+        $this->assertSame([0 => $item1, 5 => $item2], $handler->getItems());
+        $this->assertSame($result, $handler);
+    }
+
+    public function testRemoveItemRemovesItem()
+    {
+        $item1 = $this->createItemMock('my_configuration', 'my value');
+        $item2 = $this->createItemMock('my_other_configuration', 'my other value');
+
+        $handler = new ConfigurationHandler(
+            $this->getModule(),
+            [$item1, $item2]
+        );
+
+        $result = $handler->removeItem(0);
+
+        $this->assertSame([1 => $item2], $handler->getItems());
+        $this->assertSame($result, $handler);
+    }
+
     /**
      * @runInSeparateProcess
      */
@@ -127,15 +171,13 @@ final class ConfigurationHandlerTest extends TestCase
      * @param string $name
      * @param mixed $value
      *
-     * @return ConfigurationItemInterface|PHPUnit_Framework_MockObject_MockObject
+     * @return ConfigurationItemInterface
      */
     private function createItemMock($name, $value)
     {
-        $item = $this->createMock(ConfigurationItemInterface::class);
-
-        $item->method('getName')->willReturn(new Name($name));
-        $item->method('getValue')->willReturn(new Value($value));
-
-        return $item;
+        return new ConfigurationItem(
+            new Name($name),
+            new Value($value)
+        );
     }
 }

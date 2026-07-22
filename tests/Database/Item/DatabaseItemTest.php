@@ -12,9 +12,12 @@ use RubenMartinDev\PrestaShopModuleInstaller\Database\ValueObject\KeepData;
 use RubenMartinDev\PrestaShopModuleInstaller\Database\ValueObject\Query;
 use RubenMartinDev\PrestaShopModuleInstaller\Database\ValueObject\QueryFile;
 use RubenMartinDev\PrestaShopModuleInstaller\Database\ValueObject\TableName;
+use RubenMartinDev\PrestaShopModuleInstaller\Tests\Resources\ModuleTrait;
 
 final class DatabaseItemTest extends TestCase
 {
+    use ModuleTrait;
+
     /** @var vfsStreamContainer */
     private $directory;
 
@@ -61,7 +64,7 @@ final class DatabaseItemTest extends TestCase
 
     public function testCreateFromReturnDatabaseItemWithRequireParameters()
     {
-        $item = DatabaseItem::createFrom('my_table');
+        $item = DatabaseItem::createFrom($this->getModule(), ['table_name' => 'my_table']);
 
         $this->assertInstanceOf(DatabaseItemInterface::class, $item);
     }
@@ -69,13 +72,28 @@ final class DatabaseItemTest extends TestCase
     public function testCreateFromReturnDatabaseItemWithOptionalParameters()
     {
         $item = DatabaseItem::createFrom(
-            'my_table',
-            'CREATE TABLE {{DB_PREFIX}}my_table_2 (id INT) engine={{ENGINE_TYPE}}',
-            vfsStream::url('root/my_table.sql'),
-            true
+            $this->getModule(),
+            [
+                'table_name'    => 'my_table',
+                'query'         => 'CREATE TABLE {{DB_PREFIX}}my_table_2 (id INT) engine={{ENGINE_TYPE}}',
+                'query_file'    => vfsStream::url('root/my_table.sql'),
+                'keep_data'     => true,
+            ]
         );
 
         $this->assertInstanceOf(DatabaseItemInterface::class, $item);
+    }
+
+    public function testGetTypeReturnsString()
+    {
+        $item = new DatabaseItem(
+            $this->tableName,
+            $this->query,
+            $this->queryFile,
+            $this->keepData
+        );
+
+        $this->assertEquals('database', $item->getType());
     }
 
     public function testGetTableNameReturnsValueObject()

@@ -2,14 +2,13 @@
 
 namespace RubenMartinDev\PrestaShopModuleInstaller\Tests\Tab\Handler;
 
-use PHPUnit_Framework_MockObject_MockObject;
 use PHPUnit\Framework\TestCase;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Exception\ItemTypeIsInvalidException;
 use RubenMartinDev\PrestaShopModuleInstaller\Tab\Handler\Exception\FailedToCreateTabException;
 use RubenMartinDev\PrestaShopModuleInstaller\Tab\Handler\Exception\FailedToDeleteTabException;
 use RubenMartinDev\PrestaShopModuleInstaller\Tab\Handler\TabHandler;
 use RubenMartinDev\PrestaShopModuleInstaller\Tab\Handler\TabHandlerInterface;
-use RubenMartinDev\PrestaShopModuleInstaller\Tab\Item\TabItemInterface;
+use RubenMartinDev\PrestaShopModuleInstaller\Tab\Item\TabItem;
 use RubenMartinDev\PrestaShopModuleInstaller\Tab\ValueObject\ClassName;
 use RubenMartinDev\PrestaShopModuleInstaller\Tab\ValueObject\Icon;
 use RubenMartinDev\PrestaShopModuleInstaller\Tab\ValueObject\IsActive;
@@ -55,8 +54,8 @@ final class TabHandlerTest extends TestCase
             $this->getModule(),
             [
                 [
-                    'className' => 'AdminMyTab1',
-                    'name'      => 'My tab 1',
+                    'class_name'    => 'AdminMyTab1',
+                    'name'          => 'My tab 1',
                 ],
             ]
         );
@@ -70,21 +69,65 @@ final class TabHandlerTest extends TestCase
             $this->getModule(),
             [
                 [
-                    'className'     => 'AdminMyTab2',
-                    'name'          => [1 => 'My tab2 1', 2 => 'My tab2 2'],
-                    'parentId'      => 1,
-                    'position'      => 5,
-                    'isActive'      => false,
-                    'isEnabled'     => false,
-                    'routeName'     => 'admin_my_module_my_tab',
-                    'icon'          => 'extension',
-                    'wording'       => 'My tag',
-                    'wordingDomain' => 'Modules.MyModule.Navigation',
+                    'class_name'        => 'AdminMyTab2',
+                    'name'              => [1 => 'My tab2 1', 2 => 'My tab2 2'],
+                    'parent_id'         => 1,
+                    'position'          => 5,
+                    'is_active'         => false,
+                    'is_enabled'        => false,
+                    'route_name'        => 'admin_my_module_my_tab',
+                    'icon'              => 'extension',
+                    'wording'           => 'My tag',
+                    'wording_domain'    => 'Modules.MyModule.Navigation',
                 ],
             ]
         );
 
         $this->assertInstanceOf(TabHandlerInterface::class, $handler);
+    }
+
+    public function testGetItemsReturnsItems()
+    {
+        $item = $this->createItemMock('AdminMyTab');
+
+        $handler = new TabHandler(
+            $this->getModule(),
+            [$item]
+        );
+
+        $this->assertSame([$item], $handler->getItems());
+    }
+
+    public function testAddItemAddsItem()
+    {
+        $item1 = $this->createItemMock('AdminMyTab');
+        $item2 = $this->createItemMock('AdminMyOtherTab');
+
+        $handler = new TabHandler(
+            $this->getModule(),
+            [$item1]
+        );
+
+        $result = $handler->addItem($item2, 5);
+
+        $this->assertSame([0 => $item1, 5 => $item2], $handler->getItems());
+        $this->assertSame($result, $handler);
+    }
+
+    public function testRemoveItemRemovesItem()
+    {
+        $item1 = $this->createItemMock('AdminMyTab');
+        $item2 = $this->createItemMock('AdminMyOtherTab');
+
+        $handler = new TabHandler(
+            $this->getModule(),
+            [$item1, $item2]
+        );
+
+        $result = $handler->removeItem(0);
+
+        $this->assertSame([1 => $item2], $handler->getItems());
+        $this->assertSame($result, $handler);
     }
 
     /**
@@ -162,23 +205,21 @@ final class TabHandlerTest extends TestCase
      * @param string $className
      * @param array $name
      *
-     * @return TabItemInterface|PHPUnit_Framework_MockObject_MockObject
+     * @return TabItem
      */
     private function createItemMock($className, $name = 'My tab')
     {
-        $item = $this->createMock(TabItemInterface::class);
-
-        $item->method('getClassName')->willReturn(new ClassName($className));
-        $item->method('getName')->willReturn(new Name($name));
-        $item->method('getParentId')->willReturn(new ParentId(1));
-        $item->method('getPosition')->willReturn(new Position(5));
-        $item->method('isActive')->willReturn(new IsActive(false));
-        $item->method('isEnabled')->willReturn(new IsEnabled(false));
-        $item->method('getRouteName')->willReturn(new RouteName('adminadmin_my_module_my_tab'));
-        $item->method('getIcon')->willReturn(new Icon('extension'));
-        $item->method('getWording')->willReturn(new Wording('My tab'));
-        $item->method('getWordingDomain')->willReturn(new WordingDomain('Modules.MyModule.Navigation'));
-
-        return $item;
+        return new TabItem(
+            new ClassName($className),
+            new Name($name),
+            new ParentId(1),
+            new Position(5),
+            new IsActive(false),
+            new IsEnabled(false),
+            new RouteName('adminadmin_my_module_my_tab'),
+            new Icon('extension'),
+            new Wording('My tab'),
+            new WordingDomain('Modules.MyModule.Navigation')
+        );
     }
 }
