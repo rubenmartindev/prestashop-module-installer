@@ -13,6 +13,8 @@ use Tab;
  */
 final class ParentId implements ValueObjectInterface
 {
+    const HIDDEN = -1;
+
     /** @var TParentId */
     private $parentId;
 
@@ -89,7 +91,7 @@ final class ParentId implements ValueObjectInterface
     private function findParentId($parentId)
     {
         $parentId = \is_numeric($parentId)
-            ? $parentId
+            ? ($parentId == self::HIDDEN && \is_ps_version('>=1.7') ? 0 : $parentId)
             : Tab::getIdFromClassName($parentId)
         ;
 
