@@ -228,7 +228,7 @@ final class TabItem implements TabItemInterface
         $resolver->setRequired('class_name');
         $resolver->setRequired('name');
 
-        $resolver->setDefault('parent_id', -1);
+        $resolver->setDefault('parent_id', ParentId::HIDDEN);
         $resolver->setDefault('position', 0);
         $resolver->setDefault('is_active', true);
         $resolver->setDefault('is_enabled', true);
