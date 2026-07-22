@@ -50,46 +50,10 @@ items from an array.
 ```php
 use RubenMartinDev\PrestaShopModuleInstaller\Exception\InstallerException;
 use RubenMartinDev\PrestaShopModuleInstaller\Installer;
+use RubenMartinDev\PrestaShopModuleInstaller\InstallerInterface;
 
 class MyModule extends Module
 {
-    /** @var Installer */
-    private $installer;
-
-    public function __construct()
-    {
-        // ...
-
-        $this->installer = Installer::createFrom(
-            $this,
-            [
-                'configuration' => [
-                    [
-                        'name'      => 'is_enabled',
-                        'value'     => true,
-                    ],
-                ],
-                'database'      => [
-                    [
-                        'tableName' => 'my_table',
-                        'query'     => 'CREATE TABLE `{{DB_PREFIX}}my_table`;',
-                    ],
-                ],
-                'hooks'         => [
-                    [
-                        'name'      => 'displayHeader',
-                    ],
-                ],
-                'tabs'          => [
-                    [
-                        'className' => 'AdminMyTab',
-                        'name'      => 'My admin tab',
-                    ],
-                ],
-            ],
-        );
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -100,7 +64,7 @@ class MyModule extends Module
         }
 
         try {
-            return $this->installer->install();
+            return $this->getInstaller()->install();
         } catch (InstallerException $e) {
             $this->_errors[] = $e->getMessage();
         }
@@ -118,12 +82,47 @@ class MyModule extends Module
         }
 
         try {
-            return $this->installer->uninstall();
+            return $this->getInstaller()->uninstall();
         } catch (InstallerException $e) {
             $this->_errors[] = $e->getMessage();
         }
 
         return false;
+    }
+
+    /**
+     * @return InstallerInterface
+     */
+    private function getInstaller()
+    {
+        return Installer::createFrom(
+            $this,
+            [
+                'configuration' => [
+                    [
+                        'name'        => 'is_enabled',
+                        'value'       => true,
+                    ],
+                ],
+                'database'      => [
+                    [
+                        'table_name'  => 'my_table',
+                        'query'       => 'CREATE TABLE `{{DB_PREFIX}}my_table`;',
+                    ],
+                ],
+                'hooks'         => [
+                    [
+                        'name'        => 'displayHeader',
+                    ],
+                ],
+                'tabs'          => [
+                    [
+                        'class_name'  => 'AdminMyTab',
+                        'name'        => 'My admin tab',
+                    ],
+                ],
+            ],
+        );
     }
 }
 ```
@@ -149,12 +148,12 @@ services:
         - name: is_enabled
           value: true
         database:
-        - tableName: my_table
+        - table_name: my_table
           query: 'CREATE TABLE `{{DB_PREFIX}}my_table`;'
         hooks:
         - name: displayHeader
         tabs:
-        - className: AdminMyTab
+        - class_name: AdminMyTab
           name: My admin tab
 ```
 
@@ -270,18 +269,18 @@ This handler is used to create and remove tables in the database.
 
 Represents a single SQL statement.
 
-| Argument    | Type            | Default     | Description                                                       |
-|-------------|-----------------|-------------|-------------------------------------------------------------------|
-| `tableName` | `string`        | _Required_  | Table name.                                                       |
-| `query`     | `string\|null`  | `null`      | Raw SQL.                                                          |
-| `queryFile` | `string\|null`  | `null`      | Path to the SQL file.                                             |
-| `keepData`  | `bool`          | `false`     | Whether the table should be kept when the module is uninstalled.  |
+| Argument      | Type            | Default     | Description                                                       |
+|---------------|-----------------|-------------|-------------------------------------------------------------------|
+| `table_name`  | `string`        | _Required_  | Table name.                                                       |
+| `query`       | `string\|null`  | `null`      | Raw SQL.                                                          |
+| `query_file`  | `string\|null`  | `null`      | Path to the SQL file.                                             |
+| `keep_data`   | `bool`          | `false`     | Whether the table should be kept when the module is uninstalled.  |
 
-Both `query` and `queryFile` support the placeholders `{{DB_PREFIX}}`
+Both `query` and `query_file` support the placeholders `{{DB_PREFIX}}`
 and `{{ENGINE_TYPE}}`, which correspond to the PrestaShop constants
 `_DB_PREFIX_` and `_MYSQL_ENGINE_` respectively.
 
-If both `query` and `queryFile` are set, the latter takes precedence and `query`
+If both `query` and `query_file` are set, the latter takes precedence and `query`
 will be ignored.
 
 #### Example
@@ -292,13 +291,13 @@ Installer::createFrom(
     [
         'database' => [
             [
-                'tableName' => 'my_table',
-                'query'     => 'CREATE TABLE `{{DB_PREFIX}}my_table`;',
+                'table_name'  => 'my_table',
+                'query'       => 'CREATE TABLE `{{DB_PREFIX}}my_table`;',
             ],
             [
-                'tableName' => 'my_another_table',
-                'queryFile' => "{$myModule->getLocalPath()}/my_another_table.sql",
-                'keepData'  => true,
+                'table_name'  => 'my_another_table',
+                'query_file'  => "{$myModule->getLocalPath()}/my_another_table.sql",
+                'keepData'    => true,
             ],
             // ...
         ],
@@ -315,19 +314,19 @@ This handler is used to register hooks.
 
 Represents a single hook.
 
-| Argument            | Type                  | Default     | Description                                   |
-|---------------------|-----------------------|-------------|-----------------------------------------------|
-| `name`              | `string`              | _Required_  | Hook name.                                    |
-| `prestashopVersion` | `string\|array\|null` | `null`      | PrestaShop version compatible with the hook.  |
+| Argument              | Type                  | Default     | Description                                   |
+|-----------------------|-----------------------|-------------|-----------------------------------------------|
+| `name`                | `string`              | _Required_  | Hook name.                                    |
+| `prestashop_version`  | `string\|array\|null` | `null`      | PrestaShop version compatible with the hook.  |
 
-When `prestashopVersion` is null, the PrestaShop version is ignored and the hook
+When `prestashop_version` is null, the PrestaShop version is ignored and the hook
 will be registered. If it is a string, the PrestaShop version is checked and the
 hook will only be registered if the version constraint is satisfied. If it is an
 array it must contain at least the `min` key to specify the minimum PrestaShop
 version from which the hook will be registered, and the optional `max` key to
 specify up to which PrestaShop version the hook should be registered.
 
-`prestashopVersion` internally uses
+`prestashop_version` internally uses
 [rubenmartindev/prestashop-version-checker](https://github.com/rubenmartindev/prestashop-version-checker/)
 for version validation and checking.
 
@@ -339,19 +338,19 @@ Installer::createFrom(
     [
         'hooks' => [
             [
-                'name'              => 'displayHeader',
+                'name'                => 'displayHeader',
             ],
             [
-                'name'              => 'displayFooter',
-                'prestashopVersion' => '>=1.7',
+                'name'                => 'displayFooter',
+                'prestashop_version'  => '>=1.7',
             ],
             [
-                'name'              => 'displayAdminView',
-                'prestashopVersion' => ['min' => '>=1.7'],
+                'name'                => 'displayAdminView',
+                'prestashop_version'  => ['min' => '>=1.7'],
             ],
             [
-                'name'              => 'displayAdminListBefore',
-                'prestashopVersion' => ['min' => '>=1.7', 'max' => '<8.0'],
+                'name'                => 'displayAdminListBefore',
+                'prestashop_version'  => ['min' => '>=1.7', 'max' => '<8.0'],
             ],
             // ...
         ],
@@ -368,31 +367,31 @@ This handler defines and manages tabs (controllers).
 
 Represents a single tab.
 
-| Argument        | Type            | Default     | Description                         |
-|-----------------|-----------------|-------------|-------------------------------------|
-| `className`     | `string`        | _Required_  | Controller class name.              |
-| `name`          | `string\|array` | _Required_  | Name in the menu.                   |
-| `parentId`      | `string\|int`   | `-1`        | Parent controller ID or class name. |
-| `position`      | `int`           | `0`         | Position in the tabs tree.          |
-| `isActive`      | `bool`          | `true`      | Whether the tab is active.          |
-| `isEnabled`     | `bool`          | `true`      | Whether the tab is available.       |
-| `routeName`     | `string\|null`  | `null`      | Symfony route name.                 |
-| `icon`          | `string\|null`  | `null`      | Icon name used in the menu.         |
-| `wording`       | `string\|null`  | `null`      | Translation.                        |
-| `wordingDomain` | `string\|null`  | `null`      | Translation domain for the tab.     |
+| Argument          | Type            | Default     | Description                         |
+|-------------------|-----------------|-------------|-------------------------------------|
+| `class_name`      | `string`        | _Required_  | Controller class name.              |
+| `name`            | `string\|array` | _Required_  | Name in the menu.                   |
+| `parent_id`       | `string\|int`   | `-1`        | Parent controller ID or class name. |
+| `position`        | `int`           | `0`         | Position in the tabs tree.          |
+| `is_active`       | `bool`          | `true`      | Whether the tab is active.          |
+| `is_enabled`      | `bool`          | `true`      | Whether the tab is available.       |
+| `route_name`      | `string\|null`  | `null`      | Symfony route name.                 |
+| `icon`            | `string\|null`  | `null`      | Icon name used in the menu.         |
+| `wording`         | `string\|null`  | `null`      | Translation.                        |
+| `wording_domain`  | `string\|null`  | `null`      | Translation domain for the tab.     |
 
 When `name` is an array, it must be a numeric array. The array keys correspond to
 `id_lang`, and the default language ID key (`PS_LANG_DEFAULT`) must always be
 present.
 
-When `parentId` is a string, the tab ID will be resolved using the class name.
+When `parent_id` is a string, the tab ID will be resolved using the class name.
 
 When `wording` is null, it will be set using the value of `name` for the default
 PrestaShop language.
 
-When `wordingDomain` is null, it defaults to "Admin.Navigation.Menu".
+When `wording_domain` is null, it defaults to "Admin.Navigation.Menu".
 
-The `isEnabled`, `routeName`, `icon`, `wording`, and `wordingDomain` properties
+The `is_enabled`, `route_name`, `icon`, `wording`, and `wording_domain` properties
 may be ignored depending on the PrestaShop version.
 
 #### Example
@@ -403,25 +402,25 @@ Installer::createFrom(
     [
         'tabs' => [
             [
-                'className'     => 'AdminMyTab',
-                'name'          => 'My admin tab',
+                'class_name'      => 'AdminMyTab',
+                'name'            => 'My admin tab',
             ],
             [
-                'className'     => 'AdminMyAnotherTab',
-                'name'          => [1 => 'My another tab in EN', 2 => 'My another tab in ES'],
-                'parentId'      => 10,
-                'position'      => 2,
-                'isActive'      => false,
+                'class_name'      => 'AdminMyAnotherTab',
+                'name'            => [1 => 'My another tab in EN', 2 => 'My another tab in ES'],
+                'parent_id'       => 10,
+                'position'        => 2,
+                'is_active'       => false,
             ],
             [
-                'className'     => 'AdminMyExtraTab',
-                'name'          => 'My extra tab',
-                'parentId'      => 'AdminParentOrders',
-                'position'      => 3,
-                'routeName'     => 'admin_my_module_my_extra_tab',
-                'icon'          => 'extension',
-                'wording'       => 'My extra tab',
-                'wordingDomain' => 'Modules.MyModule.Navigation',
+                'class_name'      => 'AdminMyExtraTab',
+                'name'            => 'My extra tab',
+                'parent_id'       => 'AdminParentOrders',
+                'position'        => 3,
+                'route_name'      => 'admin_my_module_my_extra_tab',
+                'icon'            => 'extension',
+                'wording'         => 'My extra tab',
+                'wording_domain'  => 'Modules.MyModule.Navigation',
             ],
             // ...
         ],
