@@ -3,6 +3,7 @@
 namespace RubenMartinDev\PrestaShopModuleInstaller\Handler;
 
 use Module;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\Exception\HandlerException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Exception\ItemsIsEmptyException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Exception\ItemTypeIsInvalidException;
 use RubenMartinDev\PrestaShopModuleInstaller\Item\ItemInterface;
@@ -94,7 +95,10 @@ abstract class AbstractHandler implements HandlerInterface
     /**
      * @return class-string<ItemInterface>
      */
-    abstract protected static function getItemClassName();
+    protected static function getItemClassName()
+    {
+        throw new HandlerException('The class name for Item has not been configured');
+    }
 
     /**
      * @return Module
