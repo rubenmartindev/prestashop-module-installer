@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "258539e3386b1bc68ca7d1c450810b29",
+    "content-hash": "e20c09d6d8482236ab04a72eec01172a",
     "packages": [
         {
             "name": "rubenmartindev/prestashop-version-checker",
