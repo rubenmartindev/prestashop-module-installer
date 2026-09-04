@@ -1,1 +1,6 @@
+/.env
+/.env.*.local
+/.vscode/
+/compose.override.yaml
+/compose.override.yml
 /vendor/

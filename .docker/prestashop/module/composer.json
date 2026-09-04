@@ -1,0 +1,31 @@
+{
+    "name": "rubenmartindev/prestashop-module-installer-fixture",
+    "type": "prestashop-module",
+    "require": {
+        "php": ">=5.6.0",
+        "rubenmartindev/prestashop-module-installer": "dev-local"
+    },
+    "autoload": {
+        "psr-4": {
+            "InstallerDemo\\": "src/"
+        }
+    },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "/workspace/prestashop-module-installer",
+            "options": {
+                "symlink": true,
+                "versions": {
+                    "rubenmartindev/prestashop-module-installer": "dev-local"
+                }
+            }
+        }
+    ],
+    "config": {
+        "platform": {
+            "php": "5.6.0"
+        },
+        "prepend-autoloader": false
+    }
+}
