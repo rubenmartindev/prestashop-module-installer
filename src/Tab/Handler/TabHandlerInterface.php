@@ -30,16 +30,16 @@ use RubenMartinDev\PrestaShopModuleInstaller\Tab\ValueObject\WordingDomain;
  * @phpstan-import-type TParamWordingDomain from WordingDomain
  *
  * @phpstan-type TItem array{
- *   className: TParamClassName,
+ *   class_name: TParamClassName,
  *   name: TParamName,
- *   parentId?: TParamParentId,
+ *   parent_id?: TParamParentId,
  *   position?: TParamPosition,
- *   active?: TParamIsActive,
- *   enabled?: TParamIsEnabled,
- *   routeName?: TParamRouteName,
+ *   is_active?: TParamIsActive,
+ *   is_enabled?: TParamIsEnabled,
+ *   route_name?: TParamRouteName,
  *   icon?: TParamIcon,
  *   wording?: TParamWording,
- *   wordingDomain?: TParamWordingDomain,
+ *   wording_domain?: TParamWordingDomain,
  * }
  */
 interface TabHandlerInterface extends HandlerInterface
