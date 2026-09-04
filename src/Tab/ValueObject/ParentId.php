@@ -5,15 +5,15 @@ namespace RubenMartinDev\PrestaShopModuleInstaller\Tab\ValueObject;
 use RubenMartinDev\PrestaShopModuleInstaller\Tab\ValueObject\Exception\ParentIdIsEmptyException;
 use RubenMartinDev\PrestaShopModuleInstaller\Tab\ValueObject\Exception\ParentIdTypeIsInvalidException;
 use RubenMartinDev\PrestaShopModuleInstaller\ValueObject\ValueObjectInterface;
-use Tab;
 
 /**
- * @phpstan-type TParentId int
- * @phpstan-type TParamParentId TParentId|string
+ * @phpstan-type TParentId int|string
+ * @phpstan-type TParamParentId TParentId
  */
 final class ParentId implements ValueObjectInterface
 {
-    const HIDDEN = -1;
+    const HIDDEN    = -1;
+    const ROOT      = 0;
 
     /** @var TParentId */
     private $parentId;
@@ -32,7 +32,7 @@ final class ParentId implements ValueObjectInterface
 
         $this->ensureIsValid($parentId);
 
-        $this->parentId = $this->findParentId($parentId);
+        $this->parentId = $parentId;
     }
 
     /**
@@ -81,20 +81,5 @@ final class ParentId implements ValueObjectInterface
         if (true === empty($parentId)) {
             throw new ParentIdIsEmptyException('The ParentId is empty');
         }
-    }
-
-    /**
-     * @param TParamParentId $parentId
-     *
-     * @return TParentId
-     */
-    private function findParentId($parentId)
-    {
-        $parentId = \is_numeric($parentId)
-            ? ($parentId == self::HIDDEN && \is_ps_version('>=1.7') ? 0 : $parentId)
-            : Tab::getIdFromClassName($parentId)
-        ;
-
-        return (int) $parentId;
     }
 }

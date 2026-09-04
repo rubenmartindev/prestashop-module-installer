@@ -6,6 +6,7 @@ use Module;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\HandlerInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\Tab\Handler\Exception\FailedToCreateTabException;
 use RubenMartinDev\PrestaShopModuleInstaller\Tab\Handler\Exception\FailedToDeleteTabException;
+use RubenMartinDev\PrestaShopModuleInstaller\Tab\Handler\Exception\ParentTabNotFoundException;
 use RubenMartinDev\PrestaShopModuleInstaller\Tab\ValueObject\ClassName;
 use RubenMartinDev\PrestaShopModuleInstaller\Tab\ValueObject\Icon;
 use RubenMartinDev\PrestaShopModuleInstaller\Tab\ValueObject\IsActive;
@@ -57,6 +58,7 @@ interface TabHandlerInterface extends HandlerInterface
      * {@inheritDoc}
      *
      * @throws FailedToCreateTabException
+     * @throws ParentTabNotFoundException
      */
     public function install();
 

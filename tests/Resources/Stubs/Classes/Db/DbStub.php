@@ -12,6 +12,9 @@ class DbStub
     /** @var bool */
     public static $forceThrowExceptionOnExecute = false;
 
+    /** @var int|false */
+    public static $value = 1;
+
     /**
      * @see \Db::getInstance()
      */
@@ -32,5 +35,10 @@ class DbStub
         }
 
         return true;
+    }
+
+    public function getValue($sql, $use_cache = true)
+    {
+        return self::$value;
     }
 }

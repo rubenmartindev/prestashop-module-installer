@@ -2,12 +2,16 @@
 
 namespace RubenMartinDev\PrestaShopModuleInstaller\Tab\Handler;
 
+use Db;
+use DbQuery;
 use Module;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\AbstractHandler;
 use RubenMartinDev\PrestaShopModuleInstaller\Tab\Handler\Exception\FailedToCreateTabException;
 use RubenMartinDev\PrestaShopModuleInstaller\Tab\Handler\Exception\FailedToDeleteTabException;
+use RubenMartinDev\PrestaShopModuleInstaller\Tab\Handler\Exception\ParentTabNotFoundException;
 use RubenMartinDev\PrestaShopModuleInstaller\Tab\Item\TabItem;
 use RubenMartinDev\PrestaShopModuleInstaller\Tab\Item\TabItemInterface;
+use RubenMartinDev\PrestaShopModuleInstaller\Tab\ValueObject\ParentId;
 use Tab;
 
 /**
@@ -30,7 +34,7 @@ final class TabHandler extends AbstractHandler implements TabHandlerInterface
             $prestashopTab->name            = $item->getName()->getValue();
             $prestashopTab->class_name      = $item->getClassName()->getValue();
             $prestashopTab->module          = $this->getModule()->name;
-            $prestashopTab->id_parent       = $item->getParentId()->getValue();
+            $prestashopTab->id_parent       = $this->resolveParentId($item->getParentId());
             $prestashopTab->position        = $item->getPosition()->getValue();
             $prestashopTab->active          = $item->isActive()->getValue();
             $prestashopTab->enabled         = $item->isEnabled()->getValue();
@@ -70,5 +74,40 @@ final class TabHandler extends AbstractHandler implements TabHandlerInterface
     protected static function getItemClassName()
     {
         return TabItem::class;
+    }
+
+    /**
+     * @param ParentId $parentId
+     *
+     * @return int
+     *
+     * @throws ParentTabNotFoundException
+     */
+    private function resolveParentId(ParentId $parentId)
+    {
+        $parentIdValue = $parentId->getValue();
+
+        if (\is_string($parentIdValue)) {
+            $parentIdValue = Tab::getIdFromClassName($parentIdValue);
+            $parentIdValue = false === $parentIdValue ? null : $parentIdValue;
+        }
+
+        if (\is_int($parentIdValue)) {
+            if (!\in_array($parentIdValue, [ParentId::HIDDEN, ParentId::ROOT])) {
+                $tabPrimary = Tab::$definition['primary'];
+                $tabTable   = \_DB_PREFIX_ . Tab::$definition['table'];
+
+                $parentIdValue = Db::getInstance()->getValue(
+                    "SELECT `{$tabPrimary}` FROM {$tabTable} WHERE `{$tabPrimary}` = " . (int) $parentIdValue
+                );
+                $parentIdValue = false === $parentIdValue ? null : $parentIdValue;
+            }
+        }
+
+        if (null === $parentIdValue) {
+            throw new ParentTabNotFoundException("Parent tab {$parentId->getValue()} not found");
+        }
+
+        return $parentIdValue;
     }
 }

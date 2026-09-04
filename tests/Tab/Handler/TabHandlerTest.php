@@ -6,6 +6,7 @@ use PHPUnit\Framework\TestCase;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\Exception\ItemTypeIsInvalidException;
 use RubenMartinDev\PrestaShopModuleInstaller\Tab\Handler\Exception\FailedToCreateTabException;
 use RubenMartinDev\PrestaShopModuleInstaller\Tab\Handler\Exception\FailedToDeleteTabException;
+use RubenMartinDev\PrestaShopModuleInstaller\Tab\Handler\Exception\ParentTabNotFoundException;
 use RubenMartinDev\PrestaShopModuleInstaller\Tab\Handler\TabHandler;
 use RubenMartinDev\PrestaShopModuleInstaller\Tab\Handler\TabHandlerInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\Tab\Item\TabItem;
@@ -21,6 +22,7 @@ use RubenMartinDev\PrestaShopModuleInstaller\Tab\ValueObject\Wording;
 use RubenMartinDev\PrestaShopModuleInstaller\Tab\ValueObject\WordingDomain;
 use RubenMartinDev\PrestaShopModuleInstaller\Tests\Resources\ModuleTrait;
 use RubenMartinDev\PrestaShopModuleInstaller\Tests\Resources\Stubs\Classes\CollectionStub;
+use RubenMartinDev\PrestaShopModuleInstaller\Tests\Resources\Stubs\Classes\Db\DbStub;
 use RubenMartinDev\PrestaShopModuleInstaller\Tests\Resources\Stubs\Classes\TabStub;
 use Tab;
 
@@ -130,6 +132,40 @@ final class TabHandlerTest extends TestCase
         $this->assertSame($result, $handler);
     }
 
+    public function parentTabNotFoundDataProvider()
+    {
+        return [
+            ['AdminMyTab', 'My tab', 999],
+            ['AdminMyTab', 'My tab', 'AdminTabNotExists'],
+        ];
+    }
+
+    /**
+     * @runInSeparateProcess
+     *
+     * @dataProvider parentTabNotFoundDataProvider
+     *
+     * @param string $className
+     * @param array|string $name
+     * @param int|string $parentId
+     */
+    public function testInstallThrowsExceptionWhenParentTabIsNotFound(
+        $className,
+        $name,
+        $parentId
+    ) {
+        $this->expectException(ParentTabNotFoundException::class);
+
+        DbStub::$value = false;
+
+        $handler = new TabHandler(
+            $this->getModule(),
+            [$this->createItemMock($className, $name, $parentId)]
+        );
+
+        $handler->install();
+    }
+
     /**
      * @runInSeparateProcess
      */
@@ -203,16 +239,17 @@ final class TabHandlerTest extends TestCase
 
     /**
      * @param string $className
-     * @param array $name
+     * @param array|string $name
+     * @param int|string $parentId
      *
      * @return TabItem
      */
-    private function createItemMock($className, $name = 'My tab')
+    private function createItemMock($className, $name = 'My tab', $parentId = 1)
     {
         return new TabItem(
             new ClassName($className),
             new Name($name),
-            new ParentId(1),
+            new ParentId($parentId),
             new Position(5),
             new IsActive(false),
             new IsEnabled(false),

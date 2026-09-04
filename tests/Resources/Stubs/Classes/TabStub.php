@@ -20,6 +20,12 @@ class TabStub extends \ObjectModel
     /** @see \Tab::$module */
     public $module;
 
+    /** @see \Tab::$definition */
+    public static $definition = [
+        'table'     => 'tab',
+        'primary'   => 'id_tab',
+    ];
+
     /**
      * @see \Tab::getIdFromClassName()
      */
