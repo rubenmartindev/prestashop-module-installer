@@ -59,6 +59,6 @@ final class ParentIdTest extends TestCase
         $this->assertSame(0, $parentId4->getValue());
         $this->assertSame(-1, $parentId5->getValue());
         $this->assertSame(1, $parentId6->getValue());
-        $this->assertSame(1, $parentId7->getValue());
+        $this->assertSame('AdminParentTab', $parentId7->getValue());
     }
 }
