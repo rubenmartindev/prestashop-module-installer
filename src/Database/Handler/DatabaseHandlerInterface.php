@@ -17,10 +17,10 @@ use RubenMartinDev\PrestaShopModuleInstaller\Handler\HandlerInterface;
  * @phpstan-import-type TParamKeepData from KeepData
  *
  * @phpstan-type TItem array{
- *   tableName: TParamTableName,
+ *   table_name: TParamTableName,
  *   query?: TParamQuery,
- *   queryFile?: TParamQueryFile,
- *   keepData?: TParamKeepData,
+ *   query_file?: TParamQueryFile,
+ *   keep_data?: TParamKeepData,
  * }
  */
 interface DatabaseHandlerInterface extends HandlerInterface

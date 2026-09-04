@@ -27,7 +27,73 @@ composer require rubenmartindev/prestashop-module-installer
 ## Requirements
 
 - PHP >= 5.6.0
-- PrestaShop >=1.6
+- PrestaShop 1.6.x / 1.7.x / 8.x / 9.x
+
+## Development Environment
+
+The repository includes a Docker Compose environment for working with a
+specific PrestaShop version. The PrestaShop core is mounted in
+`prestashop/<PS_VERSION_TAG>` so it can be inspected and modified locally.
+Those installation files are ignored by Git.
+
+Copy the environment template and start the default instance:
+
+```bash
+cp .env.dist .env
+make up
+```
+
+The Compose project name is generated from `PS_VERSION_TAG`. Different versions
+can run simultaneously when using different host ports:
+
+```bash
+make up PS_VERSION_TAG=1.6 PS_HTTP_PORT=8080
+make up PS_VERSION_TAG=9 PS_HTTP_PORT=8090
+```
+
+Manage an instance by passing its version again:
+
+```bash
+make logs PS_VERSION_TAG=1.6
+make down PS_VERSION_TAG=1.6
+```
+
+Additional Docker Compose options can be passed after `--`. Instance variables
+can still be provided through `.env`, the environment, or directly on the
+`make` command:
+
+```bash
+# Remove the containers and their volumes
+make down -- --volumes
+
+# Recreate a specific PrestaShop instance
+make up PS_VERSION_TAG=9 PS_HTTP_PORT=8090 -- --force-recreate
+
+# Show the last 100 log lines
+make logs -- --tail 100
+
+# Show a specific service
+make ps -- prestashop
+```
+
+The database image is MySQL and its tag can be changed with `DB_VERSION_TAG`.
+
+The development image also includes a `installerdemo` fixture module. It is
+mounted as a regular PrestaShop module and requires the library from the
+repository through a Composer path repository. The repository root is mounted
+at `/workspace/prestashop-module-innstaller`, so changes to `src/` are available
+immediately in the fixture.
+
+Composer installs the fixture dependencies on startup. The fixture's
+`composer.lock` and `vendor/` are local files and are not versioned. The
+library tests can be run from the container shell:
+
+```bash
+make shell PS_VERSION_TAG=9
+cd /workspace/prestashop-module-innstaller
+composer tests
+composer cs
+```
 
 ## Usage
 

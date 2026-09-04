@@ -1,0 +1,7 @@
+.git
+.env
+.vscode
+vendor
+prestashop
+.docker/prestashop/module/vendor
+.docker/prestashop/module/composer.lock

@@ -10,6 +10,9 @@ use RubenMartinDev\PrestaShopModuleInstaller\Handler\HandlerInterface;
 use RubenMartinDev\PrestaShopModuleInstaller\Hook\Handler\HookHandler;
 use RubenMartinDev\PrestaShopModuleInstaller\Tab\Handler\TabHandler;
 
+/**
+ * @phpstan-import-type THandlers from InstallerInterface
+ */
 class Installer implements InstallerInterface
 {
     /** @var array<string, HandlerInterface> */
@@ -39,6 +42,8 @@ class Installer implements InstallerInterface
 
     /**
      * {@inheritDoc}
+     *
+     * @param THandlers $handlers
      */
     public static function createFrom(Module $module, array $handlers)
     {

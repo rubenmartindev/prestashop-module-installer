@@ -14,7 +14,7 @@ use RubenMartinDev\PrestaShopModuleInstaller\Hook\ValueObject\PrestaShopVersion;
  *
  * @phpstan-type TItem array{
  *   name: TParamName,
- *   prestashopVersion?: TParamPrestaShopVersion,
+ *   prestashop_version?: TParamPrestaShopVersion,
  * }
  */
 interface HookHandlerInterface extends HandlerInterface

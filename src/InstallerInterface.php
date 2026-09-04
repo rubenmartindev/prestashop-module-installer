@@ -21,6 +21,7 @@ use RubenMartinDev\PrestaShopModuleInstaller\Tab\Handler\TabHandlerInterface;
  *   database?: TDatabase[],
  *   hooks?: THook[],
  *   tabs?: TTab[],
+ *   ...<class-string<HandlerInterface>, array>,
  * }
  */
 interface InstallerInterface
