@@ -81,7 +81,7 @@ The database image is MySQL and its tag can be changed with `DB_VERSION_TAG`.
 The development image also includes a `installerdemo` fixture module. It is
 mounted as a regular PrestaShop module and requires the library from the
 repository through a Composer path repository. The repository root is mounted
-at `/workspace/prestashop-module-innstaller`, so changes to `src/` are available
+at `/workspace/prestashop-module-installer`, so changes to `src/` are available
 immediately in the fixture.
 
 Composer installs the fixture dependencies on startup. The fixture's
@@ -90,7 +90,7 @@ library tests can be run from the container shell:
 
 ```bash
 make shell PS_VERSION_TAG=9
-cd /workspace/prestashop-module-innstaller
+cd /workspace/prestashop-module-installer
 composer tests
 composer cs
 ```
@@ -270,16 +270,16 @@ will be added to PrestaShop.
 
 Represents a single configuration entry.
 
-| Argument  | Type              | Default     | Description                       |
-|-----------|-------------------|-------------|-----------------------------------|
-| `name`    | `string`          | _Required_  | Configuration name.               |
-| `value`   | `callable\|mixed` | _Required_  | Value to store in configuration.  |
-| `prefix`  | `string\|null`    | `null`      | Prefix to add to `name`.          |
+| Argument  | Type                                             | Default     | Description                       |
+|-----------|--------------------------------------------------|-------------|-----------------------------------|
+| `name`    | `string`                                         | _Required_  | Configuration name.               |
+| `value`   | `callable\|bool\|string\|array\|object\|null`    | `null`      | Value to store in configuration.  |
+| `prefix`  | `string\|null`                                   | `null`      | Prefix to add to `name`.          |
 
 If `value` is a callable, it must return a result.
 
 `value` transforms its value as follows:
-  - Booleans are converted to int (0 or 1).
+  - Booleans are converted to strings (`'0'` or `'1'`).
   - Arrays are converted to JSON.
   - Objects are serialized.
 
@@ -295,7 +295,7 @@ Installer::createFrom(
         'configuration' => [
             [
                 'name'    => 'my_boolean',    // --> MY_MODULE_MY_BOOLEAN
-                'value'   => true,            // --> 1
+                'value'   => true,            // --> '1'
             ],
             [
                 'name'    => 'my_string',     // --> MY_PREFIX_MY_STRING
@@ -363,7 +363,7 @@ Installer::createFrom(
             [
                 'table_name'  => 'my_another_table',
                 'query_file'  => "{$myModule->getLocalPath()}/my_another_table.sql",
-                'keepData'    => true,
+                'keep_data'   => true,
             ],
             // ...
         ],
@@ -505,6 +505,7 @@ tasks. To do this, you can create your own handler.
 namespace MyModule\Installer\Handler;
 
 use Customer;
+use RubenMartinDev\PrestaShopModuleInstaller\Handler\Exception\HandlerException;
 use RubenMartinDev\PrestaShopModuleInstaller\Handler\HandlerInterface;
 
 final class MyCustomHandler implements HandlerInterface
@@ -523,8 +524,6 @@ final class MyCustomHandler implements HandlerInterface
 
     public function install()
     {
-        $isSuccessful = true;
-
         foreach ($this->items as $item) {
             $customer = new Customer();
 
@@ -533,23 +532,25 @@ final class MyCustomHandler implements HandlerInterface
             $customer->email      = $item['email'];
             $customer->passwd     = $item['passwd'];
 
-            $isSuccessful &= $customer->add();
+            if (!$customer->add()) {
+                throw new HandlerException('Failed to create customer ' . $item['email']);
+            }
         }
 
-        return $isSuccessful;
+        return true;
     }
 
     public function uninstall()
     {
-        $isSuccessful = true;
-
         foreach ($this->items as $item) {
             $customer = Customer::getByEmail($item['email']);
 
-            $isSuccessful &= $customer->delete();
+            if (!$customer->delete()) {
+                throw new HandlerException('Failed to delete customer ' . $item['email']);
+            }
         }
 
-        return $isSuccessful;
+        return true;
     }
 }
 ```
