@@ -1,3 +1,4 @@
+/.agents export-ignore
 /.docker export-ignore
 /prestashop export-ignore
 /tests export-ignore

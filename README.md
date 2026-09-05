@@ -24,6 +24,14 @@ Install via Composer in your PrestaShop module:
 composer require rubenmartindev/prestashop-module-installer
 ```
 
+### Agent Skill
+
+Install the bundled Agent Skill with [`skills`](https://skills.sh/):
+
+```bash
+npx skills add rubenmartindev/prestashop-module-installer
+```
+
 ## Requirements
 
 - PHP >= 5.6.0
