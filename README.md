@@ -41,7 +41,7 @@ npx skills add rubenmartindev/prestashop-module-installer
 
 The repository includes a Docker Compose environment for working with a
 specific PrestaShop version. The PrestaShop core is mounted in
-`prestashop/<PS_VERSION_TAG>` so it can be inspected and modified locally.
+`.prestashop/<PS_VERSION_TAG>` so it can be inspected and modified locally.
 Those installation files are ignored by Git.
 
 Copy the environment template and start the default instance:
