@@ -22,19 +22,29 @@ help: ## Show this help
 build: ## Build the PrestaShop image
 	@$(COMPOSE) build --pull $(ARGS)
 
-up: ## Start the PrestaShop instance
+up: ## Start the PrestaShop container
+	@mkdir -p "./.prestashop/$(PS_VERSION_TAG)"
 	@$(COMPOSE) up --wait --detach $(ARGS)
 
-down: ## Stop and remove the PrestaShop instance
+down: ## Stop and remove the PrestaShop container
 	@$(COMPOSE) down --remove-orphans $(ARGS)
+
+down-hard: ## Stop and delete containers, volumes and the installation of PrestaShop
+	@$(COMPOSE) down \
+		--remove-orphans \
+		--volumes \
+		$(ARGS)
+	@if [ -d "./.prestashop/$(PS_VERSION_TAG)" ]; then \
+		rm -rf "./.prestashop/$(PS_VERSION_TAG)"; \
+	fi
 
 restart: ## Restart the PrestaShop instance
 	@$(COMPOSE) restart $(ARGS)
 
-logs: ## Follow the instance logs
+logs: ## Follow the container logs
 	@$(COMPOSE) logs --follow $(ARGS)
 
-ps: ## Show the instance status
+ps: ## Show the container status
 	@$(COMPOSE) ps $(ARGS)
 
 shell: ## Open a shell in the PrestaShop container

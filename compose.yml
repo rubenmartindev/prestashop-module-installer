@@ -1,24 +1,8 @@
 services:
-  db:
-    image: mysql:${DB_VERSION_TAG:-5.7}
-    restart: unless-stopped
-    environment:
-      MYSQL_DATABASE: ${DB_NAME:-prestashop}
-      MYSQL_USER: ${DB_USER:-prestashop}
-      MYSQL_PASSWORD: ${DB_PASSWORD:-prestashop}
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root}
-    volumes:
-      - database:/var/lib/mysql
-    healthcheck:
-      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p$${MYSQL_ROOT_PASSWORD} --silent"]
-      interval: 10s
-      timeout: 5s
-      retries: 10
 
   prestashop:
     build:
-      context: .
-      dockerfile: .docker/prestashop/Dockerfile
+      context: .docker/prestashop
       args:
         PS_VERSION_TAG: ${PS_VERSION_TAG:-9}
         HOST_UID: ${HOST_UID:-1000}
@@ -45,6 +29,22 @@ services:
       - ./.prestashop/${PS_VERSION_TAG:-9}:/var/www/html
       - .:/workspace/prestashop-module-installer
       - ./.docker/prestashop/module:/var/www/html/modules/installerdemo
+
+  db:
+    image: mysql:${DB_VERSION_TAG:-5.7}
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_NAME:-prestashop}
+      MYSQL_USER: ${DB_USER:-prestashop}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-prestashop}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root}
+    volumes:
+      - database:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p$${MYSQL_ROOT_PASSWORD} --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
 
 volumes:
   database:
