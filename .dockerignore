@@ -1,7 +1,0 @@
-.git
-.env
-.vscode
-vendor
-prestashop
-fixtures/installerdemo/vendor
-fixtures/installerdemo/composer.lock
