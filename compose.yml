@@ -15,6 +15,7 @@ services:
       PS_DEV_MODE: ${PS_DEV_MODE:-1}
       PS_INSTALL_AUTO: ${PS_INSTALL_AUTO:-1}
       PS_DOMAIN: ${PS_DOMAIN:-localhost}
+      PS_FOLDER_ADMIN: ${PS_FOLDER_ADMIN:-admin-dev}
       ADMIN_MAIL: ${PS_ADMIN_MAIL:-admin@prestashop.com}
       ADMIN_PASSWD: ${PS_ADMIN_PASSWD:-prestashop}
       XDEBUG_CONFIG: client_host=host.docker.internal
