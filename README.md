@@ -86,7 +86,7 @@ make ps -- prestashop
 
 The database image is MySQL and its tag can be changed with `DB_VERSION_TAG`.
 
-The development image also includes a `installerdemo` fixture module. It is
+The development image also includes the `fixtures/modulefixture` module. It is
 mounted as a regular PrestaShop module and requires the library from the
 repository through a Composer path repository. The repository root is mounted
 at `/workspace/prestashop-module-installer`, so changes to `src/` are available

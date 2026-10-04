@@ -1,8 +1,7 @@
-/.env
-/.env.*.local
+/.env*
+/!.env.dist
 /.opencode/
 /.vscode/
 /compose.override.yaml
 /compose.override.yml
-/opencode.json
 /vendor/
