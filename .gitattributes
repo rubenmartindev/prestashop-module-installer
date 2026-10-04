@@ -1,5 +1,6 @@
 /.agents export-ignore
 /.docker export-ignore
+/fixtures export-ignore
 /.prestashop export-ignore
 /tests export-ignore
 /.dockerignore export-ignore

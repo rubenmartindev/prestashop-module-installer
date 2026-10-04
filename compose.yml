@@ -28,7 +28,7 @@ services:
     volumes:
       - ./.prestashop/${PS_VERSION_TAG:-9}:/var/www/html
       - .:/workspace/prestashop-module-installer
-      - ./.docker/prestashop/module:/var/www/html/modules/installerdemo
+      - ./fixtures/installerdemo:/var/www/html/modules/installerdemo
 
   db:
     image: mysql:${DB_VERSION_TAG:-5.7}
