@@ -2,9 +2,9 @@
 
 require_once '/var/www/html/config/config.inc.php';
 
-$module = Module::getInstanceByName('installerdemo');
+$module = Module::getInstanceByName('modulefixture');
 
-if (!$module || Module::isInstalled('installerdemo')) {
+if (!$module || Module::isInstalled('modulefixture')) {
     exit(0);
 }
 
@@ -17,6 +17,6 @@ if (!isset($context->employee) || !Validate::isLoadedObject($context->employee))
 }
 
 if (!$module->install()) {
-    fwrite(STDERR, "Unable to install installerdemo module.\n");
+    fwrite(STDERR, "Unable to install modulefixture module.\n");
     exit(1);
 }
